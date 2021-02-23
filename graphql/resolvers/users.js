@@ -5,7 +5,7 @@ const {UserInputError} = require('apollo-server');
 
 const { validateRegisterInput, validateLoginInput } = require('../../util/validators');
 
-// for encode the token, only our server will be able decode 
+// for decode the token 
 const {SECRET_KEY} = require('../../config');
 
 function generateToken(user) {
@@ -73,7 +73,7 @@ module.exports = {
                 email,
                 username,
                 password,
-                createdAt: new Date().toISOString
+                createdAt: new Date().toISOString()
             });
             const res = await newUser.save();
 
