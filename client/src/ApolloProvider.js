@@ -3,7 +3,7 @@ import App from './App';
 import { ApolloClient, InMemoryCache, createHttpLink, ApolloProvider } from '@apollo/client';
 
 const httpLink = createHttpLink({
-    uri: 'http://localhost:5000'
+    uri: 'http://localhost:5000/graphql'
 });
 
 const client = new ApolloClient({
