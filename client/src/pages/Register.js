@@ -3,37 +3,32 @@ import { Button, Form } from 'semantic-ui-react';
 import {useMutation} from '@apollo/client';
 import gql from 'graphql-tag';
 
+import {useForm} from '../util/hooks';
 
-const Register = () => {
+const Register = (props) => {
     const [errors, setErrors] = useState({});
-    const [values, setValues] = useState({
+
+    const { onChange, onSubmit, values } = useForm(registerUser, {
         username: '',
         email: '',
         password: '',
         confirmPassword: ''
-    });
-
-    
+    } )
     
     const [addUser, {loading}] = useMutation(REGISTER_USER, {
-        update(proxy, result){
+        update(_, result){
             console.log(result);
+            props.history.push('/');
         },
         onError(err) {
-            console.log(err.graphQLErrors[0].extensions.exception.errors);
             setErrors(err.graphQLErrors[0].extensions.exception.errors)
         },
         variables: values
-    }) 
-    const onChange = (e) => {
-        // ???
-        setValues({...values, [e.target.name] : e.target.value})
-    };
-
-    const onSubmit = (e) => {
-        e.preventDefault();
+    });
+    // callback function
+    function registerUser(){
         addUser();
-    };
+    }
 
     return (
         <div className='form-container'>
@@ -45,6 +40,7 @@ const Register = () => {
                     placeholder='Username...'
                     label='Username'
                     value={values.username}
+                    error={errors.username ? true : false}
                     onChange={onChange}
                 />
                 <Form.Input 
@@ -53,6 +49,7 @@ const Register = () => {
                     placeholder='Email...'
                     label='Email'
                     value={values.email}
+                    error={errors.email ? true : false}
                     onChange={onChange}
                 />
                 <Form.Input 
@@ -61,6 +58,7 @@ const Register = () => {
                     placeholder='Password...'
                     label='Password'
                     value={values.password}
+                    error={errors.password ? true : false}
                     onChange={onChange}
                 />
                 <Form.Input 
@@ -69,6 +67,7 @@ const Register = () => {
                     placeholder='Confirm password...'
                     label='Confirm Password'
                     value={values.confirmPassword}
+                    error={errors.confirmPassword ? true : false}
                     onChange={onChange}
                 />
                 <Button type='submit' primary>
@@ -113,4 +112,4 @@ const REGISTER_USER = gql`
 `;
 
 
-export default Register
+export default Register;
