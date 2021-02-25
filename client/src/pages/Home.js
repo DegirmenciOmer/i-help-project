@@ -7,9 +7,15 @@ import PostCard from '../components/PostCard';
 const Home = () => {
     const {
         loading,
-        data: { getPosts: posts }
+        data
     } = useQuery(FETCH_POSTS_QUERY);
+    
+    if(!data){
+        return null
+    }
 
+    const  {getPosts: posts} = data;
+    
     return (
         <Grid columns={3}>
             <Grid.Row className='page-title'>
