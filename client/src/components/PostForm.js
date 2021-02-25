@@ -4,19 +4,33 @@ import gql from 'graphql-tag';
 import {useMutation} from '@apollo/client';
 
 import { useForm } from '../util/hooks';
+import { FETCH_POSTS_QUERY } from '../util/graphql';
 
 const PostForm = () => {
     const { values, onChange, onSubmit } = useForm(createPostCallback, {
         body: '' 
     });
 
-    const [createPost, {error}] = useMutation(CREATE_POST_MUTATION, {
+    const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
         variables: values,
-        update( _, result){
-            console.log(result)
-            values.body= '';
+        // source https://www.apollographql.com/docs/react/caching/cache-configuration/#generating-unique-identifiers
+        update(cache, result) {
+            const data = cache.readQuery({
+                query: FETCH_POSTS_QUERY
+            });
+            // must make a copy of each state, use newData
+            let newData = [...data.getPosts];
+            newData = [result.data.createPost, ...newData];
+            cache.writeQuery({ query: FETCH_POSTS_QUERY,
+                data: {
+                    ...data,
+                    getPosts: {
+                        newData,
+                    },
+                },
+            });
         }
-    })
+    });
 
     function createPostCallback(){
         createPost();
