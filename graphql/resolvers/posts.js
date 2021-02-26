@@ -9,6 +9,7 @@ module.exports = {
     async getPosts() {
       try {
         const posts = await Post.find().sort({ createdAt: -1 });
+        console.log(posts);
         return posts;
       } catch (err) {
         throw new Error(err);
