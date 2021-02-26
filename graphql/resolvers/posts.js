@@ -53,11 +53,11 @@ module.exports = {
             const user = checkAuth(context);
             try {
                 const post = await Post.findById(postId);
-                if (post) {
-                    console.log(post.username);
-                } else {
-                console.log('can not find post');
-                }
+                // if (post) {
+                //     console.log(post.username);
+                // } else {
+                // console.log('can not find post');
+                // }
                 if (user.username === post.username) {
                     await post.delete();
                     return 'Post deleted successfully';
