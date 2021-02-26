@@ -3,19 +3,26 @@ import {useState} from 'react';
 export const useForm = (callback, initialState = {}) => {
     const [values, setValues] = useState(initialState);
 
-    const onChange = (e) => {
-        // ???
-        setValues({...values, [e.target.name] : e.target.value})
+    const onChange = async (e) => {
+        try{  
+            await setValues({...values, [e.target.name] : e.target.value})
+        } catch(e) {
+            console.error(e);
+        }
     };
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
-        callback();
+        try { 
+            await callback();
+        } catch(e) {
+            console.error(e);
+        }
     };
     return {
         onChange,
         onSubmit,
-        values
+        values, 
     }
 
 }
