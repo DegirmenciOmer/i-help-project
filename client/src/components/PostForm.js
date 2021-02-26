@@ -11,9 +11,12 @@ const PostForm = () => {
         body: '' 
     });
 
-    const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
+    const [createPost] = useMutation(CREATE_POST_MUTATION, {
         variables: values,
         // source https://www.apollographql.com/docs/react/caching/cache-configuration/#generating-unique-identifiers
+        // need to do merge objects
+        // warning: To address this problem (which is not a bug in Apollo Client), 
+        // define a custom merge function for the Query.getPosts field, so InMemoryCache can safely merge objects
         update(cache, result) {
             const data = cache.readQuery({
                 query: FETCH_POSTS_QUERY
