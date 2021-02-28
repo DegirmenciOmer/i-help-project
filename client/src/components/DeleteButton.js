@@ -5,32 +5,38 @@ import gql from 'graphql-tag';
 
 import { FETCH_POSTS_QUERY } from '../util/graphql';
 
-const DeleteButton = ({ postId, callback }) => {
+const DeleteButton = ({ postId, callback, commentId }) => {
     
     const [confirmOpen, setConfirmOpen] = useState(false);
     
-    const [deletePost] = useMutation(DELETE_POST_MUTATION, {
+    const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION;
+
+    const [deletePostOrMutation] = useMutation(mutation, {
         update(proxy){
             setConfirmOpen(false);
 
-            const data = proxy.readQuery({
-                query: FETCH_POSTS_QUERY
-            });
-            // create a new variable for refresh result
-            const newDataGroups = [...data.getPosts];
-            newDataGroups[postId.id] = newDataGroups.filter(p =>  p.id !== postId);
-            proxy.writeQuery({ query: FETCH_POSTS_QUERY,
-                data: {
-                    ...data,
-                    getPosts: {
-                        newDataGroups,
+            if(!commentId){
+                const data = proxy.readQuery({
+                    query: FETCH_POSTS_QUERY
+                });
+                // create a new variable for refresh result
+                const newDataGroups = [...data.getPosts];
+                newDataGroups[postId.id] = newDataGroups.filter(p =>  p.id !== postId);
+                proxy.writeQuery({ query: FETCH_POSTS_QUERY,
+                    data: {
+                        ...data,
+                        getPosts: {
+                            newDataGroups,
+                        },
                     },
-                },
-            }); 
+                }); 
+            }
+
             if(callback) callback();
         },
         variables: {
-            postId
+            postId, 
+            commentId
             
         }, onError(err) {
                 console.log(err&&err.graphQLErrors[0]?err.graphQLErrors[0]:err) 
@@ -49,7 +55,7 @@ const DeleteButton = ({ postId, callback }) => {
             <Confirm
                 open={confirmOpen}
                 onCancel={() => setConfirmOpen(false)}
-                onConfirm={deletePost}
+                onConfirm={deletePostOrMutation}
             />
         </>
     )
@@ -58,6 +64,21 @@ const DeleteButton = ({ postId, callback }) => {
 const DELETE_POST_MUTATION = gql`
     mutation deletePost($postId: ID!) {
         deletePost(postId: $postId)
+    }
+`;
+
+const DELETE_COMMENT_MUTATION = gql`
+    mutation deleteComment($postId: ID!, $commentId: ID!) {
+        deleteComment(postId: $postId, commentId: $commentId) {
+        id
+        comments {
+            id
+            username
+            createdAt
+            body
+        }
+        commentCount
+        }
     }
 `;
 

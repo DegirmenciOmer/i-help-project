@@ -47,7 +47,7 @@ const PostForm = () => {
                 <h2>Create a post:</h2>
                 <Form.Field>
                     <Form.Input
-                        placeholder="Social network"
+                        placeholder="Create new post"
                         name='body'
                         onChange={onChange}
                         value={values.body}
