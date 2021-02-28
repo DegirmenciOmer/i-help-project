@@ -5,13 +5,13 @@ const Post = require('../../models/Post');
 
 module.exports = {
   Mutation: {
-    // create comment
+    //create comment
     createComment: async (_, { postId, body }, context) => {
       const { username } = checkAuth(context);
       if (body.trim() === '') {
         throw new UserInputError('Empty comment', {
           errors: {
-            body: 'Comment body must not be empty',
+            body: 'Comment body must not empty',
           },
         });
       }
@@ -28,9 +28,8 @@ module.exports = {
         return post;
       } else throw new UserInputError('Post not found');
     },
-
-    // delete comment
-    deleteComment: async (_, { postId, commentId }, context) => {
+    //delete comment
+    async deleteComment(_, { postId, commentId }, context) {
       const { username } = checkAuth(context);
 
       const post = await Post.findById(postId);
