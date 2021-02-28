@@ -9,7 +9,7 @@ import { AuthContext } from '../context/auth';
 
 const SinglePost = (props) => {
     const postId = props.match.params.postId;
-    console.log(postId);
+
     const {user}=useContext(AuthContext);
 
     const {data} = useQuery(FETCH_POST_QUERY, {

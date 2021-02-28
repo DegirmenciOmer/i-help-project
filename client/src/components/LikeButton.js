@@ -12,10 +12,6 @@ const LikeButton = ({user, post: {id, likeCount, likes}}) => {
         } else setLiked(false);
     }, [user, likes]);
     
-    // const likePost = () => {
-    //     console.log('like')
-    // }
-
     const [likePost] = useMutation(LIKE_POST_MUTATION, {
         variables: {postId: id}
     })

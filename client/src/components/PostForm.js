@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import {useMutation} from '@apollo/client';
@@ -10,7 +10,6 @@ const PostForm = () => {
     const { values, onChange, onSubmit } = useForm(createPostCallback, {
         body: '' 
     });
-    const [errors, setErrors] = useState({});
 
     const [createPost, {error}] = useMutation(CREATE_POST_MUTATION, {
         variables: values,
@@ -24,7 +23,7 @@ const PostForm = () => {
             });
             // must make a copy of each state, use newData
             let newData = [...data.getPosts];
-            newData = [result.data.createPost, ...newData]; console.log(newData)
+            newData = [result.data.createPost, ...newData]; 
             proxy.writeQuery({ query: FETCH_POSTS_QUERY,
                 data: {
                     ...data,
@@ -34,7 +33,7 @@ const PostForm = () => {
                 },
             }); 
         }, onError(err) {
-            setErrors(err.graphQLErrors[0].extensions.exception.errors)
+            console.log(err&&err.graphQLErrors[0]?err.graphQLErrors[0]:err) 
         },
     });
 

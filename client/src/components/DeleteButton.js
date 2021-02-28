@@ -8,23 +8,35 @@ import { FETCH_POSTS_QUERY } from '../util/graphql';
 const DeleteButton = ({ postId, callback }) => {
     
     const [confirmOpen, setConfirmOpen] = useState(false);
-    console.log(confirmOpen)
+    
     const [deletePost] = useMutation(DELETE_POST_MUTATION, {
         update(proxy){
             setConfirmOpen(false);
+
             const data = proxy.readQuery({
                 query: FETCH_POSTS_QUERY
             });
-            data.getPosts = data.getPosts.filter((p) => p.id !== postId);
-            proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
+            // create a new variable for refresh result
+            const newDataGroups = [...data.getPosts];
+            newDataGroups[postId.id] = newDataGroups.filter(p =>  p.id !== postId);
+            proxy.writeQuery({ query: FETCH_POSTS_QUERY,
+                data: {
+                    ...data,
+                    getPosts: {
+                        newDataGroups,
+                    },
+                },
+            }); 
             if(callback) callback();
         },
         variables: {
-            postId,
+            postId
             
-        }
+        }, onError(err) {
+                console.log(err&&err.graphQLErrors[0]?err.graphQLErrors[0]:err) 
+        },
     })
-    console.log(confirmOpen)
+
     return (
         <>
             <Button 
