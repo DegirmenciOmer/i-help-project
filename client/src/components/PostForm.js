@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import { gql, useMutation } from '@apollo/client';
-
 import { useForm } from '../util/hooks';
 import { FETCH_POSTS_QUERY } from '../util/graphql';
 
@@ -16,8 +15,8 @@ function PostForm() {
       const data = proxy.readQuery({
         query: FETCH_POSTS_QUERY,
       });
-      data.getPosts = [result.data.createPost, ...data.getPosts];
-      proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
+      // data.getPosts = [result.data.createPost, ...data.getPosts];
+      // proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
       values.body = '';
     },
   });
