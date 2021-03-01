@@ -16,7 +16,7 @@ function LikeButton({ user, post: { id, likeCount, likes } }) {
     variables: { postId: id },
   });
 
-  const LikeButton = user ? (
+  const likeButton = user ? (
     liked ? (
       <Button color='teal'>
         <Icon name='heart' />
@@ -27,15 +27,16 @@ function LikeButton({ user, post: { id, likeCount, likes } }) {
       </Button>
     )
   ) : (
-    <Button as={Link} to='/login' color='teal' basic>
+    <Button color='teal' basic as={Link} to='/login'>
       <Icon name='heart' />
     </Button>
   );
 
   return (
     <Button as='div' labelPosition='right' onClick={likePost}>
+      {likeButton}
       <Label basic color='teal' pointing='left'>
-        {LikeButton} {likeCount}
+        {likeCount}
       </Label>
     </Button>
   );

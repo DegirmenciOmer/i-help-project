@@ -15,6 +15,21 @@ function PostForm() {
       const data = proxy.readQuery({
         query: FETCH_POSTS_QUERY,
       });
+
+      // Serafima
+      let newData = [...data.getPosts];
+      newData = [result.data.createPost, ...newData];
+
+      proxy.writeQuery({
+        query: FETCH_POSTS_QUERY,
+        data: {
+          ...data,
+          getPosts: {
+            newData,
+          },
+        },
+      });
+
       // data.getPosts = [result.data.createPost, ...data.getPosts];
       // proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
       values.body = '';
