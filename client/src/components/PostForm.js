@@ -29,10 +29,12 @@ function PostForm() {
           },
         },
       });
-
       // data.getPosts = [result.data.createPost, ...data.getPosts];
       // proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
-      values.body = '';
+      values.body = ''; // ?
+    },
+    onError(err) {
+      console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err);
     },
   });
 
