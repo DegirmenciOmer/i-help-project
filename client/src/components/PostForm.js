@@ -32,7 +32,8 @@ const PostForm = () => {
                     },
                 },
             }); 
-        }, onError(err) {
+        }
+        , onError(err) {
             console.log(err&&err.graphQLErrors[0]?err.graphQLErrors[0]:err) 
         },
     });

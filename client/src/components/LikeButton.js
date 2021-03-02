@@ -18,7 +18,7 @@ const LikeButton = ({user, post: {id, likeCount, likes}}) => {
         variables: {postId: id}
     })
 
-    const likeButton = user ? (
+    const likeButton = (
         liked ? (
                 <Button color='teal'>
                 <Icon name='heart' />
@@ -27,14 +27,9 @@ const LikeButton = ({user, post: {id, likeCount, likes}}) => {
                 <Button color='teal' basic>
                 <Icon name='heart' />
             </Button>
-        )
-        ) : (
-            <Button color='teal' basic as={Link} to='/login'>
-                <Icon name='heart' />
-            </Button>
-        )
+        ) )
 
-    return (
+    return ( user ? (  
         <NewPopup content='Like on post'>
             <Button as='div' labelPosition='right' onClick={likePost}>
                 {likeButton}
@@ -42,7 +37,19 @@ const LikeButton = ({user, post: {id, likeCount, likes}}) => {
                     {likeCount}
                 </Label>
             </Button>
-        </NewPopup>
+        </NewPopup> ) :
+        (
+
+            <NewPopup content='Like on post'>
+                            <Button  color='teal' labelPosition="right" basic as={Link} to='/login'>
+                                <Button color='teal' basic>
+                                    <Icon name='heart' />
+                                </Button>
+                                <Label basic color='teal' pointing='left'>
+                                    {likeCount}
+                                </Label>
+                            </Button>
+                    </NewPopup>)
     )
 }
 
@@ -51,7 +58,7 @@ const LIKE_POST_MUTATION = gql`
         likePost(postId: $postId){
             id 
             likes{
-                id username
+                id username createdAt
             }
             likeCount
         }

@@ -155,7 +155,7 @@ const FETCH_POST_QUERY = gql`
             username
             likeCount
             likes {
-                username
+                id username createdAt
             }
             commentCount
             comments {
