@@ -26,6 +26,7 @@ module.exports = gql`
     type User {
         id: ID!
         email: String!
+        imageUrl: String!
         token: String!
         username: String!
         createdAt: String!
@@ -35,6 +36,7 @@ module.exports = gql`
         email: String!
         password: String!
         confirmPassword: String!
+        imageUrl: String!
     }
     type Query{
         getPosts: [Post]

@@ -13,7 +13,8 @@ function generateToken(user) {
         {
             id: user.id,
             email: user.email,
-            username: user.username
+            username: user.username,
+            imageUrl: user.imageUrl
         }, 
         SECRET_KEY, 
         {expiresIn: '1h'}
@@ -50,10 +51,10 @@ module.exports = {
                 token
             };
         },
-        async register(_, {registerInput: {username, email, password, confirmPassword}
+        async register(_, {registerInput: {username, email, password, confirmPassword, imageUrl}
         }) {
             // validate user data
-            const {valid, errors } = validateRegisterInput(username, email, password, confirmPassword);
+            const {valid, errors } = validateRegisterInput(username, email, password, confirmPassword, imageUrl);
             if(!valid) {
                 throw new UserInputError('Errors', {errors}) 
             }
@@ -72,6 +73,7 @@ module.exports = {
             const newUser = new User({
                 email,
                 username,
+                imageUrl,
                 password,
                 createdAt: new Date().toISOString()
             });
