@@ -65,4 +65,4 @@ const LIKE_POST_MUTATION = gql`
     }
 `;
 
-export default LikeButton
+export default LikeButton;

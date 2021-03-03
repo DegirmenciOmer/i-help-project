@@ -3,8 +3,18 @@
 # dependencies
 /node_modules
 /backend/.eslintcache
+<<<<<<< HEAD
+=======
+/client/node_modules
+>>>>>>> development
 
 # misc
 .DS_Store
 config.js
+<<<<<<< HEAD
 /frontend/.eslintcache
+=======
+/node_modules
+config.js
+
+>>>>>>> development

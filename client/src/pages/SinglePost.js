@@ -184,3 +184,4 @@ const SUBMIT_COMMENT_MUTATION = gql`
 `;
 
 export default SinglePost
+

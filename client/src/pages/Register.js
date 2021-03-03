@@ -114,5 +114,4 @@ const REGISTER_USER = gql`
     }
 `;
 
-
 export default Register;
