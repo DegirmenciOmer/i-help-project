@@ -1,4 +1,3 @@
-const { argsToArgsConfig } = require('graphql/type/definition');
 const Post = require('../../models/Post');
 const checkAuth = require('../../util/check-auth');
 

@@ -43,6 +43,7 @@ const Login = (props) => {
                     value={values.username}
                     error={errors.username ? true : false}
                     onChange={onChange}
+                    autoComplete= 'username'
                 />
                 <Form.Input 
                     name='password'
@@ -52,6 +53,7 @@ const Login = (props) => {
                     value={values.password}
                     error={errors.password ? true : false}
                     onChange={onChange}
+                    autoComplete= 'current-password'
                 />
                 <Button type='submit' primary>
                     Login

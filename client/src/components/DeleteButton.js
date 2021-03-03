@@ -40,7 +40,7 @@ const DeleteButton = ({ postId, callback, commentId }) => {
             commentId
             
         }, onError(err) {
-                console.log(err&&err.graphQLErrors[0]?err.graphQLErrors[0]:err) 
+                console.log(err) 
         },
     })
 
