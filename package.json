@@ -4,13 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index",
+    "serve": "node index"
+=======
     "serve": "node index",
     "start": "node index"
+>>>>>>> development
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DegirmenciOmer/fellowship28.git"
   },
+<<<<<<< HEAD
+  "keywords": [],
+=======
+>>>>>>> development
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -25,7 +35,13 @@
     "mongoose": "^5.11.17"
   },
   "devDependencies": {
+<<<<<<< HEAD
+    "nodemon": "^2.0.7",
+    "npm": "^7.5.6"
+  }
+=======
     "nodemon": "^2.0.7"
   },
   "keywords": []
+>>>>>>> development
 }
