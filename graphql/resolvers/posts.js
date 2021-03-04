@@ -30,15 +30,20 @@ module.exports = {
   },
   Mutation: {
     // create post
-    async createPost(_, { body }, context) {
+    async createPost(_, { body, category }, context) {
       const user = checkAuth(context);
 
       if (body.trim() === '') {
         throw new Error('Post body must not be empty');
       }
 
+      if (category.trim() === '') {
+        throw new Error('Category must be selected');
+      }
+
       const newPost = new Post({
         body,
+        category,
         user: user.id,
         username: user.username,
         createdAt: new Date().toISOString(),

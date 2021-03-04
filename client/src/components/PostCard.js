@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, Card, Icon, Label, Image, Popup } from 'semantic-ui-react';
+import { Button, Card, Icon, Label, Image } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { AuthContext } from '../context/auth';
@@ -8,7 +8,16 @@ import DeleteButton from './DeleteButton';
 import MyPopup from '../util/MyPopup';
 
 const PostCard = ({
-  post: { body, createdAt, id, username, likeCount, commentCount, likes },
+  post: {
+    body,
+    category,
+    createdAt,
+    id,
+    username,
+    likeCount,
+    commentCount,
+    likes,
+  },
 }) => {
   const { user } = useContext(AuthContext);
 
@@ -24,6 +33,7 @@ const PostCard = ({
         <Card.Meta as={Link} to={`/posts/${id}`}>
           {moment(createdAt).fromNow(true)}
         </Card.Meta>
+        <Card.Meta>{category}</Card.Meta>
         <Card.Description>{body}</Card.Description>
       </Card.Content>
 
