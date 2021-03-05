@@ -32,8 +32,8 @@ const PostCard = ({
         <Card.Header>{username}</Card.Header>
         <Card.Meta as={Link} to={`/posts/${id}`}>
           {moment(createdAt).fromNow(true)}
+          {`-${category}`}
         </Card.Meta>
-        <Card.Meta>{category}</Card.Meta>
         <Card.Description>{body}</Card.Description>
       </Card.Content>
 

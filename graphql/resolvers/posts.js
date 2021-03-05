@@ -27,6 +27,22 @@ module.exports = {
         throw new Error(err);
       }
     },
+
+    // get post by category
+    async filterPost(_, { category }) {
+      try {
+        const post = await Post.find({ category: category });
+        console.log(post);
+
+        if (post) {
+          return post;
+        } else {
+          throw new Error('Post not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
   },
   Mutation: {
     // create post

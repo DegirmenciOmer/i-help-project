@@ -9,9 +9,10 @@ const PostForm = () => {
 
   const options = [
     { key: 's', text: 'Shopping', value: 'Shopping' },
-    { key: 'c', text: 'Cleaning', value: 'cleaning' },
+    { key: 'c', text: 'Cleaning', value: 'Cleaning' },
     { key: 'd', text: 'Dog walking', value: 'Dogwalking' },
     { key: 'g', text: 'Cooking', value: 'Cooking' },
+    { key: 'ga', text: 'Gardening', value: 'Gardening' },
   ];
 
   const { values, onChange, onSubmit } = useForm(createPostCallback, {
@@ -51,8 +52,6 @@ const PostForm = () => {
   function createPostCallback() {
     createPost();
   }
-
-  console.log(values);
 
   return (
     <>
