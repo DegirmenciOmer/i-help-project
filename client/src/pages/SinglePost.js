@@ -165,7 +165,6 @@ const FETCH_POST_QUERY = gql`
     getPost(postId: $postId) {
       id
       body
-      category
       createdAt
       username
       likeCount
@@ -180,6 +179,7 @@ const FETCH_POST_QUERY = gql`
         body
       }
     }
+  }
 `;
 
 const SUBMIT_COMMENT_MUTATION = gql`
