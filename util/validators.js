@@ -2,13 +2,14 @@ module.exports.validateRegisterInput = (
   username,
   email,
   password,
-  confirmPassword
+  confirmPassword,
+  imageUrl
 ) => {
   const errors = {};
-
   if (username.trim() === '') {
-    errors.username = 'Username must not be empty';
+    errors.username = "Username can't be empty";
   }
+
   if (email.trim() === '') {
     errors.email = 'Email must not be empty';
   } else {
@@ -17,10 +18,15 @@ module.exports.validateRegisterInput = (
       errors.email = 'Email must be a valid email address';
     }
   }
+
   if (password === '') {
-    errors.password = 'Password must not empty';
+    errors.password = "Password can't be empty";
   } else if (password !== confirmPassword) {
-    errors.confirmPassword = 'Passwords must match';
+    errors.password = 'Passwords must match';
+  }
+
+  if (imageUrl === '') {
+    errors.password = 'Please choose a avatar';
   }
 
   return {

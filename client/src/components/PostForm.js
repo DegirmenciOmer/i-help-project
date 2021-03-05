@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'semantic-ui-react';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation, gql } from '@apollo/client';
 import { useForm } from '../util/hooks';
 import { FETCH_POSTS_QUERY } from '../util/graphql';
 
@@ -125,7 +125,6 @@ const CREATE_POST_MUTATION = gql`
       }
       commentCount
     }
-  }
 `;
 
 export default PostForm;

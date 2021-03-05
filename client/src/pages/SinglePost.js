@@ -1,18 +1,21 @@
 import React, { useContext, useState, useRef } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
+
 import {
   Button,
   Card,
-  Form,
   Grid,
   Icon,
   Image,
   Label,
+  Form,
 } from 'semantic-ui-react';
+
 import moment from 'moment';
+
+import DeleteButton from '../components/DeleteButton';
 import { AuthContext } from '../context/auth';
 import LikeButton from '../components/LikeButton';
-import DeleteButton from '../components/DeleteButton';
 
 const SinglePost = (props) => {
   const postId = props.match.params.postId;
@@ -109,7 +112,6 @@ const SinglePost = (props) => {
                 )}
               </Card.Content>
             </Card>
-
             {user && (
               <Card fluid>
                 <Card.Content>
@@ -118,10 +120,10 @@ const SinglePost = (props) => {
                     <div className='ui action input fluid'>
                       <input
                         type='text'
-                        placeholder='Comment..'
                         name='comment'
+                        placeholder='Left comment'
                         value={comment}
-                        onChange={(event) => setComment(event.target.value)}
+                        onChange={(e) => setComment(e.target.value)}
                         ref={commentInputRef}
                       />
                       <button
@@ -137,9 +139,8 @@ const SinglePost = (props) => {
                 </Card.Content>
               </Card>
             )}
-
             {comments.map((comment) => (
-              <Card fluid key={comment.id}>
+              <Card key={comment.id} fluid>
                 <Card.Content>
                   {user && user.username === comment.username && (
                     <DeleteButton postId={id} commentId={comment.id} />
@@ -179,7 +180,6 @@ const FETCH_POST_QUERY = gql`
         body
       }
     }
-  }
 `;
 
 const SUBMIT_COMMENT_MUTATION = gql`
@@ -196,4 +196,5 @@ const SUBMIT_COMMENT_MUTATION = gql`
     }
   }
 `;
+
 export default SinglePost;

@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const { UserInputError } = require('apollo-server');
 
@@ -6,8 +7,9 @@ const {
   validateRegisterInput,
   validateLoginInput,
 } = require('../../util/validators');
+
+// for decode the token
 const { SECRET_KEY } = require('../../config');
-const User = require('../../models/User');
 
 function generateToken(user) {
   return jwt.sign(
@@ -15,6 +17,7 @@ function generateToken(user) {
       id: user.id,
       email: user.email,
       username: user.username,
+      imageUrl: user.imageUrl,
     },
     SECRET_KEY,
     { expiresIn: '1h' }
@@ -23,7 +26,6 @@ function generateToken(user) {
 
 module.exports = {
   Mutation: {
-    //login user
     async login(_, { username, password }) {
       const { errors, valid } = validateLoginInput(username, password);
 
@@ -52,27 +54,29 @@ module.exports = {
         token,
       };
     },
-    // register user
     async register(
       _,
-      { registerInput: { username, email, password, confirmPassword } }
+      {
+        registerInput: { username, email, password, confirmPassword, imageUrl },
+      }
     ) {
-      // Validate user data
+      // validate user data
       const { valid, errors } = validateRegisterInput(
         username,
         email,
         password,
-        confirmPassword
+        confirmPassword,
+        imageUrl
       );
       if (!valid) {
         throw new UserInputError('Errors', { errors });
       }
-      //  Make sure user doesnt already exist
+      // make sure that user already exist
       const user = await User.findOne({ username });
       if (user) {
         throw new UserInputError('Username is taken', {
           errors: {
-            username: 'This username is taken',
+            username: 'This username has already taken',
           },
         });
       }
@@ -82,15 +86,16 @@ module.exports = {
       const newUser = new User({
         email,
         username,
+        imageUrl,
         password,
         createdAt: new Date().toISOString(),
       });
-
       const res = await newUser.save();
 
       const token = generateToken(res);
 
       return {
+        // document stored
         ...res._doc,
         id: res._id,
         token,
