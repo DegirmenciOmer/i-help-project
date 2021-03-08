@@ -11,16 +11,14 @@ import ImageUpload from '../components/ImageUpload';
 const Register = (props) => {
     const context = useContext(AuthContext);
     const [errors, setErrors] = useState({});
-    // const [image, setImage] = useState('');
-
-    const { onChange, onSubmit, values } = useForm(registerUser, {
+    const initialState = {
         username: '',
         email: '',
         password: '',
         confirmPassword: '',
         imageUrl: ''
-    } )
-    console.log(values);
+    };
+    const { onChange, onSubmit, values } = useForm(registerUser, initialState);
     const [addUser, {loading}] = useMutation(REGISTER_USER, {
         update(_, {data: {register: userData}}){
             context.login(userData);
@@ -49,7 +47,7 @@ const Register = (props) => {
                     error={errors.username ? true : false}
                     onChange={onChange}
                 />
-                <ImageUpload onUploadComplite={(imageUrl)=>}/>
+                <ImageUpload onUploadComplite={onChange} />
                 <Form.Input 
                     name='email'
                     type='email'
