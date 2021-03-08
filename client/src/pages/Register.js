@@ -11,21 +11,23 @@ import ImageUpload from '../components/ImageUpload';
 const Register = (props) => {
     const context = useContext(AuthContext);
     const [errors, setErrors] = useState({});
+    // const [image, setImage] = useState('');
 
     const { onChange, onSubmit, values } = useForm(registerUser, {
         username: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        imageUrl: ''
     } )
-    
+    console.log(values);
     const [addUser, {loading}] = useMutation(REGISTER_USER, {
         update(_, {data: {register: userData}}){
             context.login(userData);
             props.history.push('/');
         },
         onError(err) {
-            setErrors(err.graphQLErrors[0].extensions.exception.errors)
+            setErrors(err&&err.graphQLErrors[0]?err.graphQLErrors[0]:err)
         },
         variables: values
     });
@@ -47,7 +49,7 @@ const Register = (props) => {
                     error={errors.username ? true : false}
                     onChange={onChange}
                 />
-                <ImageUpload/>
+                <ImageUpload onUploadComplite={(imageUrl)=>}/>
                 <Form.Input 
                     name='email'
                     type='email'
@@ -99,13 +101,15 @@ const REGISTER_USER = gql`
         $email: String!
         $password: String!
         $confirmPassword: String!
+        $imageUrl: String!
     ) {
         register(
         registerInput: {
             username: $username
             email: $email
             password: $password
-            confirmPassword: $confirmPassword     
+            confirmPassword: $confirmPassword   
+            imageUrl: $imageUrl
         }
         ) {
         id

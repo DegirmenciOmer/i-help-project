@@ -31,6 +31,11 @@ module.exports = gql`
         username: String!
         createdAt: String!
     }
+    type File {
+    filename: String!
+    mimetype: String!
+    filesize: Int!
+    }
     input RegisterInput {
         username: String!
         email: String!
@@ -41,6 +46,7 @@ module.exports = gql`
     type Query{
         getPosts: [Post]
         getPost(postId: ID!): Post 
+        uploads: File!
     }
     type Mutation {
         register(registerInput: RegisterInput): User!
@@ -50,8 +56,11 @@ module.exports = gql`
         createComment(postId: String!, body: String!): Post!
         deleteComment(postId: ID!, commentId: ID!): Post!
         likePost(postId: ID!): Post!
+        uploadImage(file: Upload!): File!
     }
     type Subscription {
     newPost: Post!
     }
 `;
+
+
