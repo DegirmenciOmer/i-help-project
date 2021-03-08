@@ -1,22 +1,17 @@
 import React, { useContext } from 'react';
 import { useQuery } from '@apollo/client';
-import { Form, Grid, TransitionGroup } from 'semantic-ui-react';
+import { Grid, TransitionGroup } from 'semantic-ui-react';
 import PostCard from '../components/PostCard';
 import PostForm from '../components/PostForm';
 
 import { AuthContext } from '../context/auth';
 import { FETCH_POSTS_QUERY } from '../util/graphql';
 
+import Filtering from '../components/Filtering';
+
 const Home = () => {
   const { user } = useContext(AuthContext);
   const { loading, data } = useQuery(FETCH_POSTS_QUERY);
-  const options = [
-    { key: 's', text: 'Shopping', value: 'Shopping' },
-    { key: 'c', text: 'Cleaning', value: 'Cleaning' },
-    { key: 'd', text: 'Dog walking', value: 'Dogwalking' },
-    { key: 'g', text: 'Cooking', value: 'Cooking' },
-    { key: 'ga', text: 'Gardening', value: 'Gardening' },
-  ];
 
   if (!data) {
     return null;
@@ -43,15 +38,7 @@ const Home = () => {
             <h1>Filtering</h1>
           </Grid.Row>
           <Grid.Row>
-            <Form.Select
-              fluid
-              label='Category'
-              options={options}
-              placeholder='Category'
-              name='category'
-              // onChange={onChange}
-              // value={values.category}
-            />
+            <Filtering />
           </Grid.Row>
         </Grid.Column>
       </Grid>

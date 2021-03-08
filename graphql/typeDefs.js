@@ -1,10 +1,10 @@
-const gql = require('graphql-tag');
+const { gql } = require('apollo-server');
 
 module.exports = gql`
   type Post {
     id: ID!
-    category: String!
     body: String!
+    category: String!
     createdAt: String!
     username: String!
     comments: [Comment]!
@@ -38,6 +38,7 @@ module.exports = gql`
   }
   type Query {
     getPosts: [Post]
+    # getPosts(category: String): [Post]
     getPost(postId: ID!): Post
     filterPost(category: String!): [Post]
   }

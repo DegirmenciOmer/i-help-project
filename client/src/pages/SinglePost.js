@@ -42,7 +42,6 @@ const SinglePost = (props) => {
   });
 
   function deletePostCallback() {
-    console.log('clicked');
     props.history.push('/');
   }
 
@@ -165,6 +164,7 @@ const FETCH_POST_QUERY = gql`
     getPost(postId: $postId) {
       id
       body
+      category
       createdAt
       username
       likeCount

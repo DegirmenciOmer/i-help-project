@@ -22,26 +22,3 @@ export const FETCH_POSTS_QUERY = gql`
     }
   }
 `;
-
-// export const FETCH_POSTS_QUERY = gql`
-//   {
-//     getPosts(filter: { "Cleaning" }) {
-//       id
-//       body
-//       category
-//       createdAt
-//       username
-//       likeCount
-//       likes {
-//         username
-//       }
-//       commentCount
-//       comments {
-//         id
-//         username
-//         createdAt
-//         body
-//       }
-//     }
-//   }
-// `;

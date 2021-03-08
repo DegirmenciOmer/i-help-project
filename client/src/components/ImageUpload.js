@@ -1,38 +1,35 @@
-import React, {useState} from 'react';
-import { Button, Form } from 'semantic-ui-react';
+// import React, {useState} from 'react';
+// import { Button, Form } from 'semantic-ui-react';
 
-const ImageUpload = () => {
-    const [image, setImage] = useState('');
+// const ImageUpload = () => {
+//     const [image, setImage] = useState('');
 
-    // const onHandleChange =(e)=> {
-    //     if(e.target.files[0]){
-    //         setImage(e.target.files[0])
-    //     }
-    // }
+//     // const onHandleChange =(e)=> {
+//     //     if(e.target.files[0]){
+//     //         setImage(e.target.files[0])
+//     //     }
+//     // }
 
-    const handleUpload = () => {
+//     const handleUpload = () => {
 
-    }
+//     }
 
-    return (
-        <>
+//     return (
+//         <>
 
-                {/* <Form.Input 
-                    label='Avatar'
-                    name='Avatar'
-                    placeholder='enter a caption'
-                    value={image}
-                    onChange={onHandleChange} /> */}
-                <Button  
-                    onClick={handleUpload} primary>
-                        Upload avatar
-                </Button>
-        
+//                 {/* <Form.Input
+//                     label='Avatar'
+//                     name='Avatar'
+//                     placeholder='enter a caption'
+//                     value={image}
+//                     onChange={onHandleChange} /> */}
+//                 <Button
+//                     onClick={handleUpload} primary>
+//                         Upload avatar
+//                 </Button>
 
-                    
-                
-        </>
-    )
-}
+//         </>
+//     )
+// }
 
-export default ImageUpload
+// export default ImageUpload;

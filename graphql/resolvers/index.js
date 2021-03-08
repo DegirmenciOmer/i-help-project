@@ -1,7 +1,7 @@
 // combine all resolvers
-const postResolvers = require('./posts');
-const userResolvers = require('./users');
-const commentResolvers = require('./comments');
+const postsResolvers = require('./posts');
+const usersResolvers = require('./users');
+const commentsResolvers = require('./comments');
 
 module.exports = {
   Post: {
@@ -9,14 +9,14 @@ module.exports = {
     commentCount: (parent) => parent.comments.length,
   },
   Query: {
-    ...postResolvers.Query,
+    ...postsResolvers.Query,
   },
   Mutation: {
-    ...userResolvers.Mutation,
-    ...postResolvers.Mutation,
-    ...commentResolvers.Mutation,
+    ...usersResolvers.Mutation,
+    ...postsResolvers.Mutation,
+    ...commentsResolvers.Mutation,
   },
   Subscription: {
-    ...postResolvers.Subscription,
+    ...postsResolvers.Subscription,
   },
 };
