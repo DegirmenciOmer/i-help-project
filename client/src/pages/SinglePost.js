@@ -64,7 +64,7 @@ const SinglePost = (props) => {
                         <Image
                             floated='right'
                             size='small'
-                            src='https://react.semantic-ui.com/images/avatar/large/molly.png'
+                            src={user.imageUrl}
                         />
                     </Grid.Column>
                     <Grid.Column width={10}>
@@ -153,6 +153,7 @@ const FETCH_POST_QUERY = gql`
             body
             createdAt
             username
+            imageUrl
             likeCount
             likes {
                 id username createdAt

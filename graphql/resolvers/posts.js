@@ -14,6 +14,7 @@ module.exports = {
         },
         async getPost(_, { postId }) {
             try {
+                
                 const post = await Post.findById(postId);
                 if (post) {
                     return post;
@@ -32,11 +33,11 @@ module.exports = {
             if(body.trim() === ''){
                 throw new Error('Post body must not be empty');
             }
-
             const newPost = new Post({
                 body,
                 user: user.id,
                 username: user.username,
+                imageUrl: user.imageUrl,
                 createdAt: new Date().toISOString(),
             });
             const post = await newPost.save();
