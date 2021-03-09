@@ -11,11 +11,13 @@ import ImageUpload from '../components/ImageUpload';
 const Register = (props) => {
     const context = useContext(AuthContext);
     const [errors, setErrors] = useState({});
+
     const initialState = { 
         username: '',
         email: '',
         password: '',
         confirmPassword: '',
+
         imageUrl: '' };
 
     const { onChange, onSubmit, values } = useForm(registerUser, initialState)
@@ -49,6 +51,7 @@ const Register = (props) => {
                     onChange={onChange}
                 />
                 <ImageUpload onUploadComplite={(evt, data)=> {onChange(evt, data)}}/>
+
                 <Form.Input 
                     name='email'
                     type='email'

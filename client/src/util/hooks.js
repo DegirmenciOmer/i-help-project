@@ -4,6 +4,7 @@ export const useForm = (callback, initialState = {}) => {
     const [values, setValues] = useState(initialState);
 
     const onChange = async (evt, {name, value}) => {
+
         try{  
             await setValues({...values, [name] : value})
         } catch(e) {
