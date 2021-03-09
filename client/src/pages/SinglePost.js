@@ -51,6 +51,7 @@ const SinglePost = (props) => {
             body,
             createdAt,
             username,
+            imageUrl,
             comments,
             likes,
             likeCount,
@@ -64,7 +65,7 @@ const SinglePost = (props) => {
                         <Image
                             floated='right'
                             size='small'
-                            src={user.imageUrl}
+                            src={imageUrl}
                         />
                     </Grid.Column>
                     <Grid.Column width={10}>
