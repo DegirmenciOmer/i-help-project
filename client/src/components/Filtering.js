@@ -25,7 +25,7 @@ const Filtering = () => {
     return null;
   }
 
-  const { filterPost: posts } = data;
+  // const { filterPost: posts } = data;
   console.log(data);
 
   return (
