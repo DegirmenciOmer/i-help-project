@@ -5,46 +5,25 @@ const checkAuth = require('../../util/check-auth');
 
 module.exports = {
   Query: {
-    //get all posts
-    async getPosts() {
+    async getPosts(_, { category }) {
       try {
-        const posts = await Post.find().sort({ createdAt: -1 });
-        return posts;
+        if (!category) {
+          // Return all posts
+          return await Post.find();
+        }
+
+        // Return all posts filtered, in this case by category
+        return await Post.find({ category: category });
       } catch (err) {
+        // Error!!!!
         throw new Error(err);
       }
     },
-
-    // async getPosts(_, { category }) {
-    //   try {
-    //     const post = await Post.find({ category: category });
-    //     if (post) {
-    //       return post;
-    //     } else {
-    //       throw new Error('Post not found');
-    //     }
-    //   } catch (err) {
-    //     throw new Error(err);
-    //   }
-    // },
 
     // get post by id
     async getPost(_, { postId }) {
       try {
         const post = await Post.findById(postId);
-        if (post) {
-          return post;
-        } else {
-          throw new Error('Post not found');
-        }
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-    // get post by category
-    async filterPost(_, { category }) {
-      try {
-        const post = await Post.find({ category: category });
         if (post) {
           return post;
         } else {
