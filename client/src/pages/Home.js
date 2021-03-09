@@ -38,7 +38,8 @@ const Home = () => {
             <h1>Filtering</h1>
           </Grid.Row>
           <Grid.Row>
-            <Filtering />
+            {/* <Filtering onDataComplited={data} /> */}
+            <Filtering onDataComplited={data} />
           </Grid.Row>
         </Grid.Column>
       </Grid>
