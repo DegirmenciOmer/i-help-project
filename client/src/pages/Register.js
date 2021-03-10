@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useContext} from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import {useMutation} from '@apollo/client';
 import gql from 'graphql-tag';
@@ -10,8 +10,6 @@ import ImageUpload from '../components/ImageUpload';
 
 const Register = (props) => {
     const context = useContext(AuthContext);
-    const [errors, setErrors] = useState({});
-    console.log(errors);
     const initialState = { 
         username: '',
         email: '',
@@ -21,23 +19,33 @@ const Register = (props) => {
     };
 
     const { onChange, onSubmit, values } = useForm(registerUser, initialState)
-
-    const [addUser, {loading}] = useMutation(REGISTER_USER, {
+    const [addUser, { loading, error }] = useMutation(REGISTER_USER, {
         update(_, {data: {register: userData}}){
             context.login(userData);
-            props.history.push('/'); 
+            props.history.push('/');
         },
-        onError(err) {
-            setErrors(err&&err.graphQLErrors[0]?err.graphQLErrors[0]:err)
-        },
-        variables: values 
-    } ); 
-    // callback function
+        onError() {},
+        variables: values
+    });
     
-    function registerUser(){
+    function registerUser() {
         addUser();
     }
-    console.log(values);
+
+    function showGraphqlError(fieldName) {
+        if (!error) {
+            return false;
+        }
+
+        const graphqlError = error.graphQLErrors[0].extensions.errors[fieldName];
+
+        if (!graphqlError) {
+            return false;
+        }
+
+        return graphqlError;
+    }
+
     return (
         <div className='form-container'>
             <Form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
@@ -48,7 +56,7 @@ const Register = (props) => {
                     placeholder='Username...'
                     label='Username'
                     value={values.username}
-                    error={errors.username ? true : false}
+                    error={showGraphqlError('username')}
                     onChange={onChange}
                 />
                 <ImageUpload onUploadComplite={(evt, data)=> {onChange(evt, data)}}/>
@@ -59,7 +67,7 @@ const Register = (props) => {
                     placeholder='Email...'
                     label='Email'
                     value={values.email}
-                    error={errors.email ? true : false}
+                    error={showGraphqlError('email')}
                     onChange={onChange}
                 />
                 <Form.Input 
@@ -68,7 +76,7 @@ const Register = (props) => {
                     placeholder='Password...'
                     label='Password'
                     value={values.password}
-                    error={errors.password ? true : false}
+                    error={showGraphqlError('password')}
                     onChange={onChange}
                 />
                 <Form.Input 
@@ -77,7 +85,7 @@ const Register = (props) => {
                     placeholder='Confirm password...'
                     label='Confirm Password'
                     value={values.confirmPassword}
-                    error={errors.confirmPassword ? true : false}
+                    error={showGraphqlError('confirmPassword')}
                     onChange={onChange}
                 />
                 
@@ -85,15 +93,15 @@ const Register = (props) => {
                     Register
                 </Button>    
             </Form>
-            {Object.keys(errors).length > 0 && ( 
-                <div className='ui error message '>
-                <ul className='list'>
-                    {Object.values(errors).map(value => (
-                        <li key={value.id}>{value}</li>
-                    ))}
-                </ul>
-            </div>  
-            )}
+            {/*{Object.keys(errors).length > 0 && ( */}
+            {/*    <div className='ui error message '>*/}
+            {/*    <ul className='list'>*/}
+            {/*        {Object.values(errors).map(value => (*/}
+            {/*            <li key={value.id}>{value}</li>*/}
+            {/*        ))}*/}
+            {/*    </ul>*/}
+            {/*</div>  */}
+            {/*)}*/}
         </div>
     )
 }
