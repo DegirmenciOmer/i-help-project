@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Form } from 'semantic-ui-react';
 import { useQuery, gql } from '@apollo/client';
 
-// const Filtering = ({ onDataComplited }) => {
-const Filtering = () => {
+const Filtering = ({ onDataComplited }) => {
+  // const Filtering = () => {
   const options = [
     { key: 's', text: 'Shopping', value: 'Shopping' },
     { key: 'c', text: 'Cleaning', value: 'Cleaning' },
@@ -28,7 +28,7 @@ const Filtering = () => {
 
   const { filterPosts: posts } = data;
   console.log(data);
-  // onDataComplited(data);
+  onDataComplited(data);
 
   return (
     <>
