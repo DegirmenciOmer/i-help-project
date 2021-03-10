@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { Grid, TransitionGroup } from 'semantic-ui-react';
 import PostCard from '../components/PostCard';
@@ -10,15 +10,17 @@ import { FETCH_POSTS_QUERY } from '../util/graphql';
 import Filtering from '../components/Filtering';
 
 const Home = () => {
+  const [categorySelected, setCategory] = useState();
   const { user } = useContext(AuthContext);
-  const { loading, data } = useQuery(FETCH_POSTS_QUERY);
+  const { loading, data } = useQuery(FETCH_POSTS_QUERY, {
+    variables: { category: categorySelected },
+  });
 
   if (!data) {
     return null;
   }
 
   const { getPosts: posts } = data;
-  // console.log(data);
 
   return (
     <div>
@@ -38,8 +40,10 @@ const Home = () => {
             <h1>Filtering</h1>
           </Grid.Row>
           <Grid.Row>
-            <Filtering onDataComplited={data} />
-            {/* <Filtering onDataComplited={data} /> */}
+            <Filtering
+              categorySelected={categorySelected}
+              onFilterChange={setCategory}
+            />
           </Grid.Row>
         </Grid.Column>
       </Grid>
