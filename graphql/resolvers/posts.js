@@ -9,11 +9,11 @@ module.exports = {
       try {
         if (!category) {
           // Return all posts
-          return await Post.find();
+          return await Post.find().sort({ createdAt: -1 });
         }
 
         // Return all posts filtered, in this case by category
-        return await Post.find({ category: category });
+        return await Post.find({ category: category }).sort({ createdAt: -1 });
       } catch (err) {
         // Error!!!!
         throw new Error(err);
@@ -38,12 +38,8 @@ module.exports = {
     async createPost(_, { body, category }, context) {
       const user = checkAuth(context);
 
-      if (body.trim() === '') {
-        throw new Error('Post body must not be empty');
-      }
-
-      if (category.trim() === '') {
-        throw new Error('Category must be selected');
+      if (body.trim() === '' || category.trim() === '') {
+        throw new Error('Please fill out both fields');
       }
 
       const newPost = new Post({

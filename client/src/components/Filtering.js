@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
 
 const options = [
   { key: 's', text: 'Shopping', value: 'Shopping' },
@@ -16,16 +16,25 @@ const Filtering = ({ categorySelected, onFilterChange }) => {
 
   return (
     <>
-      <Form>
+      <Form className='form-container'>
         <Form.Select
+          className='filter-input'
           fluid
-          label='Category'
           options={options}
           placeholder='Filter'
           value={categorySelected}
           name='filter'
           onChange={onChange}
         />
+        <Button
+          primary
+          className='filter-button'
+          onClick={() => {
+            onFilterChange('');
+          }}
+        >
+          Reset
+        </Button>
       </Form>
     </>
   );

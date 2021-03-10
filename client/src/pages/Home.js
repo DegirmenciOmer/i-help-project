@@ -36,21 +36,23 @@ const Home = () => {
         </Grid.Column>
 
         <Grid.Column floated='right' width={5}>
-          <Grid.Row>
-            <h1>Filtering</h1>
-          </Grid.Row>
-          <Grid.Row>
-            <Filtering
-              categorySelected={categorySelected}
-              onFilterChange={setCategory}
-            />
-          </Grid.Row>
+          <Grid.Row></Grid.Row>
         </Grid.Column>
       </Grid>
 
       <Grid columns={3}>
         <Grid.Row className='page-title'>
-          <h1>Recents posts</h1>
+          <Grid.Column>
+            <Filtering
+              categorySelected={categorySelected}
+              onFilterChange={setCategory}
+            />
+          </Grid.Column>
+          <Grid.Column>
+            <h1>Recents posts</h1>
+          </Grid.Column>
+
+          {/* <h1>Recents posts</h1> */}
         </Grid.Row>
         <Grid.Row>
           {loading ? (

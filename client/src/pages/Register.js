@@ -6,7 +6,6 @@ import gql from 'graphql-tag';
 import { AuthContext } from '../context/auth';
 
 import { useForm } from '../util/hooks';
-import ImageUpload from '../components/ImageUpload';
 
 const Register = (props) => {
   const context = useContext(AuthContext);
@@ -47,7 +46,6 @@ const Register = (props) => {
           error={errors.username ? true : false}
           onChange={onChange}
         />
-        {/* <ImageUpload /> */}
         <Form.Input
           name='email'
           type='email'
