@@ -19,15 +19,15 @@ module.exports.validateRegisterInput = (
         }
     }
 
+    if(imageUrl === ''){
+        errors.imageUrl = 'Choose the avatar';
+    } 
+
     if(password === ''){
         errors.password = 'Password can\'t be empty';
     } else if(password !== confirmPassword) {
         errors.password = 'Passwords must match';
     }
-
-    if(imageUrl === ''){
-        errors.password = 'Please choose a avatar';
-    } 
 
     return {
         errors,

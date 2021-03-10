@@ -11,31 +11,33 @@ import ImageUpload from '../components/ImageUpload';
 const Register = (props) => {
     const context = useContext(AuthContext);
     const [errors, setErrors] = useState({});
-
+    console.log(errors);
     const initialState = { 
         username: '',
         email: '',
         password: '',
         confirmPassword: '',
-        imageUrl: 'https://react.semantic-ui.com/images/wireframe/image.png' };
-console.log(initialState)
+        imageUrl: 'https://res.cloudinary.com/dvvinugki/image/upload/v1615384195/man.jpg' 
+    };
+
     const { onChange, onSubmit, values } = useForm(registerUser, initialState)
 
     const [addUser, {loading}] = useMutation(REGISTER_USER, {
         update(_, {data: {register: userData}}){
             context.login(userData);
-            props.history.push('/');
+            props.history.push('/'); 
         },
         onError(err) {
             setErrors(err&&err.graphQLErrors[0]?err.graphQLErrors[0]:err)
         },
-        variables: values
-    });
+        variables: values 
+    } ); 
     // callback function
+    
     function registerUser(){
         addUser();
     }
-
+    console.log(values);
     return (
         <div className='form-container'>
             <Form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
@@ -87,7 +89,7 @@ console.log(initialState)
                 <div className='ui error message '>
                 <ul className='list'>
                     {Object.values(errors).map(value => (
-                        <li key={value}>{value}</li>
+                        <li key={value.id}>{value}</li>
                     ))}
                 </ul>
             </div>  
@@ -117,6 +119,7 @@ const REGISTER_USER = gql`
         email
         username
         createdAt
+        imageUrl
         token
         }
     }

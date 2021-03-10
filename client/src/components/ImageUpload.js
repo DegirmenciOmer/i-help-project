@@ -7,7 +7,8 @@ const ImageUpload = ({onUploadComplite}) => {
     const upload = (evt) => {
         const formData = new FormData();
         formData.append("file", evt.target.files[0]);
-        
+    
+
         formData.append("upload_preset", "ml_default");
         Axios.post(
             `https://api.cloudinary.com/v1_1/dvvinugki/image/upload`,
@@ -17,7 +18,7 @@ const ImageUpload = ({onUploadComplite}) => {
                     evt,
                     { name: evt.target.name, value: response.data.secure_url }
                 )
-            }).catch(err => {console.log(err)})
+            })
     }
 
     return (
