@@ -17,6 +17,11 @@ const PostCard = ({
         <Card fluid>
             <Card.Content>
             {/* <Image
+                    source={
+                            imageUrl
+                                ? imageUrl
+                                : require("https://react.semantic-ui.com/images/avatar/large/molly.png")
+                        }
                     floated='right'
                     size='mini'
                     src='https://react.semantic-ui.com/images/avatar/large/molly.png'

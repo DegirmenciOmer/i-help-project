@@ -17,9 +17,8 @@ const Register = (props) => {
         email: '',
         password: '',
         confirmPassword: '',
-
-        imageUrl: '' };
-
+        imageUrl: 'https://react.semantic-ui.com/images/wireframe/image.png' };
+console.log(initialState)
     const { onChange, onSubmit, values } = useForm(registerUser, initialState)
 
     const [addUser, {loading}] = useMutation(REGISTER_USER, {
@@ -103,7 +102,7 @@ const REGISTER_USER = gql`
         $email: String!
         $password: String!
         $confirmPassword: String!
-        $imageUrl: String!
+        $imageUrl: String
     ) {
         register(
         registerInput: {

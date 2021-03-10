@@ -42,7 +42,7 @@ module.exports = gql`
         email: String!
         password: String!
         confirmPassword: String!
-        imageUrl: String!
+        imageUrl: String
     }
     type Query{
         getPosts: [Post]
