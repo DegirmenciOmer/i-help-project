@@ -22,6 +22,7 @@ const PostCard = ({
   },
 }) => {
   const { user } = useContext(AuthContext);
+  console.log(imageUrl);
 
   return (
     <Card fluid>
