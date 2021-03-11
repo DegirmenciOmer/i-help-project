@@ -4,7 +4,7 @@ export const FETCH_POSTS_QUERY = gql`
 
 {
     getPosts{
-        id body createdAt username 
+        id body createdAt username imageUrl
         likeCount
         likes{
             id username createdAt

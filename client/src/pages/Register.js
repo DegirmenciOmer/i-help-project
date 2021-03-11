@@ -12,24 +12,27 @@ const Register = (props) => {
     const context = useContext(AuthContext);
     const [errors, setErrors] = useState({});
 
-    const { onChange, onSubmit, values } = useForm(registerUser, {
+    const initialState = { 
         username: '',
         email: '',
         password: '',
-        confirmPassword: ''
-    } )
-    
+        confirmPassword: '',
+        imageUrl: 'https://res.cloudinary.com/dvvinugki/image/upload/v1615384195/man.jpg' 
+    };
+
+    const { onChange, onSubmit, values } = useForm(registerUser, initialState)
+
     const [addUser, {loading}] = useMutation(REGISTER_USER, {
         update(_, {data: {register: userData}}){
             context.login(userData);
-            props.history.push('/');
+            props.history.push('/'); 
         },
         onError(err) {
-            setErrors(err.graphQLErrors[0].extensions.exception.errors)
+            setErrors(err.graphQLErrors[0].extensions.exception.errors);
         },
-        variables: values
-    });
-    // callback function
+        variables: values 
+    } ); 
+    // callback function 
     function registerUser(){
         addUser();
     }
@@ -47,7 +50,8 @@ const Register = (props) => {
                     error={errors.username ? true : false}
                     onChange={onChange}
                 />
-                <ImageUpload/>
+                <ImageUpload onUploadComplite={(evt, data)=> {onChange(evt, data)}}/>
+
                 <Form.Input 
                     name='email'
                     type='email'
@@ -99,19 +103,22 @@ const REGISTER_USER = gql`
         $email: String!
         $password: String!
         $confirmPassword: String!
+        $imageUrl: String
     ) {
         register(
         registerInput: {
             username: $username
             email: $email
             password: $password
-            confirmPassword: $confirmPassword     
+            confirmPassword: $confirmPassword   
+            imageUrl: $imageUrl
         }
         ) {
         id
         email
         username
         createdAt
+        imageUrl
         token
         }
     }
