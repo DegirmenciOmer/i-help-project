@@ -21,6 +21,7 @@ const Home = () => {
   }
 
   const { getPosts: posts } = data;
+  console.log(data);
 
   return (
     <div>
@@ -34,7 +35,6 @@ const Home = () => {
             )}
           </Grid.Row>
         </Grid.Column>
-        <Grid.Row></Grid.Row>
       </Grid>
 
       <Grid columns={3}>
@@ -43,7 +43,7 @@ const Home = () => {
             <Filtering
               categorySelected={categorySelected}
               onFilterChange={setCategory}
-            />{' '}
+            />
           </Grid.Column>
           <Grid.Column>
             <h1>Recents Posts</h1>

@@ -38,7 +38,7 @@ const Filtering = ({ categorySelected, onFilterChange }) => {
               }}
             >
               Reset
-            </Button>{' '}
+            </Button>
           </Grid.Column>
         </Grid.Row>
       </Grid>
