@@ -1,7 +1,7 @@
 // combine all resolvers
 const postResolvers = require('./posts');
 const userResolvers = require('./users');
-const commentResolvers = require('./comment');
+const commentResolvers = require('./comments');
 
 module.exports = {
     Post: {

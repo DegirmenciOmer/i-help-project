@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import {useMutation} from '@apollo/client';
 import gql from 'graphql-tag';
@@ -10,6 +10,8 @@ import ImageUpload from '../components/ImageUpload';
 
 const Register = (props) => {
     const context = useContext(AuthContext);
+    const [errors, setErrors] = useState({});
+
     const initialState = { 
         username: '',
         email: '',
@@ -19,31 +21,20 @@ const Register = (props) => {
     };
 
     const { onChange, onSubmit, values } = useForm(registerUser, initialState)
-    const [addUser, { loading, error }] = useMutation(REGISTER_USER, {
+
+    const [addUser, {loading}] = useMutation(REGISTER_USER, {
         update(_, {data: {register: userData}}){
             context.login(userData);
-            props.history.push('/');
+            props.history.push('/'); 
         },
-        onError() {},
-        variables: values
-    });
-    
-    function registerUser() {
+        onError(err) {
+            setErrors(err.graphQLErrors[0].extensions.exception.errors);
+        },
+        variables: values 
+    } ); 
+    // callback function 
+    function registerUser(){
         addUser();
-    }
-
-    function showGraphqlError(fieldName) {
-        if (!error) {
-            return false;
-        }
-
-        const graphqlError = error.graphQLErrors[0].extensions.errors[fieldName];
-
-        if (!graphqlError) {
-            return false;
-        }
-
-        return graphqlError;
     }
 
     return (
@@ -56,7 +47,7 @@ const Register = (props) => {
                     placeholder='Username...'
                     label='Username'
                     value={values.username}
-                    error={showGraphqlError('username')}
+                    error={errors.username ? true : false}
                     onChange={onChange}
                 />
                 <ImageUpload onUploadComplite={(evt, data)=> {onChange(evt, data)}}/>
@@ -67,7 +58,7 @@ const Register = (props) => {
                     placeholder='Email...'
                     label='Email'
                     value={values.email}
-                    error={showGraphqlError('email')}
+                    error={errors.email ? true : false}
                     onChange={onChange}
                 />
                 <Form.Input 
@@ -76,7 +67,7 @@ const Register = (props) => {
                     placeholder='Password...'
                     label='Password'
                     value={values.password}
-                    error={showGraphqlError('password')}
+                    error={errors.password ? true : false}
                     onChange={onChange}
                 />
                 <Form.Input 
@@ -85,7 +76,7 @@ const Register = (props) => {
                     placeholder='Confirm password...'
                     label='Confirm Password'
                     value={values.confirmPassword}
-                    error={showGraphqlError('confirmPassword')}
+                    error={errors.confirmPassword ? true : false}
                     onChange={onChange}
                 />
                 
@@ -93,15 +84,15 @@ const Register = (props) => {
                     Register
                 </Button>    
             </Form>
-            {/*{Object.keys(errors).length > 0 && ( */}
-            {/*    <div className='ui error message '>*/}
-            {/*    <ul className='list'>*/}
-            {/*        {Object.values(errors).map(value => (*/}
-            {/*            <li key={value.id}>{value}</li>*/}
-            {/*        ))}*/}
-            {/*    </ul>*/}
-            {/*</div>  */}
-            {/*)}*/}
+            {Object.keys(errors).length > 0 && ( 
+                <div className='ui error message '>
+                <ul className='list'>
+                    {Object.values(errors).map(value => (
+                        <li key={value}>{value}</li>
+                    ))}
+                </ul>
+            </div>  
+            )}
         </div>
     )
 }

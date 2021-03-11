@@ -19,9 +19,9 @@ module.exports.validateRegisterInput = (
         }
     }
 
-    if(imageUrl === ''){
-        errors.imageUrl = 'Choose the avatar';
-    } 
+    // if(imageUrl === ''){
+    //     errors.imageUrl = 'Choose the avatar';
+    // } 
 
     if(password === ''){
         errors.password = 'Password can\'t be empty';
