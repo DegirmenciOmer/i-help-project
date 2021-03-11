@@ -6,6 +6,7 @@ import gql from 'graphql-tag';
 import { AuthContext } from '../context/auth';
 
 import { useForm } from '../util/hooks';
+import ImageUpload from '../components/ImageUpload';
 
 const Register = (props) => {
   const context = useContext(AuthContext);
@@ -102,29 +103,28 @@ const Register = (props) => {
 };
 
 const REGISTER_USER = gql`
-    mutation register(
-        $username: String!
-        $email: String!
-        $password: String!
-        $confirmPassword: String!
-        $imageUrl: String
+  mutation register(
+    $username: String!
+    $email: String!
+    $password: String!
+    $confirmPassword: String!
+    $imageUrl: String
+  ) {
+    register(
+      registerInput: {
+        username: $username
+        email: $email
+        password: $password
+        confirmPassword: $confirmPassword
+        imageUrl: $imageUrl
+      }
     ) {
-        register(
-        registerInput: {
-            username: $username
-            email: $email
-            password: $password
-            confirmPassword: $confirmPassword   
-            imageUrl: $imageUrl
-        }
-        ) {
-        id
-        email
-        username
-        createdAt
-        imageUrl
-        token
-        }
+      id
+      email
+      username
+      createdAt
+      imageUrl
+      token
     }
   }
 `;

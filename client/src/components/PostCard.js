@@ -12,6 +12,7 @@ const PostCard = ({
   post: {
     body,
     category,
+    imageUrl,
     createdAt,
     id,
     username,
@@ -25,11 +26,7 @@ const PostCard = ({
   return (
     <Card fluid>
       <Card.Content>
-        <Image
-          floated='right'
-          size='mini'
-          src='https://react.semantic-ui.com/images/avatar/large/molly.png'
-        />
+        <Image floated='right' size='mini' src={imageUrl} />
         <Card.Header>{username}</Card.Header>
         <Card.Meta as={Link} to={`/posts/${id}`}>
           {moment(createdAt).fromNow(true)}

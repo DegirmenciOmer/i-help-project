@@ -1,6 +1,5 @@
 import React, { useContext, useState, useRef } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
-
 import {
   Button,
   Card,
@@ -10,18 +9,18 @@ import {
   Label,
   Form,
 } from 'semantic-ui-react';
-
 import moment from 'moment';
-
 import DeleteButton from '../components/DeleteButton';
-import { AuthContext } from '../context/auth';
+
 import LikeButton from '../components/LikeButton';
+import { AuthContext } from '../context/auth';
+import NewPopup from '../util/NewPopup';
 
 const SinglePost = (props) => {
   const postId = props.match.params.postId;
+
   const { user } = useContext(AuthContext);
   const commentInputRef = useRef(null);
-
   const [comment, setComment] = useState('');
 
   const { data } = useQuery(FETCH_POST_QUERY, {
@@ -48,13 +47,12 @@ const SinglePost = (props) => {
   if (!data) {
     return null;
   }
-
-  const { getPost } = data;
+  const { getPost: post } = data;
 
   let postMarkup;
 
-  if (!getPost) {
-    postMarkup = <p>Loading post ..</p>;
+  if (!post) {
+    postMarkup = <p>Loading...</p>;
   } else {
     const {
       id,
@@ -67,7 +65,7 @@ const SinglePost = (props) => {
       likes,
       likeCount,
       commentCount,
-    } = getPost;
+    } = post;
 
     postMarkup = (
       <Grid>
@@ -75,34 +73,34 @@ const SinglePost = (props) => {
           <Grid.Column width={2}>
             <Image floated='right' size='small' src={imageUrl} />
           </Grid.Column>
-
           <Grid.Column width={10}>
             <Card fluid>
               <Card.Content>
                 <Card.Header>{username}</Card.Header>
+                <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
                 <Card.Meta>
                   {moment(createdAt).fromNow()}
                   {`-${category}`}
                 </Card.Meta>
-
                 <Card.Description>{body}</Card.Description>
               </Card.Content>
-
               <hr />
               <Card.Content extra>
                 <LikeButton user={user} post={{ id, likeCount, likes }} />
-                <Button
-                  as='div'
-                  labelPosition='right'
-                  onClick={() => console.log('Comment on post')}
-                >
-                  <Button basic color='blue'>
-                    <Icon name='comments' />
+                <NewPopup content='Comment on post'>
+                  <Button
+                    as='div'
+                    labelPosition='right'
+                    onClick={() => console.log('Comment')}
+                  >
+                    <Button basic color='blue'>
+                      <Icon name='comments' />
+                    </Button>
+                    <Label basic color='blue' pointing='left'>
+                      {commentCount}
+                    </Label>
                   </Button>
-                  <Label basic color='blue' pointing='left'>
-                    {commentCount}
-                  </Label>
-                </Button>
+                </NewPopup>
                 {user && user.username === username && (
                   <DeleteButton postId={id} callback={deletePostCallback} />
                 )}
@@ -163,11 +161,13 @@ const FETCH_POST_QUERY = gql`
       body
       category
       createdAt
-      imageUrl
       username
+      imageUrl
       likeCount
       likes {
+        id
         username
+        createdAt
       }
       commentCount
       comments {
