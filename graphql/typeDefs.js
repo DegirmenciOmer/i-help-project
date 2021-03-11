@@ -7,6 +7,7 @@ module.exports = gql`
     category: String!
     createdAt: String!
     username: String!
+    imageUrl: String
     comments: [Comment]!
     likes: [Like]!
     likeCount: Int!
@@ -22,19 +23,27 @@ module.exports = gql`
     id: ID!
     createdAt: String!
     username: String!
+    body: String!
   }
   type User {
     id: ID!
     email: String!
+    imageUrl: String
     token: String!
     username: String!
     createdAt: String!
   }
+  type File {
+    filename: String!
+    mimetype: String!
+    filesize: Int!
+  }
   input RegisterInput {
     username: String!
+    email: String!
     password: String!
     confirmPassword: String!
-    email: String!
+    imageUrl: String
   }
   type Query {
     getPosts(category: String): [Post]

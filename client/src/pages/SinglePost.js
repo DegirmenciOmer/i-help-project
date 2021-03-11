@@ -62,6 +62,7 @@ const SinglePost = (props) => {
       category,
       createdAt,
       username,
+      imageUrl,
       comments,
       likes,
       likeCount,
@@ -71,12 +72,8 @@ const SinglePost = (props) => {
     postMarkup = (
       <Grid>
         <Grid.Row>
-          <Grid.Column>
-            <Image
-              src='https://react.semantic-ui.com/images/avatar/large/molly.png'
-              size='small'
-              float='right'
-            />
+          <Grid.Column width={2}>
+            <Image floated='right' size='small' src={imageUrl} />
           </Grid.Column>
 
           <Grid.Column width={10}>
@@ -166,6 +163,7 @@ const FETCH_POST_QUERY = gql`
       body
       category
       createdAt
+      imageUrl
       username
       likeCount
       likes {

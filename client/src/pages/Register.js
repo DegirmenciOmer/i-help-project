@@ -11,12 +11,16 @@ const Register = (props) => {
   const context = useContext(AuthContext);
   const [errors, setErrors] = useState({});
 
-  const { onChange, onSubmit, values } = useForm(registerUser, {
+  const initialState = {
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
-  });
+    imageUrl:
+      'https://res.cloudinary.com/dvvinugki/image/upload/v1615384195/man.jpg',
+  };
+
+  const { onChange, onSubmit, values } = useForm(registerUser, initialState);
 
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
     update(_, { data: { register: userData } }) {
@@ -46,6 +50,12 @@ const Register = (props) => {
           error={errors.username ? true : false}
           onChange={onChange}
         />
+        <ImageUpload
+          onUploadComplite={(evt, data) => {
+            onChange(evt, data);
+          }}
+        />
+
         <Form.Input
           name='email'
           type='email'
@@ -92,25 +102,29 @@ const Register = (props) => {
 };
 
 const REGISTER_USER = gql`
-  mutation register(
-    $username: String!
-    $email: String!
-    $password: String!
-    $confirmPassword: String!
-  ) {
-    register(
-      registerInput: {
-        username: $username
-        email: $email
-        password: $password
-        confirmPassword: $confirmPassword
-      }
+    mutation register(
+        $username: String!
+        $email: String!
+        $password: String!
+        $confirmPassword: String!
+        $imageUrl: String
     ) {
-      id
-      email
-      username
-      createdAt
-      token
+        register(
+        registerInput: {
+            username: $username
+            email: $email
+            password: $password
+            confirmPassword: $confirmPassword   
+            imageUrl: $imageUrl
+        }
+        ) {
+        id
+        email
+        username
+        createdAt
+        imageUrl
+        token
+        }
     }
   }
 `;
