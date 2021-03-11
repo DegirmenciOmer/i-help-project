@@ -3,7 +3,6 @@ module.exports.validateRegisterInput = (
     email,
     password,
     confirmPassword,
-    imageUrl
 ) => {
     const errors = {};
     if(username.trim() === '') {
@@ -18,10 +17,6 @@ module.exports.validateRegisterInput = (
             errors.email = 'Email must be a valid email address';
         }
     }
-
-    // if(imageUrl === ''){
-    //     errors.imageUrl = 'Choose the avatar';
-    // } 
 
     if(password === ''){
         errors.password = 'Password can\'t be empty';
