@@ -1,24 +1,26 @@
 import gql from 'graphql-tag'
 
 export const FETCH_POSTS_QUERY = gql`
-  query($category: String) {
-    getPosts(category: $category) {
-      id
-      body
-      imageUrl
-      category
-      createdAt
-      username
-      likeCount
-      likes {
-        username
-      }
-      commentCount
-      comments {
+  query($category: String, $offset: Int, $limit: Int) {
+    getPosts(category: $category, offset: $offset, limit: $limit) {
+      posts {
         id
-        username
-        createdAt
         body
+        imageUrl
+        category
+        createdAt
+        username
+        likeCount
+        likes {
+          username
+        }
+        commentCount
+        comments {
+          id
+          username
+          createdAt
+          body
+        }
       }
     }
   }

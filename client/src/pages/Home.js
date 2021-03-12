@@ -12,15 +12,21 @@ import Filtering from '../components/Filtering'
 const Home = () => {
   const [categorySelected, setCategory] = useState()
   const { user } = useContext(AuthContext)
-  const { loading, data } = useQuery(FETCH_POSTS_QUERY, {
-    variables: { category: categorySelected },
+  const { loading, data, fetchMore } = useQuery(FETCH_POSTS_QUERY, {
+    variables: {
+      offset: 0,
+      limit: 6,
+      category: categorySelected,
+    },
   })
 
   if (!data) {
     return null
   }
 
-  const { getPosts: posts } = data
+  const {
+    getPosts: { posts },
+  } = data
 
   return (
     <div>
