@@ -1,13 +1,13 @@
-import React from 'react';
-import { Form } from 'semantic-ui-react';
-import Axios from 'axios';
+import React from 'react'
+import { Form } from 'semantic-ui-react'
+import Axios from 'axios'
 
 const ImageUpload = ({ onUploadComplite }) => {
   const upload = (evt) => {
-    const formData = new FormData();
+    const formData = new FormData()
 
-    formData.append('file', evt.target.files[0]);
-    formData.append('upload_preset', 'ml_default');
+    formData.append('file', evt.target.files[0])
+    formData.append('upload_preset', 'ml_default')
     Axios.post(
       `https://api.cloudinary.com/v1_1/dvvinugki/image/upload`,
       formData
@@ -16,10 +16,10 @@ const ImageUpload = ({ onUploadComplite }) => {
         onUploadComplite(evt, {
           name: evt.target.name,
           value: response.data.secure_url,
-        });
+        })
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   return (
     <Form.Input
@@ -29,7 +29,7 @@ const ImageUpload = ({ onUploadComplite }) => {
       placeholder='enter a caption'
       onChange={upload}
     />
-  );
-};
+  )
+}
 
-export default ImageUpload;
+export default ImageUpload

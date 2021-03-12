@@ -1,16 +1,16 @@
-import React, { useState, useContext } from 'react';
-import { Button, Form } from 'semantic-ui-react';
-import { useMutation } from '@apollo/client';
-import gql from 'graphql-tag';
+import React, { useState, useContext } from 'react'
+import { Button, Form } from 'semantic-ui-react'
+import { useMutation } from '@apollo/client'
+import gql from 'graphql-tag'
 
-import { AuthContext } from '../context/auth';
+import { AuthContext } from '../context/auth'
 
-import { useForm } from '../util/hooks';
-import ImageUpload from '../components/ImageUpload';
+import { useForm } from '../util/hooks'
+import ImageUpload from '../components/ImageUpload'
 
 const Register = (props) => {
-  const context = useContext(AuthContext);
-  const [errors, setErrors] = useState({});
+  const context = useContext(AuthContext)
+  const [errors, setErrors] = useState({})
 
   const initialState = {
     username: '',
@@ -19,23 +19,23 @@ const Register = (props) => {
     confirmPassword: '',
     imageUrl:
       'https://res.cloudinary.com/dvvinugki/image/upload/v1615384195/man.jpg',
-  };
+  }
 
-  const { onChange, onSubmit, values } = useForm(registerUser, initialState);
+  const { onChange, onSubmit, values } = useForm(registerUser, initialState)
 
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
     update(_, { data: { register: userData } }) {
-      context.login(userData);
-      props.history.push('/');
+      context.login(userData)
+      props.history.push('/')
     },
     onError(err) {
-      setErrors(err.graphQLErrors[0].extensions.exception.errors);
+      setErrors(err.graphQLErrors[0].extensions.exception.errors)
     },
     variables: values,
-  });
+  })
   // callback function
   function registerUser() {
-    addUser();
+    addUser()
   }
 
   return (
@@ -53,7 +53,7 @@ const Register = (props) => {
         />
         <ImageUpload
           onUploadComplite={(evt, data) => {
-            onChange(evt, data);
+            onChange(evt, data)
           }}
         />
 
@@ -99,8 +99,8 @@ const Register = (props) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 const REGISTER_USER = gql`
   mutation register(
@@ -127,6 +127,6 @@ const REGISTER_USER = gql`
       token
     }
   }
-`;
+`
 
-export default Register;
+export default Register

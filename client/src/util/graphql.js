@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 
 export const FETCH_POSTS_QUERY = gql`
   query($category: String) {
@@ -22,4 +22,4 @@ export const FETCH_POSTS_QUERY = gql`
       }
     }
   }
-`;
+`

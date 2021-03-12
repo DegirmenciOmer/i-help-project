@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Form, Grid } from 'semantic-ui-react';
+import React from 'react'
+import { Button, Form, Grid } from 'semantic-ui-react'
 
 const options = [
   { key: 's', text: 'Shopping', value: 'Shopping' },
@@ -7,12 +7,12 @@ const options = [
   { key: 'd', text: 'Dog walking', value: 'Dogwalking' },
   { key: 'g', text: 'Cooking', value: 'Cooking' },
   { key: 'ga', text: 'Gardening', value: 'Gardening' },
-];
+]
 
 const Filtering = ({ categorySelected, onFilterChange }) => {
   const onChange = (event, { value }) => {
-    onFilterChange(value);
-  };
+    onFilterChange(value)
+  }
 
   return (
     <>
@@ -34,7 +34,7 @@ const Filtering = ({ categorySelected, onFilterChange }) => {
               primary
               className='filter-button'
               onClick={() => {
-                onFilterChange('');
+                onFilterChange('')
               }}
             >
               Reset
@@ -43,7 +43,7 @@ const Filtering = ({ categorySelected, onFilterChange }) => {
         </Grid.Row>
       </Grid>
     </>
-  );
-};
+  )
+}
 
-export default Filtering;
+export default Filtering

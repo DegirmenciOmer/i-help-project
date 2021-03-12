@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
-import { Button, Card, Icon, Label, Image } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
+import React, { useContext } from 'react'
+import { Button, Card, Icon, Label, Image } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import moment from 'moment'
 
-import NewPopup from '../util/NewPopup';
-import { AuthContext } from '../context/auth';
-import LikeButton from './LikeButton';
-import DeleteButton from './DeleteButton';
+import NewPopup from '../util/NewPopup'
+import { AuthContext } from '../context/auth'
+import LikeButton from './LikeButton'
+import DeleteButton from './DeleteButton'
 
 const PostCard = ({
   post: {
@@ -21,7 +21,7 @@ const PostCard = ({
     likes,
   },
 }) => {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext)
 
   return (
     <Card fluid>
@@ -50,7 +50,7 @@ const PostCard = ({
         {user && user.username === username && <DeleteButton postId={id} />}
       </Card.Content>
     </Card>
-  );
-};
+  )
+}
 
-export default PostCard;
+export default PostCard

@@ -1,88 +1,89 @@
-import React, {useState} from 'react';
-import { Button, Icon, Confirm } from 'semantic-ui-react';
-import {useMutation} from '@apollo/client';
-import gql from 'graphql-tag';
+import React, { useState } from 'react'
+import { Button, Icon, Confirm } from 'semantic-ui-react'
+import { useMutation } from '@apollo/client'
+import gql from 'graphql-tag'
 
-import NewPopup from '../util/NewPopup';
-import { FETCH_POSTS_QUERY } from '../util/graphql';
+import NewPopup from '../util/NewPopup'
+import { FETCH_POSTS_QUERY } from '../util/graphql'
 
 const DeleteButton = ({ postId, callback, commentId }) => {
-    
-    const [confirmOpen, setConfirmOpen] = useState(false);
-    
-    const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION;
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
-    const [deletePostOrMutation] = useMutation(mutation, {
-        update(proxy){
-            setConfirmOpen(false);
+  const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION
 
-            if(!commentId){
-                const data = proxy.readQuery({
-                    query: FETCH_POSTS_QUERY
-                });
-                // create a new variable for refresh result
-                const newDataGroups = [...data.getPosts];
-                newDataGroups[postId.id] = newDataGroups.filter(p =>  p.id !== postId);
-                proxy.writeQuery({ query: FETCH_POSTS_QUERY,
-                    data: {
-                        ...data,
-                        getPosts: {
-                            newDataGroups,
-                        },
-                    },
-                }); 
-            }
+  const [deletePostOrMutation] = useMutation(mutation, {
+    update(proxy) {
+      setConfirmOpen(false)
 
-            if(callback) callback();
-        },
-        variables: {
-            postId, 
-            commentId
-            
-        }, onError(err) {
-                console.log(err) 
-        },
-    })
+      if (!commentId) {
+        const data = proxy.readQuery({
+          query: FETCH_POSTS_QUERY,
+        })
+        // create a new variable for refresh result
+        const newDataGroups = [...data.getPosts]
+        newDataGroups[postId.id] = newDataGroups.filter((p) => p.id !== postId)
+        proxy.writeQuery({
+          query: FETCH_POSTS_QUERY,
+          data: {
+            ...data,
+            getPosts: {
+              newDataGroups,
+            },
+          },
+        })
+      }
 
-    return (
-        <>
-            <NewPopup content={commentId ? 'Delete comment' : 'Delete post'}>
-                    <Button 
-                        as="div"
-                        color="red"
-                        floated="right"
-                        onClick={() => setConfirmOpen(true)}>
-                        <Icon name='trash' style={{margin: 0}}/>
-                    </Button>
-            </NewPopup>
-            <Confirm
-                open={confirmOpen}
-                onCancel={() => setConfirmOpen(false)}
-                onConfirm={deletePostOrMutation}
-            />
-        </>
-    )
+      if (callback) callback()
+    },
+    variables: {
+      postId,
+      commentId,
+    },
+    onError(err) {
+      console.log(err)
+    },
+  })
+
+  return (
+    <>
+      <NewPopup content={commentId ? 'Delete comment' : 'Delete post'}>
+        <Button
+          as='div'
+          color='red'
+          floated='right'
+          onClick={() => setConfirmOpen(true)}
+        >
+          <Icon name='trash' style={{ margin: 0 }} />
+        </Button>
+      </NewPopup>
+      <Confirm
+        open={confirmOpen}
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={deletePostOrMutation}
+      />
+    </>
+  )
 }
 
 const DELETE_POST_MUTATION = gql`
-    mutation deletePost($postId: ID!) {
-        deletePost(postId: $postId)
-    }
-`;
+  mutation deletePost($postId: ID!) {
+    deletePost(postId: $postId)
+  }
+`
 
 const DELETE_COMMENT_MUTATION = gql`
-    mutation deleteComment($postId: ID!, $commentId: ID!) {
-        deleteComment(postId: $postId, commentId: $commentId) {
+  mutation deleteComment($postId: ID!, $commentId: ID!) {
+    deleteComment(postId: $postId, commentId: $commentId) {
+      id
+      comments {
         id
-        comments {
-            id
-            username
-            createdAt
-            body
-        }
-        commentCount
-        }
+        username
+        createdAt
+        body
+      }
+      commentCount
     }
-`;
+  }
+`
 
-export default DeleteButton;
+export default DeleteButton

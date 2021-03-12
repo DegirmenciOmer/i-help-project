@@ -1,8 +1,8 @@
-import React from 'react';
-import { Button, Form } from 'semantic-ui-react';
-import { useMutation, gql } from '@apollo/client';
-import { useForm } from '../util/hooks';
-import { FETCH_POSTS_QUERY } from '../util/graphql';
+import React from 'react'
+import { Button, Form } from 'semantic-ui-react'
+import { useMutation, gql } from '@apollo/client'
+import { useForm } from '../util/hooks'
+import { FETCH_POSTS_QUERY } from '../util/graphql'
 
 const options = [
   { key: 's', text: 'Shopping', value: 'Shopping' },
@@ -10,13 +10,13 @@ const options = [
   { key: 'd', text: 'Dog walking', value: 'Dogwalking' },
   { key: 'g', text: 'Cooking', value: 'Cooking' },
   { key: 'ga', text: 'Gardening', value: 'Gardening' },
-];
+]
 
 const PostForm = () => {
   const { values, onChange, onSubmit } = useForm(createPostCallback, {
     body: '',
     category: '',
-  });
+  })
 
   const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
     variables: values,
@@ -24,9 +24,9 @@ const PostForm = () => {
     update(proxy, result) {
       const data = proxy.readQuery({
         query: FETCH_POSTS_QUERY,
-      });
+      })
 
-      const newData = [result.data.createPost, ...data.getPosts];
+      const newData = [result.data.createPost, ...data.getPosts]
       proxy.writeQuery({
         query: FETCH_POSTS_QUERY,
         data: {
@@ -35,15 +35,15 @@ const PostForm = () => {
             newData,
           },
         },
-      });
+      })
     },
     onError(err) {
-      console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err);
+      console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
     },
-  });
+  })
 
   function createPostCallback() {
-    createPost();
+    createPost()
   }
 
   return (
@@ -80,8 +80,8 @@ const PostForm = () => {
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
 const CREATE_POST_MUTATION = gql`
   mutation createPost($body: String!, $category: String!) {
@@ -106,6 +106,6 @@ const CREATE_POST_MUTATION = gql`
       commentCount
     }
   }
-`;
+`
 
-export default PostForm;
+export default PostForm

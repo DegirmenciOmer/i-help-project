@@ -1,58 +1,50 @@
-import React, { useContext, useState, useRef } from 'react';
-import { useQuery, gql, useMutation } from '@apollo/client';
-import {
-  Button,
-  Card,
-  Grid,
-  Icon,
-  Image,
-  Label,
-  Form,
-} from 'semantic-ui-react';
-import moment from 'moment';
-import DeleteButton from '../components/DeleteButton';
+import React, { useContext, useState, useRef } from 'react'
+import { useQuery, gql, useMutation } from '@apollo/client'
+import { Button, Card, Grid, Icon, Image, Label, Form } from 'semantic-ui-react'
+import moment from 'moment'
+import DeleteButton from '../components/DeleteButton'
 
-import LikeButton from '../components/LikeButton';
-import { AuthContext } from '../context/auth';
-import NewPopup from '../util/NewPopup';
+import LikeButton from '../components/LikeButton'
+import { AuthContext } from '../context/auth'
+import NewPopup from '../util/NewPopup'
 
 const SinglePost = (props) => {
-  const postId = props.match.params.postId;
+  const postId = props.match.params.postId
 
-  const { user } = useContext(AuthContext);
-  const commentInputRef = useRef(null);
-  const [comment, setComment] = useState('');
+  const { user } = useContext(AuthContext)
+  const commentInputRef = useRef(null)
+  const [comment, setComment] = useState('')
 
   const { data } = useQuery(FETCH_POST_QUERY, {
     variables: {
       postId,
     },
-  });
+  })
 
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
     update() {
-      setComment('');
-      commentInputRef.current.blur();
+      setComment('')
+      commentInputRef.current.blur()
     },
     variables: {
       postId,
       body: comment,
     },
-  });
+  })
 
   function deletePostCallback() {
-    props.history.push('/');
+    props.history.push('/')
   }
 
   if (!data) {
-    return null;
+    return null
   }
-  const { getPost: post } = data;
+  const { getPost: post } = data
 
-  let postMarkup;
+  let postMarkup
 
   if (!post) {
-    postMarkup = <p>Loading...</p>;
+    postMarkup = <p>Loading...</p>
   } else {
     const {
       id,
@@ -65,7 +57,7 @@ const SinglePost = (props) => {
       likes,
       likeCount,
       commentCount,
-    } = post;
+    } = post
 
     postMarkup = (
       <Grid>
@@ -148,11 +140,11 @@ const SinglePost = (props) => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-    );
+    )
   }
 
-  return postMarkup;
-};
+  return postMarkup
+}
 
 const FETCH_POST_QUERY = gql`
   query($postId: ID!) {
@@ -178,7 +170,7 @@ const FETCH_POST_QUERY = gql`
       }
     }
   }
-`;
+`
 
 const SUBMIT_COMMENT_MUTATION = gql`
   mutation($postId: String!, $body: String!) {
@@ -193,6 +185,6 @@ const SUBMIT_COMMENT_MUTATION = gql`
       commentCount
     }
   }
-`;
+`
 
-export default SinglePost;
+export default SinglePost

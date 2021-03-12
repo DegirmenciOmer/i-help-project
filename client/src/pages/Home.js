@@ -1,26 +1,26 @@
-import React, { useContext, useState } from 'react';
-import { useQuery } from '@apollo/client';
-import { Grid, TransitionGroup } from 'semantic-ui-react';
-import PostCard from '../components/PostCard';
-import PostForm from '../components/PostForm';
+import React, { useContext, useState } from 'react'
+import { useQuery } from '@apollo/client'
+import { Grid, TransitionGroup } from 'semantic-ui-react'
+import PostCard from '../components/PostCard'
+import PostForm from '../components/PostForm'
 
-import { AuthContext } from '../context/auth';
-import { FETCH_POSTS_QUERY } from '../util/graphql';
+import { AuthContext } from '../context/auth'
+import { FETCH_POSTS_QUERY } from '../util/graphql'
 
-import Filtering from '../components/Filtering';
+import Filtering from '../components/Filtering'
 
 const Home = () => {
-  const [categorySelected, setCategory] = useState();
-  const { user } = useContext(AuthContext);
+  const [categorySelected, setCategory] = useState()
+  const { user } = useContext(AuthContext)
   const { loading, data } = useQuery(FETCH_POSTS_QUERY, {
     variables: { category: categorySelected },
-  });
+  })
 
   if (!data) {
-    return null;
+    return null
   }
 
-  const { getPosts: posts } = data;
+  const { getPosts: posts } = data
 
   return (
     <div>
@@ -66,7 +66,7 @@ const Home = () => {
         </Grid.Row>
       </Grid>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
