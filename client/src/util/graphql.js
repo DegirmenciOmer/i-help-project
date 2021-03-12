@@ -5,6 +5,7 @@ export const FETCH_POSTS_QUERY = gql`
     getPosts(category: $category) {
       id
       body
+      imageUrl
       category
       createdAt
       username
