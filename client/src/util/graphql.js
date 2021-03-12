@@ -1,18 +1,25 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 
 export const FETCH_POSTS_QUERY = gql`
-
-{
-    getPosts{
-        id body createdAt username imageUrl
-        likeCount
-        likes{
-            id username createdAt
-        }
-        commentCount
-        comments{
-            id username createdAt body
-        }
+  query($category: String) {
+    getPosts(category: $category) {
+      id
+      body
+      imageUrl
+      category
+      createdAt
+      username
+      likeCount
+      likes {
+        username
+      }
+      commentCount
+      comments {
+        id
+        username
+        createdAt
+        body
+      }
     }
-}
+  }
 `
