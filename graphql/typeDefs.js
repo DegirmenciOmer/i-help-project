@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server')
 
 module.exports = gql`
   type Post {
@@ -12,6 +12,10 @@ module.exports = gql`
     likes: [Like]!
     likeCount: Int!
     commentCount: Int!
+  }
+  type PostsResponse {
+    posts: [Post]
+    count: Int!
   }
   type Comment {
     id: ID!
@@ -46,7 +50,7 @@ module.exports = gql`
     imageUrl: String
   }
   type Query {
-    getPosts(category: String): [Post]
+    getPosts(category: String, offset: Int, limit: Int): PostsResponse
     getPost(postId: ID!): Post
   }
   type Mutation {
@@ -61,4 +65,4 @@ module.exports = gql`
   type Subscription {
     newPost: Post!
   }
-`;
+`
