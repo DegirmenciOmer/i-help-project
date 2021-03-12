@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index",
-    "serve": "node index"
+    "serve": "node index",
+    "lint": "eslint"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,8 @@
     "mongoose": "^5.11.17"
   },
   "devDependencies": {
+    "eslint": "^7.21.0",
+    "eslint-plugin-react": "^7.22.0",
     "nodemon": "^2.0.7",
     "npm": "^7.6.0",
     "prettier": "2.2.1"
