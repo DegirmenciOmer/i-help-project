@@ -7,8 +7,11 @@ import DeleteButton from '../components/DeleteButton'
 import LikeButton from '../components/LikeButton'
 import { AuthContext } from '../context/auth'
 import NewPopup from '../util/NewPopup'
+import { ValuesOfCorrectTypeRule } from 'graphql'
 
 const SinglePost = (props) => {
+  const [toggle, setToggle] = useState(false)
+
   const postId = props.match.params.postId
 
   const { user } = useContext(AuthContext)
@@ -69,12 +72,37 @@ const SinglePost = (props) => {
             <Card fluid>
               <Card.Content>
                 <Card.Header>{username}</Card.Header>
-                <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
-                <Card.Meta>
-                  {moment(createdAt).fromNow()}
-                  {`-${category}`}
-                </Card.Meta>
-                <Card.Description>{body}</Card.Description>
+                <div className='floated'>
+                  <Card.Meta>
+                    {moment(createdAt).fromNow()}
+                    {`-${category}`}
+                  </Card.Meta>
+                  <Card.Meta>
+                    <Icon
+                      onClick={() => setToggle(true)}
+                      name='pencil alternate'
+                    ></Icon>
+                  </Card.Meta>
+                </div>
+
+                {!toggle ? (
+                  <Card.Description>{body}</Card.Description>
+                ) : (
+                  <Form>
+                    <Form.Field>
+                      <Form.Input
+                        className='EditInput'
+                        placeholder={body}
+                        name='body'
+                        // onChange={onChange}
+                        // value={values.body}
+                      />
+                      <Button color='teal' type='submit'>
+                        Save
+                      </Button>
+                    </Form.Field>
+                  </Form>
+                )}
               </Card.Content>
               <hr />
               <Card.Content extra>
