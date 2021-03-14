@@ -26,13 +26,15 @@ const PostForm = () => {
         query: FETCH_POSTS_QUERY,
       })
 
-      const newData = [result.data.createPost, ...data.getPosts]
+      const newData = [result.data.createPost, ...data.getPosts.paginatedPosts]
       proxy.writeQuery({
         query: FETCH_POSTS_QUERY,
         data: {
           ...data,
           getPosts: {
-            newData,
+            paginatedPosts: {
+              newData,
+            },
           },
         },
       })

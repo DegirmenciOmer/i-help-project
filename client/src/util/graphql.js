@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 export const FETCH_POSTS_QUERY = gql`
   query($category: String, $offset: Int, $limit: Int) {
     getPosts(category: $category, offset: $offset, limit: $limit) {
-      posts {
+      paginatedPosts {
         id
         body
         imageUrl
@@ -22,6 +22,8 @@ export const FETCH_POSTS_QUERY = gql`
           body
         }
       }
+      totalPostsCount
+      matchedResults
     }
   }
 `

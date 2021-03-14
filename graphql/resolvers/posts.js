@@ -22,14 +22,18 @@ module.exports = {
         }
 
         // Return all posts filtered, in this case by category
-        const posts = await Post.find({ category: category })
-          .sort({ createdAt: -1 })
-          .limit(limit)
-          .skip(offset)
+        const paginatedPosts = await Post.find({ category: category })
+            .sort({ createdAt: -1 })
+            .limit(limit)
+            .skip(offset),
+          matchedResults = await Post.find({ category: category })
+            .sort({ createdAt: -1 })
+            .countDocuments()
 
         return {
-          posts,
+          paginatedPosts,
           totalPostsCount,
+          matchedResults,
         }
       } catch (err) {
         // Error!!!!
