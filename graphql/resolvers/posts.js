@@ -10,30 +10,30 @@ module.exports = {
         const totalPostsCount = await Post.find().countDocuments()
         if (!category) {
           // Return all posts
-          const posts = await Post.find()
+          const paginatedPosts = await Post.find()
             .sort({ createdAt: -1 })
             .limit(limit)
             .skip(offset)
 
           return {
-            posts,
+            paginatedPosts,
             totalPostsCount,
           }
-        }
+        } else {
+          // Return all posts filtered, in this case by category
+          const paginatedPosts = await Post.find({ category: category })
+              .sort({ createdAt: -1 })
+              .limit(limit)
+              .skip(offset),
+            matchedResults = await Post.find({ category: category })
+              .sort({ createdAt: -1 })
+              .countDocuments()
 
-        // Return all posts filtered, in this case by category
-        const paginatedPosts = await Post.find({ category: category })
-            .sort({ createdAt: -1 })
-            .limit(limit)
-            .skip(offset),
-          matchedResults = await Post.find({ category: category })
-            .sort({ createdAt: -1 })
-            .countDocuments()
-
-        return {
-          paginatedPosts,
-          totalPostsCount,
-          matchedResults,
+          return {
+            paginatedPosts,
+            totalPostsCount,
+            matchedResults,
+          }
         }
       } catch (err) {
         // Error!!!!

@@ -8,13 +8,14 @@ import { AuthContext } from '../context/auth'
 import { FETCH_POSTS_QUERY } from '../util/graphql'
 
 import Filtering from '../components/Filtering'
+import NewPopup from '../util/NewPopup'
 
 const Home = () => {
   const [categorySelected, setCategory] = useState()
   const [pageNum, setPageNum] = useState(0)
   const [limit, setLimit] = useState(1)
   const { user } = useContext(AuthContext)
-  const { loading, data, fetchMore } = useQuery(FETCH_POSTS_QUERY, {
+  const { loading, data } = useQuery(FETCH_POSTS_QUERY, {
     variables: {
       offset: pageNum,
       limit: limit,
@@ -83,12 +84,28 @@ const Home = () => {
           )}
         </Grid.Row>
         <Grid.Row>
-          {pageNum > 0 && (
-            <Button onClick={() => setPageNum(pageNum - 1)}>Previous</Button>
-          )}
-          {pageNum < matchedResults - 1 && (
-            <Button onClick={() => setPageNum(pageNum + 1)}>Next</Button>
-          )}
+          <Grid.Column position='right'>
+            {pageNum > 0 && (
+              <NewPopup content='Previous'>
+                <Button
+                  className='ui basic icon button'
+                  onClick={() => setPageNum(pageNum - 1)}
+                >
+                  <i className='fas fa-chevron-circle-left'></i>
+                </Button>
+              </NewPopup>
+            )}
+            {pageNum < matchedResults - 1 && (
+              <NewPopup content='Next'>
+                <Button
+                  className='ui basic icon button'
+                  onClick={() => setPageNum(pageNum + 1)}
+                >
+                  <i className='fas fa-chevron-circle-right'></i>
+                </Button>
+              </NewPopup>
+            )}
+          </Grid.Column>
         </Grid.Row>
       </Grid>
     </div>

@@ -1,6 +1,5 @@
 import React from 'react'
 import App from './App'
-import { offsetLimitPagination } from '@apollo/client/utilities'
 
 import {
   ApolloClient,

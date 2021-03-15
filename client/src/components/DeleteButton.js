@@ -21,6 +21,7 @@ const DeleteButton = ({ postId, callback, commentId }) => {
         })
         // create a new variable for refresh result
         const newDataGroups = [...data.getPosts]
+        console.log(newDataGroups, 'newdatagroup')
         newDataGroups[postId.id] = newDataGroups.filter((p) => p.id !== postId)
         proxy.writeQuery({
           query: FETCH_POSTS_QUERY,
