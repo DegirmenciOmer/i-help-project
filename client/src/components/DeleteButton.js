@@ -18,18 +18,22 @@ const DeleteButton = ({ postId, callback, commentId }) => {
       if (!commentId) {
         const data = proxy.readQuery({
           query: FETCH_POSTS_QUERY,
+          variables: {
+            offset: pageNum,
+            limit: limit,
+            category: category,
+          },
         })
         // create a new variable for refresh result
-        const newDataGroups = [...data.getPosts]
+        console.log(data)
+        const newDataGroups = [...data.getPosts.paginatedPosts]
         console.log(newDataGroups, 'newdatagroup')
         newDataGroups[postId.id] = newDataGroups.filter((p) => p.id !== postId)
         proxy.writeQuery({
           query: FETCH_POSTS_QUERY,
           data: {
             ...data,
-            getPosts: {
-              newDataGroups,
-            },
+            getPosts: { paginatedPosts: { newDataGroups } },
           },
         })
       }

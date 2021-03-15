@@ -11,15 +11,15 @@ import Filtering from '../components/Filtering'
 import NewPopup from '../util/NewPopup'
 
 const Home = () => {
-  const [categorySelected, setCategory] = useState()
+  const [category, setCategory] = useState()
   const [pageNum, setPageNum] = useState(0)
-  const [limit, setLimit] = useState(1)
+  const [limit, setLimit] = useState(2)
   const { user } = useContext(AuthContext)
   const { loading, data } = useQuery(FETCH_POSTS_QUERY, {
     variables: {
       offset: pageNum,
       limit: limit,
-      category: categorySelected,
+      category: category,
     },
   })
 
@@ -59,10 +59,7 @@ const Home = () => {
       <Grid columns={1}>
         <Grid.Row>
           <Grid.Column width={6}>
-            <Filtering
-              categorySelected={categorySelected}
-              onFilterChange={setCategory}
-            />
+            <Filtering category={category} onFilterChange={setCategory} />
           </Grid.Column>
           <Grid.Column>
             <h1>Recent Posts</h1>
