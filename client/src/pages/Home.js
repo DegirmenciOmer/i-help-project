@@ -14,13 +14,13 @@ const PAGINATION_LIMIT = 2;
 
 const Home = () => {
   const [category, setCategory] = useState()
-  const [pageNum, setPageNum] = useState(0)
+  const [offset, setOffset] = useState(0)
   const { user } = useContext(AuthContext)
   const { loading, data } = useQuery(FETCH_POSTS_QUERY, {
     variables: {
-      offset: pageNum,
+      offset,
       limit: PAGINATION_LIMIT,
-      category: category,
+      category
     },
   });
 
@@ -29,12 +29,12 @@ const Home = () => {
   }
 
   const {
-    getPosts: { paginatedPosts, matchedResults },
+    getPosts: { paginatedPosts, totalPostsCount },
   } = data
 
   function updateCachePosts(proxy, postId) {
     const variables = {
-      offset: pageNum,
+      offset: offset,
       limit: PAGINATION_LIMIT,
       category,
     }
@@ -55,6 +55,23 @@ const Home = () => {
         getPosts: { paginatedPosts: { newDataGroups } },
       },
     })
+  }
+
+
+  function nextPage() {
+    setOffset((offset) => offset + PAGINATION_LIMIT);
+  }
+
+  function previousPage() {
+    setOffset(offset => offset - PAGINATION_LIMIT);
+  }
+
+  function isFirstPage() {
+    return PAGINATION_LIMIT * offset <= 0;
+  }
+
+  function isLastPage() {
+    return PAGINATION_LIMIT * offset >= totalPostsCount;
   }
 
   return (
@@ -98,21 +115,21 @@ const Home = () => {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column position='right'>
-            {pageNum > 0 && (
+            {!isFirstPage() && (
               <NewPopup content='Previous'>
                 <Button
                   className='ui basic icon button'
-                  onClick={() => setPageNum(pageNum - 1)}
+                  onClick={previousPage}
                 >
                   <i className='fas fa-chevron-circle-left'></i>
                 </Button>
               </NewPopup>
             )}
-            {pageNum < matchedResults - 1 && (
+            {!isLastPage() && (
               <NewPopup content='Next'>
                 <Button
                   className='ui basic icon button'
-                  onClick={() => setPageNum(pageNum + 1)}
+                  onClick={nextPage}
                 >
                   <i className='fas fa-chevron-circle-right'></i>
                 </Button>
