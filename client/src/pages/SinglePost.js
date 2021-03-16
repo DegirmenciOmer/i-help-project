@@ -9,32 +9,40 @@ import { AuthContext } from '../context/auth'
 import NewPopup from '../util/NewPopup'
 
 const SinglePost = (props) => {
-  const postId = props.match.params.postId
-
-  const { user } = useContext(AuthContext)
-  const commentInputRef = useRef(null)
-  const [comment, setComment] = useState('')
-
+  const postId = props.match.params.postId;
+  const { user } = useContext(AuthContext);
+  const commentInputRef = useRef(null);
+  const [comment, setComment] = useState('');
   const { data } = useQuery(FETCH_POST_QUERY, {
     variables: {
       postId,
     },
-  })
+  });
+  const [deleteComment] = useMutation(DELETE_COMMENT_MUTATION);
+  const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION);
 
-  const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
-    update() {
-      setComment('')
-      commentInputRef.current.blur()
-    },
-    variables: {
-      postId,
-      body: comment,
-    },
-  })
-
-  function deletePostCallback() {
-    props.history.push('/')
+  function handleCommentDelete(commentId) {
+    deleteComment({
+      variables: {
+        postId,
+        commentId
+      },
+    });
   }
+
+  function handleCommentSubmit() {
+    submitComment({
+      update() {
+        setComment('');
+        commentInputRef.current.blur();
+      },
+      variables: {
+        postId,
+        body: comment,
+      },
+    })
+  }
+
 
   if (!data) {
     return null
@@ -94,7 +102,7 @@ const SinglePost = (props) => {
                   </Button>
                 </NewPopup>
                 {user && user.username === username && (
-                  <DeleteButton postId={id} callback={deletePostCallback} />
+                  <DeleteButton content="Delete Comment" onDelete={() => handleCommentDelete(comment.id)} />
                 )}
               </Card.Content>
             </Card>
@@ -116,7 +124,7 @@ const SinglePost = (props) => {
                         type='submit'
                         className='ui button teal'
                         disabled={comment.trim() === ''}
-                        onClick={submitComment}
+                        onClick={handleCommentSubmit}
                       >
                         Submit
                       </button>
@@ -129,7 +137,7 @@ const SinglePost = (props) => {
               <Card key={comment.id} fluid>
                 <Card.Content>
                   {user && user.username === comment.username && (
-                    <DeleteButton postId={id} commentId={comment.id} />
+                    <DeleteButton content="Delete Comment" onDelete={() => handleCommentDelete(comment.id)} />
                   )}
                   <Card.Header>{comment.username}</Card.Header>
                   <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
@@ -181,6 +189,21 @@ const SUBMIT_COMMENT_MUTATION = gql`
         body
         createdAt
         username
+      }
+      commentCount
+    }
+  }
+`
+
+const DELETE_COMMENT_MUTATION = gql`
+  mutation deleteComment($postId: ID!, $commentId: ID!) {
+    deleteComment(postId: $postId, commentId: $commentId) {
+      id
+      comments {
+        id
+        username
+        createdAt
+        body
       }
       commentCount
     }

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { useQuery } from '@apollo/client'
+import { useQuery} from '@apollo/client'
 import { Button, Grid, TransitionGroup } from 'semantic-ui-react'
 import PostCard from '../components/PostCard'
 import PostForm from '../components/PostForm'
@@ -10,36 +10,52 @@ import { FETCH_POSTS_QUERY } from '../util/graphql'
 import Filtering from '../components/Filtering'
 import NewPopup from '../util/NewPopup'
 
+const PAGINATION_LIMIT = 2;
+
 const Home = () => {
   const [category, setCategory] = useState()
   const [pageNum, setPageNum] = useState(0)
-  const [limit, setLimit] = useState(2)
   const { user } = useContext(AuthContext)
   const { loading, data } = useQuery(FETCH_POSTS_QUERY, {
     variables: {
       offset: pageNum,
-      limit: limit,
+      limit: PAGINATION_LIMIT,
       category: category,
     },
-  })
+  });
 
   if (!data) {
     return null
   }
 
   const {
-    getPosts: { paginatedPosts, totalPostsCount, matchedResults },
+    getPosts: { paginatedPosts, matchedResults },
   } = data
-  console.log(paginatedPosts, totalPostsCount, matchedResults)
-  //pageNum > totalPostsCount / limit + 1 ? setLimit(0) : setLimit(1)
-  console.log(
-    'limit: ',
-    limit,
-    'pagenum: ',
-    pageNum,
-    'matched: ',
-    matchedResults
-  )
+
+  function updateCachePosts(proxy, postId) {
+    const variables = {
+      offset: pageNum,
+      limit: PAGINATION_LIMIT,
+      category,
+    }
+    const data = proxy.readQuery({
+      query: FETCH_POSTS_QUERY,
+      variables
+    });
+
+    // create a new variable for refresh result
+    const newDataGroups = [...data.getPosts.paginatedPosts]
+    newDataGroups[postId.id] = newDataGroups.filter((p) => p.id !== postId);
+
+    proxy.writeQuery({
+      query: FETCH_POSTS_QUERY,
+      variables,
+      data: {
+        ...data,
+        getPosts: { paginatedPosts: { newDataGroups } },
+      },
+    })
+  }
 
   return (
     <div>
@@ -74,7 +90,7 @@ const Home = () => {
               {paginatedPosts &&
                 paginatedPosts.map((post) => (
                   <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
-                    <PostCard post={post} />
+                    <PostCard post={post} onDeletePost={updateCachePosts} />
                   </Grid.Column>
                 ))}
             </TransitionGroup>
@@ -109,4 +125,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Home;
