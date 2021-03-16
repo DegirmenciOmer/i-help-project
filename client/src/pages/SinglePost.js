@@ -12,7 +12,6 @@ import NewPopup from '../util/NewPopup'
 const SinglePost = (props) => {
   const [toggle, setToggle] = useState(false)
   const postId = props.match.params.postId
-
   const { user } = useContext(AuthContext)
   const commentInputRef = useRef(null)
   const [comment, setComment] = useState('')
@@ -23,8 +22,29 @@ const SinglePost = (props) => {
     postId,
   })
 
-  const [updatePost, { error }] = useMutation(UPDATE_POST_MUTATION, {
+  const [updatePost] = useMutation(UPDATE_POST_MUTATION, {
     variables: values,
+
+    update(proxy, result) {
+      const data = proxy.readQuery({
+        query: FETCH_POST_QUERY,
+      })
+
+      const newData = [result.data.updatePost, ...data.getPost]
+      console.log(newData)
+      // proxy.writeQuery({
+      //   query: FETCH_POSTS_QUERY,
+      //   data: {
+      //     ...data,
+      //     getPosts: {
+      //       newData,
+      //     },
+      //   },
+      // })
+    },
+    onError(err) {
+      console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
+    },
   })
 
   function updatePostCallback() {
@@ -107,7 +127,7 @@ const SinglePost = (props) => {
                     <Form.Field>
                       <Form.Input
                         className='EditInput'
-                        placeholder={body}
+                        // placeholder={body}
                         name='body'
                         onChange={onChange}
                         value={values.body}
