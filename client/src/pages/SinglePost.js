@@ -3,20 +3,35 @@ import { useQuery, gql, useMutation } from '@apollo/client'
 import { Button, Card, Grid, Icon, Image, Label, Form } from 'semantic-ui-react'
 import moment from 'moment'
 import DeleteButton from '../components/DeleteButton'
+import { useForm } from '../util/hooks'
 
 import LikeButton from '../components/LikeButton'
 import { AuthContext } from '../context/auth'
 import NewPopup from '../util/NewPopup'
-import { ValuesOfCorrectTypeRule } from 'graphql'
 
 const SinglePost = (props) => {
   const [toggle, setToggle] = useState(false)
-
   const postId = props.match.params.postId
 
   const { user } = useContext(AuthContext)
   const commentInputRef = useRef(null)
   const [comment, setComment] = useState('')
+
+  //update post body {
+  const { values, onChange, onSubmit } = useForm(updatePostCallback, {
+    body: '',
+    postId,
+  })
+
+  const [updatePost, { error }] = useMutation(UPDATE_POST_MUTATION, {
+    variables: values,
+  })
+
+  function updatePostCallback() {
+    updatePost()
+  }
+
+  //}
 
   const { data } = useQuery(FETCH_POST_QUERY, {
     variables: {
@@ -88,14 +103,14 @@ const SinglePost = (props) => {
                 {!toggle ? (
                   <Card.Description>{body}</Card.Description>
                 ) : (
-                  <Form>
+                  <Form onSubmit={onSubmit}>
                     <Form.Field>
                       <Form.Input
                         className='EditInput'
                         placeholder={body}
                         name='body'
-                        // onChange={onChange}
-                        // value={values.body}
+                        onChange={onChange}
+                        value={values.body}
                       />
                       <Button color='teal' type='submit'>
                         Save
@@ -209,6 +224,31 @@ const SUBMIT_COMMENT_MUTATION = gql`
         body
         createdAt
         username
+      }
+      commentCount
+    }
+  }
+`
+
+const UPDATE_POST_MUTATION = gql`
+  mutation updatePost($postId: ID!, $body: String!) {
+    updatePost(body: $body, postId: $postId) {
+      id
+      body
+      category
+      createdAt
+      username
+      likes {
+        id
+        username
+        createdAt
+      }
+      likeCount
+      comments {
+        id
+        body
+        username
+        createdAt
       }
       commentCount
     }
