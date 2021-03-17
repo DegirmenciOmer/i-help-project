@@ -120,31 +120,15 @@ module.exports = {
         token,
       };
     },
-// UPDATE 
-async updateUser(_, { id, ...args }, ctx) {
-  // console.log(userId)
-  // console.log(username)
-  // const foundUserName = await User.findOne({ username })
-
-  // if (foundUserName) throw new Error('Username is already in use')
-
-  // return User.findOneAndUpdate(
-  //   { userId: userId,
-  //     username: username,
-  //     email: email, 
-  //     imageUrl: imageUrl}, 
-  //   { new: true })
-  console.log(args)
-
-    return ctx.prisma.user.update({
-      data: {
-        ...args
-      },
-      where: {
-        id: Number(id)
-      }
-    })
-  }
+    // UPDATE
+    async updateUser(_, { userId, username, imageUrl, email }) {
+      return User.findOneAndUpdate({ _id: userId }, {
+          username: username,
+          email: email,
+          imageUrl: imageUrl
+        },
+        { new: true }
+      );
+    }
   },
-  
 };
