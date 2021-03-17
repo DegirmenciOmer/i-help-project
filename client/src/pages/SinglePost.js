@@ -21,7 +21,6 @@ const SinglePost = (props) => {
     body: '',
     postId,
   })
-
   const [updatePost] = useMutation(UPDATE_POST_MUTATION, {
     variables: values,
 
@@ -30,8 +29,10 @@ const SinglePost = (props) => {
         query: FETCH_POST_QUERY,
         variables: values,
       })
-      console.log(values)
       const newData = [result.data.updatePost, data.getPost]
+
+      console.log(result.data.updatePost)
+      console.log(data.getPost)
 
       proxy.writeQuery({
         query: FETCH_POST_QUERY,
@@ -134,13 +135,7 @@ const SinglePost = (props) => {
                         onChange={onChange}
                         value={values.body}
                       />
-                      <Button
-                        color='teal'
-                        type='submit'
-                        // onClick={() => {
-                        //   setToggle(false)
-                        // }}
-                      >
+                      <Button color='teal' type='submit'>
                         Save
                       </Button>
                     </Form.Field>

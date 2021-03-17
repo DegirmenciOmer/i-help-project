@@ -83,8 +83,10 @@ module.exports = {
       try {
         const post = await Post.findById(postId)
         if (user.username === post.username) {
+          console.log(body)
           await post.updateOne({ body })
-          console.log('user is user')
+          await post.save()
+          console.log(post)
           return post
         } else {
           throw new AuthenticationError('Action not allowed')
@@ -92,6 +94,7 @@ module.exports = {
       } catch (err) {
         throw new Error(err)
       }
+      console.log(post)
     },
 
     // like post
