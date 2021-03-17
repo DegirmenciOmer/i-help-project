@@ -116,13 +116,14 @@ const SinglePost = (props) => {
                     {`-${category}`}
                   </Card.Meta>
                   <Card.Meta>
-                    <Icon
-                      onClick={() => setToggle(true)}
-                      name='pencil alternate'
-                    ></Icon>
+                    {user && user.username === username && (
+                      <Icon
+                        onClick={() => setToggle(true)}
+                        name='pencil alternate'
+                      ></Icon>
+                    )}
                   </Card.Meta>
                 </div>
-
                 {!toggle ? (
                   <Card.Description>{body}</Card.Description>
                 ) : (
