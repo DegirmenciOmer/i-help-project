@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const { UserInputError } = require('apollo-server');
+const checkAuth = require('../../util/check-auth');
 
 const {
   validateRegisterInput,
@@ -30,16 +31,18 @@ module.exports = {
     async getUser(_, { userId }) {
       try {
         const user = await User.findById(userId);
-      
-        if (!user) {
+        console.log(userId);
+        if (user) {
           return user;
         } else {
-          throw new Error('User info not found');
+          throw new UserInputError('User info not found');
         }
       } catch (err) {
         throw new Error(err);
       }
+      
     },
+    
   },
   Mutation: {
     async login(_, { username, password }) {
@@ -117,50 +120,31 @@ module.exports = {
         token,
       };
     },
-    async editUser(
-      _,
-      {
-        registerInput: { username, email, imageUrl, password, confirmPassword },
-      }
-    ) {
-      // validate user data
-      const { valid, errors } = validateRegisterInput(
-        username,
-        email,
-        imageUrl
-      );
-      if (!valid) {
-        throw new UserInputError('Errors', { errors });
-      }
-      // make sure that user already exist
-      const user = await User.findOne({ username });
-      if (user) {
-        throw new UserInputError('Username is taken', {
-          errors: {
-            username: 'This username has already taken',
-          },
-        });
-      }
-      // hash password and create an auth token
-      password = await bcrypt.hash(password, 12);
+// UPDATE 
+async updateUser(_, { id, ...args }, ctx) {
+  // console.log(userId)
+  // console.log(username)
+  // const foundUserName = await User.findOne({ username })
 
-      const newUser = new User({
-        email,
-        username,
-        imageUrl,
-        password,
-        createdAt: new Date().toISOString(),
-      });
-      const res = await newUser.save();
+  // if (foundUserName) throw new Error('Username is already in use')
 
-      const token = generateToken(res);
+  // return User.findOneAndUpdate(
+  //   { userId: userId,
+  //     username: username,
+  //     email: email, 
+  //     imageUrl: imageUrl}, 
+  //   { new: true })
+  console.log(args)
 
-      return {
-        // document stored
-        ...res._doc,
-        id: res._id,
-        token,
-      };
-    },
+    return ctx.prisma.user.update({
+      data: {
+        ...args
+      },
+      where: {
+        id: Number(id)
+      }
+    })
+  }
   },
+  
 };

@@ -22,7 +22,7 @@ function App() {
         <Container>
           <MenuBar />
           <Route exact path='/' component={Home} />
-          <Route exact path='/profile' component={Profile} />
+          <Route exact path='/profile/:userId' component={Profile} />
           <AuthRoute exact path='/login' component={Login} />
           <AuthRoute exact path='/register' component={Register} />
           <Route exact path='/posts/:postId' component={SinglePost} />
