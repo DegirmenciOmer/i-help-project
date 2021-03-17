@@ -25,6 +25,7 @@ const SinglePost = (props) => {
     variables: values,
 
     update(proxy, result) {
+      //console.log(values)
       const data = proxy.readQuery({
         query: FETCH_POST_QUERY,
         variables: values,
@@ -32,7 +33,7 @@ const SinglePost = (props) => {
       const newData = [result.data.updatePost, data.getPost]
 
       console.log(result.data.updatePost)
-      console.log(data.getPost)
+      // console.log(data.getPost)
 
       proxy.writeQuery({
         query: FETCH_POST_QUERY,
@@ -49,7 +50,6 @@ const SinglePost = (props) => {
       console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
     },
   })
-
   function updatePostCallback() {
     updatePost()
   }

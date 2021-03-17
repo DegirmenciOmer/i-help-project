@@ -14,6 +14,7 @@ export const useForm = (callback, initialState = {}) => {
   const onChange = (event, { name, value }) => {
     setValues({ ...values, [name]: value })
   }
+  // console.log(values)
 
   return {
     onChange,
