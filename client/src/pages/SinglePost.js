@@ -28,19 +28,21 @@ const SinglePost = (props) => {
     update(proxy, result) {
       const data = proxy.readQuery({
         query: FETCH_POST_QUERY,
+        variables: values,
       })
+      console.log(values)
+      const newData = [result.data.updatePost, data.getPost]
 
-      const newData = [result.data.updatePost, ...data.getPost]
-      console.log(newData)
-      // proxy.writeQuery({
-      //   query: FETCH_POSTS_QUERY,
-      //   data: {
-      //     ...data,
-      //     getPosts: {
-      //       newData,
-      //     },
-      //   },
-      // })
+      proxy.writeQuery({
+        query: FETCH_POST_QUERY,
+        data: {
+          ...data,
+          getPost: {
+            newData,
+          },
+        },
+      })
+      setToggle(false)
     },
     onError(err) {
       console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
@@ -127,12 +129,18 @@ const SinglePost = (props) => {
                     <Form.Field>
                       <Form.Input
                         className='EditInput'
-                        // placeholder={body}
+                        placeholder={body}
                         name='body'
                         onChange={onChange}
                         value={values.body}
                       />
-                      <Button color='teal' type='submit'>
+                      <Button
+                        color='teal'
+                        type='submit'
+                        // onClick={() => {
+                        //   setToggle(false)
+                        // }}
+                      >
                         Save
                       </Button>
                     </Form.Field>
