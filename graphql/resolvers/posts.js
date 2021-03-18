@@ -82,14 +82,11 @@ module.exports = {
       const user = checkAuth(context)
       try {
         const post = await Post.findById(postId)
-
-        if (user.username === post.username) {
-          post.body = body
-
-          return post.save()
-        } else {
+        if (user.username !== post.username) {
           throw new AuthenticationError('Action not allowed')
         }
+        post.body = body
+        return post.save()
       } catch (err) {
         throw new Error(err)
       }
