@@ -120,20 +120,27 @@ module.exports = {
         token,
       };
     },
-// UPDATE 
-async updateUser(_, { userId, username, email, imageUrl }) {
-  
-  // const foundUserName = await User.findOne({ username })
 
-  // if (foundUserName) throw new Error('Username is already in use')
-
-  return User.findOneAndUpdate({userId: userId},
-    {
-      username: username,
-      email: email, 
-      imageUrl: imageUrl}, 
-    { new: true })
+    // UPDATE
+    async updateUser(_, { userId, username, imageUrl, email }) {
+// make sure that user already exist
+const user = await User.findOne({ username });
+if (user) {
+  throw new UserInputError('Username is taken', {
+    errors: {
+      username: 'This username has already taken',
+    },
+  });
 }
+
+      return User.findOneAndUpdate({ _id: userId }, {
+          username: username,
+          email: email,
+          imageUrl: imageUrl
+        },
+        { new: true }
+      );
+    }
+
   },
-  
 };
