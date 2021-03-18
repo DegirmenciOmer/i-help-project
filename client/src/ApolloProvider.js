@@ -33,6 +33,11 @@ const client = new ApolloClient({
               return incoming
             },
           },
+          getPost: {
+            merge(existing, incoming) {
+              return incoming
+            },
+          },
         },
       },
     },

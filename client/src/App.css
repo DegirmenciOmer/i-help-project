@@ -20,3 +20,12 @@
   color: #fff;
   text-shadow: none;
 }
+
+.floated {
+  display: flex;
+  justify-content: space-between;
+}
+
+.EditInput {
+  border: none;
+}

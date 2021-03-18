@@ -3,38 +3,77 @@ import { useQuery, gql, useMutation } from '@apollo/client'
 import { Button, Card, Grid, Icon, Image, Label, Form } from 'semantic-ui-react'
 import moment from 'moment'
 import DeleteButton from '../components/DeleteButton'
+import { useForm } from '../util/hooks'
 
 import LikeButton from '../components/LikeButton'
 import { AuthContext } from '../context/auth'
 import NewPopup from '../util/NewPopup'
 
 const SinglePost = (props) => {
-  const postId = props.match.params.postId;
-  const { user } = useContext(AuthContext);
-  const commentInputRef = useRef(null);
-  const [comment, setComment] = useState('');
+  const [toggle, setToggle] = useState(false)
+  const postId = props.match.params.postId
+  const { user } = useContext(AuthContext)
+  const commentInputRef = useRef(null)
+  const [comment, setComment] = useState('')
+
+  //update post body {
+  const { values, onChange, onSubmit } = useForm(updatePostCallback, {
+    body: '',
+    postId,
+  })
+  const [updatePost] = useMutation(UPDATE_POST_MUTATION, {
+    variables: values,
+
+    update(proxy, result) {
+      const data = proxy.readQuery({
+        query: FETCH_POST_QUERY,
+        variables: values,
+      })
+      const newData = [result.data.updatePost, data.getPost]
+
+      proxy.writeQuery({
+        query: FETCH_POST_QUERY,
+        data: {
+          ...data,
+          getPost: {
+            newData,
+          },
+        },
+      })
+      setToggle(false)
+    },
+    onError(err) {
+      console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
+    },
+  })
+  function updatePostCallback() {
+    updatePost()
+  }
+
+  //}
+
   const { data } = useQuery(FETCH_POST_QUERY, {
     variables: {
       postId,
     },
-  });
-  const [deleteComment] = useMutation(DELETE_COMMENT_MUTATION);
-  const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION);
+  })
+  const [deleteComment] = useMutation(DELETE_COMMENT_MUTATION)
+  const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION)
 
   function handleCommentDelete(commentId) {
     deleteComment({
       variables: {
         postId,
-        commentId
+        commentId,
       },
-    });
+    })
   }
 
   function handleCommentSubmit() {
     submitComment({
       update() {
-        setComment('');
-        commentInputRef.current.blur();
+        setComment('')
+        commentInputRef.current.blur()
       },
       variables: {
         postId,
@@ -42,7 +81,6 @@ const SinglePost = (props) => {
       },
     })
   }
-
 
   if (!data) {
     return null
@@ -77,12 +115,38 @@ const SinglePost = (props) => {
             <Card fluid>
               <Card.Content>
                 <Card.Header>{username}</Card.Header>
-                <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
-                <Card.Meta>
-                  {moment(createdAt).fromNow()}
-                  {`-${category}`}
-                </Card.Meta>
-                <Card.Description>{body}</Card.Description>
+                <div className='floated'>
+                  <Card.Meta>
+                    {moment(createdAt).fromNow()}
+                    {`-${category}`}
+                  </Card.Meta>
+                  <Card.Meta>
+                    {user && user.username === username && (
+                      <Icon
+                        onClick={() => setToggle(true)}
+                        name='pencil alternate'
+                      ></Icon>
+                    )}
+                  </Card.Meta>
+                </div>
+                {!toggle ? (
+                  <Card.Description>{body}</Card.Description>
+                ) : (
+                  <Form onSubmit={onSubmit}>
+                    <Form.Field>
+                      <Form.Input
+                        className='EditInput'
+                        placeholder={body}
+                        name='body'
+                        onChange={onChange}
+                        value={values.body}
+                      />
+                      <Button color='teal' type='submit'>
+                        Save
+                      </Button>
+                    </Form.Field>
+                  </Form>
+                )}
               </Card.Content>
               <hr />
               <Card.Content extra>
@@ -101,9 +165,6 @@ const SinglePost = (props) => {
                     </Label>
                   </Button>
                 </NewPopup>
-                {user && user.username === username && (
-                  <DeleteButton content="Delete Comment" onDelete={() => handleCommentDelete(comment.id)} />
-                )}
               </Card.Content>
             </Card>
             {user && (
@@ -137,7 +198,10 @@ const SinglePost = (props) => {
               <Card key={comment.id} fluid>
                 <Card.Content>
                   {user && user.username === comment.username && (
-                    <DeleteButton content="Delete Comment" onDelete={() => handleCommentDelete(comment.id)} />
+                    <DeleteButton
+                      content='Delete Comment'
+                      onDelete={() => handleCommentDelete(comment.id)}
+                    />
                   )}
                   <Card.Header>{comment.username}</Card.Header>
                   <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
@@ -195,6 +259,30 @@ const SUBMIT_COMMENT_MUTATION = gql`
   }
 `
 
+const UPDATE_POST_MUTATION = gql`
+  mutation updatePost($postId: ID!, $body: String!) {
+    updatePost(body: $body, postId: $postId) {
+      id
+      body
+      category
+      createdAt
+      username
+      likes {
+        id
+        username
+        createdAt
+      }
+      likeCount
+      comments {
+        id
+        body
+        username
+        createdAt
+      }
+      commentCount
+    }
+  }
+`
 const DELETE_COMMENT_MUTATION = gql`
   mutation deleteComment($postId: ID!, $commentId: ID!) {
     deleteComment(postId: $postId, commentId: $commentId) {

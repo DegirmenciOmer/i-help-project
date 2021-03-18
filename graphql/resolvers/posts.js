@@ -56,6 +56,7 @@ module.exports = {
     },
   },
   Mutation: {
+    // create post
     async createPost(_, { body, category }, context) {
       const user = checkAuth(context)
 
@@ -80,6 +81,7 @@ module.exports = {
 
       return post
     },
+    // delete post
     async deletePost(_, { postId }, context) {
       const user = checkAuth(context)
 
@@ -95,6 +97,23 @@ module.exports = {
         throw new Error(err)
       }
     },
+
+    // update post
+    async updatePost(_, { postId, body }, context) {
+      const user = checkAuth(context)
+      try {
+        const post = await Post.findById(postId)
+        if (user.username !== post.username) {
+          throw new AuthenticationError('Action not allowed')
+        }
+        post.body = body
+        return post.save()
+      } catch (err) {
+        throw new Error(err)
+      }
+    },
+
+    // like post
     async likePost(_, { postId }, context) {
       const { username } = checkAuth(context)
 
