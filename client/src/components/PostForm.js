@@ -22,13 +22,19 @@ const PostForm = () => {
     variables: values,
 
     update(proxy, result) {
+      const variables = {
+        offset: 0,
+        limit: 2,
+      }
       const data = proxy.readQuery({
         query: FETCH_POSTS_QUERY,
+        variables,
       })
 
       const newData = [result.data.createPost, ...data.getPosts.paginatedPosts]
       proxy.writeQuery({
         query: FETCH_POSTS_QUERY,
+        variables,
         data: {
           ...data,
           getPosts: {
