@@ -77,17 +77,16 @@ module.exports = {
       }
     },
 
-    //update post
+    // update post
     async updatePost(_, { postId, body }, context) {
       const user = checkAuth(context)
-
       try {
-        const post = await Post.findById(postId);
+        const post = await Post.findById(postId)
 
         if (user.username === post.username) {
-          post.body = body;
+          post.body = body
 
-          return post.save();
+          return post.save()
         } else {
           throw new AuthenticationError('Action not allowed')
         }

@@ -25,15 +25,11 @@ const SinglePost = (props) => {
     variables: values,
 
     update(proxy, result) {
-      //console.log(values)
       const data = proxy.readQuery({
         query: FETCH_POST_QUERY,
         variables: values,
       })
       const newData = [result.data.updatePost, data.getPost]
-
-      console.log(result.data.updatePost)
-      // console.log(data.getPost)
 
       proxy.writeQuery({
         query: FETCH_POST_QUERY,
