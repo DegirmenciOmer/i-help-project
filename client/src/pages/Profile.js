@@ -4,9 +4,13 @@ import { Image, Grid, Card, Button, Icon, Form } from 'semantic-ui-react'
 import { useForm } from '../util/hooks'
 import ImageUpload from '../components/ImageUpload'
 
+
+
 const Profile = (props) => {
+    
     const userId = props.match.params.userId
     const [toggle, setToggle] = useState(false)
+    const [errors, setErrors] = useState({})
 
     const { data } = useQuery(FETCH_USER_QUERY, { 
         variables: {
@@ -43,7 +47,7 @@ const Profile = (props) => {
             setToggle(false)
         },
         onError(err) {
-            console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
+            setErrors(err.graphQLErrors[0].extensions.exception.errors)
         },
     })
     function updateUserCallback() {
@@ -57,6 +61,7 @@ const Profile = (props) => {
 
     console.log(userId)
     console.log(data.getUser.username)
+    console.log(data.getUser.imageUrl)
     return (
         <Grid>
         <Grid.Row>
@@ -74,16 +79,14 @@ const Profile = (props) => {
                 </Card.Description>
                 </Card.Content>
                 <Card.Content extra>
-                <Card.Meta>
-                    {data.getUser.username && (
-                        <Icon
-                        onClick={() => setToggle(true)}
-                        name='edit'/>
-                    )} 
-                </Card.Meta>
+
                 </Card.Content>
                 {!toggle ? (
-                <Card.Description>Update your data</Card.Description>
+                <Card.Description> 
+                    <Button color='teal' type='submit' onClick={() => setToggle(true)}>
+                        <Icon
+                        name='edit outline'
+                        />update</Button></Card.Description>
                 ) : (
                 
                     <Form onSubmit={onSubmit}>
@@ -94,7 +97,10 @@ const Profile = (props) => {
                                 placeholder={data.getUser.username}
                                 label='Username'
                                 value={values.username }
-                                onChange={onChange}
+                                error={errors.username ? true : false}
+                                onChange={(evt, data) => {
+                                onChange(evt, data)
+                            }}
                             />
                             <ImageUpload
                             onUploadComplite={(evt, data) => {
@@ -106,6 +112,7 @@ const Profile = (props) => {
                                 type='email'
                                 placeholder={data.getUser.email}
                                 label='Email'
+                                error={errors.email ? true : false}
                                 value={values.email}
                                 onChange={onChange}
                             />
@@ -116,7 +123,15 @@ const Profile = (props) => {
                     </Form>
                 )}
             </Card>
-
+            {Object.keys(errors).length > 0 && (
+        <div className='ui error message '>
+          <ul className='list'>
+            {Object.values(errors).map((value) => (
+              <li key={value}>{value}</li>
+            ))}
+          </ul>
+        </div>
+      )}
         </Grid.Column>
         </Grid.Row>
         </Grid>

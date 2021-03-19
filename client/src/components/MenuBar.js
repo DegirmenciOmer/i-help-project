@@ -11,12 +11,13 @@ function MenuBar() {
   const [activeItem, setActiveItem] = useState(path)
 
   const handleItemClick = (e, { name }) => setActiveItem(name)
-  
+ //console.log(user.imageUrl)
+  //console.log(user.username)
   const menuBar = user ? (
     <Menu pointing secondary size='massive' color='teal'>
       <Menu.Item name={user.username} active as={Link} to='/' />
       <Menu.Menu position='right' >
-      <Menu.Item name='profile' active={activeItem === 'profile'} as={Link} to={`/profile/${user.id}`}>
+      <Menu.Item name='profile'  as={Link} to={`/profile/${user.id}`}>
         <Image src={user.imageUrl} size='mini'/>
       </Menu.Item>
       <Menu.Item name='logout' onClick={logout} />
