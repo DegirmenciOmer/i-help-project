@@ -5,7 +5,7 @@ const checkAuth = require('../../util/check-auth')
 
 module.exports = {
   Query: {
-    async getPosts(_, { category, offset = 0, limit = 2 }) {
+    async getPosts(_, { category, offset = 0, limit }) {
       try {
         const totalPostsCount = await Post.find().countDocuments()
         if (!category) {
