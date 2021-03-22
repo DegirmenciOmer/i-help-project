@@ -23,13 +23,14 @@ const Register = (props) => {
 
   const { onChange, onSubmit, values } = useForm(registerUser, initialState)
 
-  const [addUser, { loading }] = useMutation(REGISTER_USER, {
+  const [addUser, { loading, error }] = useMutation(REGISTER_USER, {
     update(_, { data: { register: userData } }) {
       context.login(userData)
       props.history.push('/')
     },
     onError(err) {
       setErrors(err.graphQLErrors[0].extensions.exception.errors)
+      console.log(error)
     },
     variables: values,
   })

@@ -27,6 +27,7 @@ const PostForm = () => {
       })
 
       const newData = [result.data.createPost, ...data.getPosts]
+
       proxy.writeQuery({
         query: FETCH_POSTS_QUERY,
         data: {
