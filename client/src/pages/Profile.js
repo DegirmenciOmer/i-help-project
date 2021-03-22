@@ -12,12 +12,6 @@ const Profile = (props) => {
     const [toggle, setToggle] = useState(false)
     const [errors, setErrors] = useState({})
 
-    const { data } = useQuery(FETCH_USER_QUERY, { 
-        variables: {
-        userId
-        }
-    })
-
     //update user {
     const { values, onChange, onSubmit } = useForm(updateUserCallback, {
         userId,
@@ -25,23 +19,29 @@ const Profile = (props) => {
         username: '',
         imageUrl: ''
     })
-    const [updateUser] = useMutation(FETCH_USER_MUTATION, {
+
+    const { data } = useQuery(FETCH_USER_QUERY, { 
+        variables: {
+        userId
+        }
+    })
+
+    const [updateUser, {loading}] = useMutation(FETCH_USER_MUTATION, {
         variables: values,
     
-        update(proxy, result) {
-            const data = proxy.readQuery({
+        update(cache, result) {
+            const data = cache.readQuery({
                 query: FETCH_USER_QUERY,
                 variables: values,
             })
-            const newData = [result.data.updateUser, data.updateUser]
+            const newData = [result.data.updateUser, data.getUser]
         
-            proxy.writeQuery({
+            cache.writeQuery({
                 query: FETCH_USER_QUERY,
                 data: {
-                ...data,
-                getUser: {
-                    newData,
-                },
+                    getUser: {
+                        newData,
+                    },
                 },
             })
             setToggle(false)
@@ -58,10 +58,8 @@ const Profile = (props) => {
         return null
     }
     
-
-    console.log(userId)
-    console.log(data.getUser.username)
-    console.log(data.getUser.imageUrl)
+    console.log(data)
+    
     return (
         <Grid>
         <Grid.Row>
@@ -89,7 +87,7 @@ const Profile = (props) => {
                         />update</Button></Card.Description>
                 ) : (
                 
-                    <Form onSubmit={onSubmit}>
+                    <Form onSubmit={onSubmit} className={loading ? 'loading' : ''}>
                         <Form.Field>
                             <Form.Input
                                 name='username'
@@ -124,14 +122,14 @@ const Profile = (props) => {
                 )}
             </Card>
             {Object.keys(errors).length > 0 && (
-        <div className='ui error message '>
-          <ul className='list'>
-            {Object.values(errors).map((value) => (
-              <li key={value}>{value}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+                <div className='ui error message '>
+                    <ul className='list'>
+                        {Object.values(errors).map((value) => (
+                        <li key={value}>{value}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </Grid.Column>
         </Grid.Row>
         </Grid>
