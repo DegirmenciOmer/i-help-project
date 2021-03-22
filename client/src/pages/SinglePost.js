@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react'
+import React, { useContext, useState, useRef, useEffect } from 'react'
 import { useQuery, gql, useMutation } from '@apollo/client'
 import { Button, Card, Grid, Icon, Image, Label, Form } from 'semantic-ui-react'
 import moment from 'moment'
@@ -14,10 +14,13 @@ const SinglePost = (props) => {
   const postId = props.match.params.postId
   const { user } = useContext(AuthContext)
   const commentInputRef = useRef(null)
-  const [comment, setComment] = useState('')
-
-  //update post body {
-  const { values, onChange, onSubmit } = useForm(updatePostCallback, {
+  const [comment, setComment] = useState('');
+  const { data } = useQuery(FETCH_POST_QUERY, {
+    variables: {
+      postId,
+    },
+  });
+  const { values, onChange, onSubmit, setValues } = useForm(updatePostCallback, {
     body: '',
     postId,
   })
@@ -25,39 +28,12 @@ const SinglePost = (props) => {
     variables: values,
 
     update(proxy, result) {
-      const data = proxy.readQuery({
-        query: FETCH_POST_QUERY,
-        variables: values,
-      })
-      const newData = [result.data.updatePost, data.getPost]
-
-      proxy.writeQuery({
-        query: FETCH_POST_QUERY,
-        data: {
-          ...data,
-          getPost: {
-            newData,
-          },
-        },
-      })
-      setToggle(false)
+      setToggle(false);
     },
     onError(err) {
       console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
     },
   })
-  function updatePostCallback() {
-    updatePost()
-  }
-
-  //}
-
-  const { data } = useQuery(FETCH_POST_QUERY, {
-    variables: {
-      postId,
-    },
-  })
-
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
     update() {
       setComment('')
@@ -67,7 +43,19 @@ const SinglePost = (props) => {
       postId,
       body: comment,
     },
-  })
+  });
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    setValues((prevState) => ({ ...prevState, body: data.getPost.body }));
+  }, [data])
+
+  function updatePostCallback() {
+    updatePost()
+  }
 
   function deletePostCallback() {
     props.history.push('/')
@@ -76,6 +64,7 @@ const SinglePost = (props) => {
   if (!data) {
     return null
   }
+
   const { getPost: post } = data
 
   let postMarkup
