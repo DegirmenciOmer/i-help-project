@@ -14,21 +14,24 @@ const SinglePost = (props) => {
   const postId = props.match.params.postId
   const { user } = useContext(AuthContext)
   const commentInputRef = useRef(null)
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState('')
   const { data } = useQuery(FETCH_POST_QUERY, {
     variables: {
       postId,
     },
-  });
-  const { values, onChange, onSubmit, setValues } = useForm(updatePostCallback, {
-    body: '',
-    postId,
   })
+  const { values, onChange, onSubmit, setValues } = useForm(
+    updatePostCallback,
+    {
+      body: '',
+      postId,
+    }
+  )
   const [updatePost] = useMutation(UPDATE_POST_MUTATION, {
     variables: values,
 
     update(proxy, result) {
-      setToggle(false);
+      setToggle(false)
     },
     onError(err) {
       console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
@@ -43,14 +46,13 @@ const SinglePost = (props) => {
       postId,
       body: comment,
     },
-  });
+  })
 
   useEffect(() => {
     if (!data) {
-      return;
+      return
     }
-
-    setValues((prevState) => ({ ...prevState, body: data.getPost.body }));
+    setValues((prevState) => ({ ...prevState, body: data.getPost.body }))
   }, [data])
 
   function updatePostCallback() {

@@ -14,8 +14,8 @@ export const useForm = (callback, initialState = {}) => {
   const onChange = (event, { name, value }) => {
     setValues((prevState) => {
       // setState is async method!!!!!!! be careful
-      return {...prevState, [name]: value };
-    });
+      return { ...prevState, [name]: value }
+    })
   }
 
   return {
