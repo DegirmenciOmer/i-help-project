@@ -26,39 +26,42 @@ const Profile = (props) => {
         }
     })
 
-    const [updateUser, {loading}] = useMutation(FETCH_USER_MUTATION, {
-        variables: values,
-    
-        update(cache, result) {
-            const data = cache.readQuery({
-                query: FETCH_USER_QUERY,
-                variables: values,
-            })
-            const newData = [result.data.updateUser, data.getUser]
-        
-            cache.writeQuery({
-                query: FETCH_USER_QUERY,
-                data: {
-                    getUser: {
-                        newData,
-                    },
-                },
-            })
-            setToggle(false)
-        },
-        onError(err) {
-            setErrors(err.graphQLErrors[0].extensions.exception.errors)
-        },
-    })
+    const [updateUser, {loading}] = useMutation(FETCH_USER_MUTATION)
     function updateUserCallback() {
-        updateUser()
+        console.log(values)
+        updateUser(
+            {
+                variables: values,
+            
+                update(cache, result) {
+                    const data = cache.readQuery({
+                        query: FETCH_USER_QUERY,
+                        variables: values,
+                    })
+                    const newData = {...data.getUser, ...result.data.updateUser}
+        
+                    console.log(result.data)
+                    console.log(newData)
+                    
+                    cache.writeQuery({
+                        query: FETCH_USER_QUERY,
+                        variables: {userId},
+                        data: {
+                            getUser: newData,
+                        },
+                    })
+                    setToggle(false)
+                },
+                onError(err) {
+                    setErrors(err.graphQLErrors[0].extensions.exception.errors)
+                },
+            }
+        )
     }
 
     if (!data) {
         return null
     }
-    
-    console.log(data)
     
     return (
         <Grid>
@@ -101,7 +104,7 @@ const Profile = (props) => {
                             }}
                             />
                             <ImageUpload
-                            onUploadComplite={(evt, data) => {
+                                onUploadComplite={(evt, data) => {
                                 onChange(evt, data)
                             }}
                             />
