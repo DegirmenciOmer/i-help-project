@@ -25,14 +25,14 @@ module.exports = {
               .sort({ createdAt: -1 })
               .limit(limit)
               .skip(offset),
-            matchedResults = await Post.find({ category: category })
+            matchedResultsCount = await Post.find({ category: category })
               .sort({ createdAt: -1 })
               .countDocuments()
 
           return {
             paginatedPosts,
             totalPostsCount,
-            matchedResults,
+            matchedResultsCount,
           }
         }
       } catch (err) {

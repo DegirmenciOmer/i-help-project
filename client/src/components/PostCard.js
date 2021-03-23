@@ -7,8 +7,8 @@ import NewPopup from '../util/NewPopup'
 import { AuthContext } from '../context/auth'
 import LikeButton from './LikeButton'
 import DeleteButton from './DeleteButton'
-import {useMutation} from "@apollo/client";
-import gql from "graphql-tag";
+import { useMutation } from '@apollo/client'
+import gql from 'graphql-tag'
 
 const PostCard = ({
   post: {
@@ -22,18 +22,18 @@ const PostCard = ({
     commentCount,
     likes,
   },
-    onDeletePost
+  onDeletePost,
 }) => {
-  const { user } = useContext(AuthContext);
-  const [deletePostOrMutation] = useMutation(DELETE_POST_MUTATION);
+  const { user } = useContext(AuthContext)
+  const [deletePostOrMutation] = useMutation(DELETE_POST_MUTATION)
 
   function handleDeletePost() {
     deletePostOrMutation({
       variables: {
         postId: id,
       },
-      update: (proxy) => onDeletePost(proxy, id)
-    });
+      update: (proxy) => onDeletePost(proxy, id),
+    })
   }
 
   return (
@@ -45,7 +45,9 @@ const PostCard = ({
           {moment(createdAt).fromNow(true)}
           {`-${category}`}
         </Card.Meta>
-        <Card.Description>{body}</Card.Description>
+        <Link to={`/posts/${id}`}>
+          <Card.Description>{body}</Card.Description>
+        </Link>
       </Card.Content>
       <Card.Content extra>
         <LikeButton user={user} post={{ id, likes, likeCount }} />
@@ -60,7 +62,9 @@ const PostCard = ({
           </Button>
         </NewPopup>
 
-        {user && user.username === username && <DeleteButton content="Delete Post" onDelete={handleDeletePost} />}
+        {user && user.username === username && (
+          <DeleteButton content='Delete Post' onDelete={handleDeletePost} />
+        )}
       </Card.Content>
     </Card>
   )

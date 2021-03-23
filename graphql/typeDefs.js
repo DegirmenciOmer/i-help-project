@@ -16,7 +16,7 @@ module.exports = gql`
   type PostsResponse {
     paginatedPosts: [Post]
     totalPostsCount: Int!
-    matchedResults: Int
+    matchedResultsCount: Int
   }
   type Comment {
     id: ID!

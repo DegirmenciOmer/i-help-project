@@ -28,15 +28,17 @@ const Home = () => {
   }
 
   const {
-    getPosts: { paginatedPosts, totalPostsCount, matchedResults },
+    getPosts: { paginatedPosts, totalPostsCount, matchedResultsCount },
   } = data
   console.log(
+    PAGINATION_LIMIT * offset - PAGINATION_LIMIT,
+    matchedResultsCount,
     'offset:',
     offset,
     'total:',
     totalPostsCount,
     'matched:',
-    matchedResults,
+    matchedResultsCount,
     'paginated:',
     paginatedPosts
   )
@@ -78,8 +80,11 @@ const Home = () => {
   }
 
   function isLastPage() {
-    if (matchedResults) {
-      return PAGINATION_LIMIT * offset >= matchedResults
+    if (matchedResultsCount) {
+      if (PAGINATION_LIMIT === matchedResultsCount) {
+        return true
+      }
+      return PAGINATION_LIMIT * offset - PAGINATION_LIMIT >= matchedResultsCount
     } else {
       return PAGINATION_LIMIT * offset >= totalPostsCount
     }
@@ -112,7 +117,7 @@ const Home = () => {
           <Grid.Column>
             {category ? (
               <h1>
-                Recent Posts on {category} ({matchedResults})
+                Recent Posts on {category} ({matchedResultsCount})
               </h1>
             ) : (
               <h1>Recent Posts</h1>
