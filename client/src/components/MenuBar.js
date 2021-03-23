@@ -6,25 +6,25 @@ import { AuthContext } from '../context/auth'
 
 function MenuBar() {
   const { user, logout } = useContext(AuthContext)
-  const pathname = window.location.pathname
-  const path = pathname === '/' ? 'home' : pathname.substr(1)
-  const [activeItem, setActiveItem] = useState(path)
-
-  const handleItemClick = (e, { name }) => setActiveItem(name)
+  // const pathname = window.location.pathname
+  // const path = pathname === '/' ? 'home' : pathname.substr(1)
+  const [activeItem, setActiveItem] = useState(window.location.pathname)
+  
+  const handleItemClick = (newPath) => setActiveItem(newPath)
 
   const menuBar = user ? (
     <Menu pointing secondary size='massive' color='teal'>
       <Menu.Item 
-        name={user.username} 
-        active={activeItem === user.username}
-        onClick={handleItemClick} 
+        name={user.username}
+        active={activeItem === '/'}
+        onClick={()=>handleItemClick('/')} 
         as={Link} 
         to='/' />
       <Menu.Menu position='right' >
       <Menu.Item 
         name='profile' 
-        active={activeItem === 'profile'}
-        onClick={handleItemClick} 
+        active={activeItem === `/profile/${user.id}`}
+        onClick={()=>handleItemClick(`/profile/${user.id}`)} 
         as={Link} 
         to={`/profile/${user.id}`}>
         {/* <Image src={user.imageUrl} size='mini'/> */}
@@ -41,23 +41,23 @@ function MenuBar() {
     <Menu pointing secondary size='massive' color='teal'>
       <Menu.Item
         name='home'
-        active={activeItem === 'home'}
-        onClick={handleItemClick}
+        active={activeItem === '/'}
+        onClick={()=>handleItemClick('/')}
         as={Link}
         to='/'
       />
       <Menu.Menu position='right'>
         <Menu.Item
           name='login'
-          active={activeItem === 'login'}
-          onClick={handleItemClick}
+          active={activeItem === '/login'}
+          onClick={()=>handleItemClick('/login')}
           as={Link}
           to='/login'
         />
         <Menu.Item
           name='register'
-          active={activeItem === 'register'}
-          onClick={handleItemClick}
+          active={activeItem === '/register'}
+          onClick={()=>handleItemClick('/register')}
           as={Link}
           to='/register'
         />
