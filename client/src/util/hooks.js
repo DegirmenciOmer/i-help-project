@@ -12,12 +12,16 @@ export const useForm = (callback, initialState = {}) => {
     }
   }
   const onChange = (event, { name, value }) => {
-    setValues({ ...values, [name]: value })
+    setValues((prevState) => {
+      // setState is async method!!!!!!! be careful
+      return { ...prevState, [name]: value }
+    })
   }
 
   return {
     onChange,
     onSubmit,
     values,
+    setValues
   }
 }

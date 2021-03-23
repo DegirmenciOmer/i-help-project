@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery, gql, useMutation } from '@apollo/client'
 import { Image, Grid, Card, Button, Icon, Form } from 'semantic-ui-react'
 import { useForm } from '../util/hooks'
@@ -13,7 +13,7 @@ const Profile = (props) => {
     const [errors, setErrors] = useState({})
 
     //update user {
-    const { values, onChange, onSubmit } = useForm(updateUserCallback, {
+    const { values, onChange, onSubmit, setValues } = useForm(updateUserCallback, {
         userId,
         email: '',
         username: '',
@@ -25,6 +25,12 @@ const Profile = (props) => {
         userId
         }
     })
+    useEffect(() => {
+        if (!data) {
+            return
+        }
+        setValues((prevState) => ({ ...prevState,  ...data.getUser }))
+    }, [data, setValues])
 
     const [updateUser, {loading}] = useMutation(FETCH_USER_MUTATION)
     function updateUserCallback() {
@@ -40,7 +46,6 @@ const Profile = (props) => {
                     })
                     const newData = {...data.getUser, ...result.data.updateUser}
         
-                    console.log(result.data)
                     console.log(newData)
                     
                     cache.writeQuery({
@@ -58,7 +63,7 @@ const Profile = (props) => {
             }
         )
     }
-
+    
     if (!data) {
         return null
     }
