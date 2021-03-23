@@ -2,7 +2,6 @@ import React from 'react'
 import { Button, Form } from 'semantic-ui-react'
 import { useMutation, gql } from '@apollo/client'
 import { useForm } from '../util/hooks'
-import { FETCH_POSTS_QUERY } from '../util/graphql'
 
 const options = [
   { key: 's', text: 'Shopping', value: 'Shopping' },
@@ -12,41 +11,23 @@ const options = [
   { key: 'ga', text: 'Gardening', value: 'Gardening' },
 ]
 
-const PostForm = () => {
+const PostForm = ({ categoryFiltered, onPostCreated }) => {
   const { values, onChange, onSubmit } = useForm(createPostCallback, {
     body: '',
-    category: '',
+    category: categoryFiltered || '',
   })
 
-  const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
-    variables: values,
-
-    update(proxy, result) {
-      const data = proxy.readQuery({
-        query: FETCH_POSTS_QUERY,
-      })
-
-      const newData = [result.data.createPost, ...data.getPosts]
-
-      proxy.writeQuery({
-        query: FETCH_POSTS_QUERY,
-        data: {
-          ...data,
-          getPosts: {
-            newData,
-          },
-        },
-      })
-    },
-    onError(err) {
-      console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
-    },
-  })
+  const [createPost, { error }] = useMutation(CREATE_POST_MUTATION)
 
   function createPostCallback() {
-    createPost()
+    createPost({
+      variables: values,
+      update: onPostCreated,
+      onError(err) {
+        console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
+      },
+    });
   }
-
   return (
     <>
       <Form onSubmit={onSubmit}>
@@ -59,6 +40,7 @@ const PostForm = () => {
             name='category'
             onChange={onChange}
             value={values.category}
+            disabled={!!categoryFiltered}
           />
 
           <Form.Input
@@ -73,7 +55,7 @@ const PostForm = () => {
         </Form.Field>
       </Form>
 
-      {error && (
+      {error && Array.isArray(error.graphQLErrors) && error.graphQLErrors.length > 0 && (
         <div className='ui error message' style={{ marginBottom: 20 }}>
           <ul className='list'>
             <li>{error.graphQLErrors[0].message}</li>

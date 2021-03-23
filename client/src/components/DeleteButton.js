@@ -4,37 +4,14 @@ import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 
 import NewPopup from '../util/NewPopup'
-import { FETCH_POSTS_QUERY } from '../util/graphql'
 
-const DeleteButton = ({ postId, callback, commentId }) => {
+const DeleteButton = ({ postId, onDelete, commentId }) => {
   const [confirmOpen, setConfirmOpen] = useState(false)
 
   const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION
 
   const [deletePostOrMutation] = useMutation(mutation, {
-    update(proxy) {
-      setConfirmOpen(false)
-
-      if (!commentId) {
-        const data = proxy.readQuery({
-          query: FETCH_POSTS_QUERY,
-        })
-        // create a new variable for refresh result
-        const newDataGroups = [...data.getPosts]
-        newDataGroups[postId.id] = newDataGroups.filter((p) => p.id !== postId)
-        proxy.writeQuery({
-          query: FETCH_POSTS_QUERY,
-          data: {
-            ...data,
-            getPosts: {
-              newDataGroups,
-            },
-          },
-        })
-      }
-
-      if (callback) callback()
-    },
+    update: onDelete,
     variables: {
       postId,
       commentId,

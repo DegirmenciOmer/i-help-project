@@ -22,6 +22,23 @@ const Home = () => {
 
   const { getPosts: posts } = data
 
+  function updatePostCache(proxy, result) {
+    const data = proxy.readQuery({
+      query: FETCH_POSTS_QUERY,
+      variables: { category: categorySelected }
+    })
+    const newData = [result.data.createPost, ...data.getPosts]
+
+    proxy.writeQuery({
+      query: FETCH_POSTS_QUERY,
+      variables: { category: categorySelected  },
+      data: {
+        ...data,
+        getPosts: newData,
+      },
+    })
+  }
+
   return (
     <div>
       <Grid>
@@ -29,7 +46,7 @@ const Home = () => {
           <Grid.Row>
             {user && (
               <Grid.Column>
-                <PostForm />
+                <PostForm categoryFiltered={categorySelected} onPostCreated={updatePostCache} />
               </Grid.Column>
             )}
           </Grid.Row>
@@ -58,7 +75,7 @@ const Home = () => {
               {posts &&
                 posts.map((post) => (
                   <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
-                    <PostCard post={post} />
+                    <PostCard categorySelected={categorySelected} post={post} />
                   </Grid.Column>
                 ))}
             </TransitionGroup>
