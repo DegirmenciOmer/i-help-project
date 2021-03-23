@@ -29,7 +29,12 @@ function MenuBar() {
         to={`/profile/${user.id}`}>
         {/* <Image src={user.imageUrl} size='mini'/> */}
       </Menu.Item>
-      <Menu.Item name='logout' onClick={logout} />
+      <Menu.Item 
+        name='logout' 
+        onClick={logout} 
+        as={Link}
+        to='/' 
+      />
       </Menu.Menu>
     </Menu>
   ) : (
