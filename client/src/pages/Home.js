@@ -69,12 +69,15 @@ const Home = () => {
 
   function isLastPage() {
     if (matchedResultsCount) {
-      if (PAGINATION_LIMIT === matchedResultsCount) {
-        return true
-      }
-      return PAGINATION_LIMIT * offset - PAGINATION_LIMIT >= matchedResultsCount
+      return (
+        offset / PAGINATION_LIMIT ===
+        Math.ceil(matchedResultsCount / PAGINATION_LIMIT) - 1
+      )
     } else {
-      return PAGINATION_LIMIT * offset >= totalPostsCount
+      return (
+        offset / PAGINATION_LIMIT ===
+        Math.ceil(totalPostsCount / PAGINATION_LIMIT) - 1
+      )
     }
   }
 
