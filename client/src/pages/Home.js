@@ -30,18 +30,6 @@ const Home = () => {
   const {
     getPosts: { paginatedPosts, totalPostsCount, matchedResultsCount },
   } = data
-  console.log(
-    PAGINATION_LIMIT * offset - PAGINATION_LIMIT,
-    matchedResultsCount,
-    'offset:',
-    offset,
-    'total:',
-    totalPostsCount,
-    'matched:',
-    matchedResultsCount,
-    'paginated:',
-    paginatedPosts
-  )
 
   function updateCachePosts(proxy, postId) {
     const variables = {
