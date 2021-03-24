@@ -1,14 +1,13 @@
 import React, { useContext, useState } from 'react'
 import { useQuery } from '@apollo/client'
-import { Button, Grid, TransitionGroup } from 'semantic-ui-react'
+import { Grid, TransitionGroup } from 'semantic-ui-react'
 import PostCard from '../components/PostCard'
 import PostForm from '../components/PostForm'
 
 import { AuthContext } from '../context/auth'
 import { FETCH_POSTS_QUERY } from '../util/graphql'
-
 import Filtering from '../components/Filtering'
-import NewPopup from '../util/NewPopup'
+
 import { PAGINATION_LIMIT, PAGINATION_OFFSET } from '../constants/constants'
 
 const Home = () => {
@@ -28,29 +27,22 @@ const Home = () => {
   }
 
   const {
-    getPosts: { paginatedPosts, totalPostsCount, matchedResultsCount },
+    getPosts: { posts, paginatedPosts, totalPostsCount, matchedResultsCount },
   } = data
 
-  function updateCachePosts(proxy, postId, result) {
-    const variables = {
-      offset,
-      limit: PAGINATION_LIMIT,
-    }
+  function updatePostCache(proxy, result) {
     const data = proxy.readQuery({
       query: FETCH_POSTS_QUERY,
-      variables,
+      variables: { category: categorySelected },
     })
-
-    // create a new variable for refresh result
-    const newDataGroups = [...data.getPosts.paginatedPosts]
-    newDataGroups[postId.id] = newDataGroups.filter((p) => p.id !== postId)
+    const newData = [result.data.createPost, ...data.getPosts]
 
     proxy.writeQuery({
       query: FETCH_POSTS_QUERY,
       variables: { category: categorySelected },
       data: {
         ...data,
-        getPosts: { paginatedPosts: { newDataGroups } },
+        getPosts: newData,
       },
     })
   }
@@ -116,23 +108,16 @@ const Home = () => {
         <Grid.Row></Grid.Row>
       </Grid>
 
-      <Grid columns={1}>
+      <Grid columns={3}>
         <Grid.Row>
           <Grid.Column width={6}>
             <Filtering
-              category={categorySelected}
+              categorySelected={categorySelected}
               onFilterChange={setCategory}
-              onOffset={setOffset}
             />
           </Grid.Column>
           <Grid.Column>
-            {categorySelected ? (
-              <h1>
-                Recent Posts on {categorySelected} ({matchedResultsCount})
-              </h1>
-            ) : (
-              <h1>Recent Posts</h1>
-            )}
+            <h1>Recents Posts</h1>
           </Grid.Column>
         </Grid.Row>
 
@@ -141,36 +126,14 @@ const Home = () => {
             <h2>Loading posts ...</h2>
           ) : (
             <TransitionGroup>
-              {paginatedPosts &&
-                paginatedPosts.map((post) => (
+              {posts &&
+                posts.map((post) => (
                   <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
-                    <PostCard
-                      categorySelected={categorySelected}
-                      post={post}
-                      onDeletePost={updateCachePosts}
-                    />
+                    <PostCard categorySelected={categorySelected} post={post} />
                   </Grid.Column>
                 ))}
             </TransitionGroup>
           )}
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column position='right'>
-            {!isFirstPage() && (
-              <NewPopup content='Previous'>
-                <Button className='ui basic icon button' onClick={previousPage}>
-                  <i className='fas fa-chevron-circle-left'></i>
-                </Button>
-              </NewPopup>
-            )}
-            {!isLastPage() && (
-              <NewPopup content='Next'>
-                <Button className='ui basic icon button' onClick={nextPage}>
-                  <i className='fas fa-chevron-circle-right'></i>
-                </Button>
-              </NewPopup>
-            )}
-          </Grid.Column>
         </Grid.Row>
       </Grid>
     </div>

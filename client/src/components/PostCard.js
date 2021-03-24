@@ -8,8 +8,6 @@ import { AuthContext } from '../context/auth'
 import LikeButton from './LikeButton'
 import DeleteButton from './DeleteButton'
 import { FETCH_POSTS_QUERY } from '../util/graphql'
-import { useMutation } from '@apollo/client'
-import gql from 'graphql-tag'
 
 const PostCard = ({
   post: {
@@ -54,9 +52,7 @@ const PostCard = ({
           {moment(createdAt).fromNow(true)}
           {`-${category}`}
         </Card.Meta>
-        <Link to={`/posts/${id}`}>
-          <Card.Description>{body}</Card.Description>
-        </Link>
+        <Card.Description>{body}</Card.Description>
       </Card.Content>
       <Card.Content extra>
         <LikeButton user={user} post={{ id, likes, likeCount }} />
@@ -78,11 +74,5 @@ const PostCard = ({
     </Card>
   )
 }
-
-const DELETE_POST_MUTATION = gql`
-  mutation deletePost($postId: ID!) {
-    deletePost(postId: $postId)
-  }
-`
 
 export default PostCard

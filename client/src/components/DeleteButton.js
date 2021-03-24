@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Icon, Confirm } from 'semantic-ui-react'
-import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
+import gql from 'graphql-tag'
 
 import NewPopup from '../util/NewPopup'
 
