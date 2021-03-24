@@ -26,7 +26,7 @@ const PostForm = ({ categoryFiltered, onPostCreated }) => {
       onError(err) {
         console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
       },
-    });
+    })
   }
   return (
     <>
@@ -55,13 +55,15 @@ const PostForm = ({ categoryFiltered, onPostCreated }) => {
         </Form.Field>
       </Form>
 
-      {error && Array.isArray(error.graphQLErrors) && error.graphQLErrors.length > 0 && (
-        <div className='ui error message' style={{ marginBottom: 20 }}>
-          <ul className='list'>
-            <li>{error.graphQLErrors[0].message}</li>
-          </ul>
-        </div>
-      )}
+      {error &&
+        Array.isArray(error.graphQLErrors) &&
+        error.graphQLErrors.length > 0 && (
+          <div className='ui error message' style={{ marginBottom: 20 }}>
+            <ul className='list'>
+              <li>{error.graphQLErrors[0].message}</li>
+            </ul>
+          </div>
+        )}
     </>
   )
 }
