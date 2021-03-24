@@ -1,13 +1,12 @@
 import React, { useState, useContext } from 'react'
-import { Menu, Image } from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
 import { AuthContext } from '../context/auth'
 
 function MenuBar() {
   const { user, logout } = useContext(AuthContext)
-  // const pathname = window.location.pathname
-  // const path = pathname === '/' ? 'home' : pathname.substr(1)
+  
   const [activeItem, setActiveItem] = useState(window.location.pathname)
   
   const handleItemClick = (newPath) => setActiveItem(newPath)
@@ -27,7 +26,7 @@ function MenuBar() {
         onClick={()=>handleItemClick(`/profile/${user.id}`)} 
         as={Link} 
         to={`/profile/${user.id}`}>
-        {/* <Image src={user.imageUrl} size='mini'/> */}
+        
       </Menu.Item>
       <Menu.Item 
         name='logout' 
