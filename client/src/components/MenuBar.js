@@ -3,6 +3,7 @@ import { Menu } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
 import { AuthContext } from '../context/auth'
+import NewPopup from '../util/NewPopup'
 
 function MenuBar() {
   const { user, logout } = useContext(AuthContext)
@@ -33,7 +34,11 @@ function MenuBar() {
         onClick={logout} 
         as={Link}
         to='/' 
-      />
+      >
+      <NewPopup content='Logout'>
+            <i className='fas fa-sign-out-alt'></i>
+          </NewPopup>
+        </Menu.Item>
       </Menu.Menu>
     </Menu>
   ) : (
@@ -60,6 +65,7 @@ function MenuBar() {
           as={Link}
           to='/register'
         />
+
       </Menu.Menu>
     </Menu>
   )

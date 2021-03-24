@@ -5,9 +5,18 @@
   margin-top: 10px;
 }
 
+a, a:hover {
+  color: inherit;
+}
+
+
 .form-container {
   width: 400px;
   margin: auto;
+}
+
+.logout:hover {
+  color: red !important;
 }
 
 .ui.teal.button:focus,

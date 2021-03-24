@@ -6,6 +6,7 @@ import gql from 'graphql-tag'
 import { AuthContext } from '../context/auth'
 
 import { useForm } from '../util/hooks'
+import { Link } from 'react-router-dom'
 
 const Login = (props) => {
   const context = useContext(AuthContext)
@@ -58,6 +59,9 @@ const Login = (props) => {
         <Button type='submit' primary>
           Login
         </Button>
+        <p>
+          Not a member? <Link to='/register'>Register</Link>
+        </p>
       </Form>
       {Object.keys(errors).length > 0 && (
         <div className='ui error message '>
