@@ -7,7 +7,8 @@ import NewPopup from '../util/NewPopup'
 import { AuthContext } from '../context/auth'
 import LikeButton from './LikeButton'
 import DeleteButton from './DeleteButton'
-import { FETCH_POSTS_QUERY } from '../util/graphql'
+import {useMutation} from "@apollo/client";
+import gql from "graphql-tag";
 
 const PostCard = ({
   post: {
@@ -21,25 +22,20 @@ const PostCard = ({
     commentCount,
     likes,
   },
-  categorySelected,
+  postsQuery,
 }) => {
   const { user } = useContext(AuthContext)
+  const [deletePostMutation] = useMutation(DELETE_POST_MUTATION)
 
-  function updatePostCache(proxy) {
-    const data = proxy.readQuery({
-      query: FETCH_POSTS_QUERY,
-      variables: { category: categorySelected },
-    })
-    // remove an element from an array
-    const newData = data.getPosts.filter((post) => post.id !== id)
-
-    proxy.writeQuery({
-      query: FETCH_POSTS_QUERY,
-      variables: { category: categorySelected },
-      data: {
-        ...data,
-        getPosts: newData,
+  function handleDeletePost() {
+    deletePostMutation({
+      variables: {
+        postId: id,
       },
+      onError(err) {
+        console.log(err)
+      },
+      refetchQueries: [postsQuery]
     })
   }
 
@@ -68,11 +64,17 @@ const PostCard = ({
         </NewPopup>
 
         {user && user.username === username && (
-          <DeleteButton onDelete={updatePostCache} postId={id} />
+          <DeleteButton onDelete={handleDeletePost} postId={id} />
         )}
       </Card.Content>
     </Card>
   )
 }
+
+const DELETE_POST_MUTATION = gql`
+  mutation deletePost($postId: ID!) {
+    deletePost(postId: $postId)
+  }
+`
 
 export default PostCard

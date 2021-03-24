@@ -9,41 +9,49 @@ import { FETCH_POSTS_QUERY } from '../util/graphql'
 import Filtering from '../components/Filtering'
 import NewPopup from '../util/NewPopup'
 
-import { PAGINATION_LIMIT, PAGINATION_OFFSET } from '../constants/constants'
+import { PAGINATION_LIMIT, INITIAL_VARIABLES } from '../constants/constants'
 
 const Home = () => {
-  const [categorySelected, setCategory] = useState()
-  const [offset, setOffset] = useState(PAGINATION_OFFSET)
+  const [categorySelected, setCategory] = useState(INITIAL_VARIABLES.category)
+  const [offset, setOffset] = useState(INITIAL_VARIABLES.offset)
   const { user } = useContext(AuthContext)
-  const { loading, data } = useQuery(FETCH_POSTS_QUERY, {
-    variables: {
-      offset,
-      limit: PAGINATION_LIMIT,
-      category: categorySelected,
-    },
-  })
+  const variables = {
+    offset,
+    limit: INITIAL_VARIABLES.limit,
+    category: categorySelected,
+  }
+  const { loading, data } = useQuery(FETCH_POSTS_QUERY, { variables, fetchPolicy: "network-only" })
 
   if (!data) {
     return null
   }
 
   const {
-    getPosts: { posts, paginatedPosts, totalPostsCount, matchedResultsCount },
+    getPosts: { paginatedPosts, totalPostsCount, matchedResultsCount },
   } = data
 
-  function updatePostCache(proxy, result) {
+
+  function removePostFromCache(proxy, postId) {
     const data = proxy.readQuery({
       query: FETCH_POSTS_QUERY,
-      variables: { category: categorySelected },
+      variables,
     })
-    const newData = [result.data.createPost, ...data.getPosts]
+
+    // remove an element from an array
+    const newData = data.getPosts.paginatedPosts.filter((post) => post.id !== postId)
+    const newDataSize = newData.length;
 
     proxy.writeQuery({
       query: FETCH_POSTS_QUERY,
-      variables: { category: categorySelected },
+      variables,
       data: {
         ...data,
-        getPosts: newData,
+        getPosts: {
+          ...data.getPosts,
+          paginatedPosts: newData,
+          totalPostsCount: newDataSize,
+          matchedResultsCount: newDataSize
+        },
       },
     })
   }
@@ -74,21 +82,9 @@ const Home = () => {
     }
   }
 
-  function updatePostCache(proxy, result) {
-    const data = proxy.readQuery({
-      query: FETCH_POSTS_QUERY,
-      variables: { category: categorySelected },
-    })
-    const newData = [result.data.createPost, ...data.getPosts]
-
-    proxy.writeQuery({
-      query: FETCH_POSTS_QUERY,
-      variables: { category: categorySelected },
-      data: {
-        ...data,
-        getPosts: newData,
-      },
-    })
+  async function handleFiltersReset() {
+    setOffset(INITIAL_VARIABLES.offset)
+    setCategory(INITIAL_VARIABLES.category)
   }
 
   return (
@@ -99,8 +95,8 @@ const Home = () => {
             {user && (
               <Grid.Column>
                 <PostForm
-                  categoryFiltered={categorySelected}
-                  onPostCreated={updatePostCache}
+                    categoryFiltered={categorySelected}
+                  postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
                 />
               </Grid.Column>
             )}
@@ -116,6 +112,7 @@ const Home = () => {
               categorySelected={categorySelected}
               onFilterChange={setCategory}
               onOffset={setOffset}
+              onReset={handleFiltersReset}
             />
           </Grid.Column>
           <Grid.Column>
@@ -137,11 +134,7 @@ const Home = () => {
               {paginatedPosts &&
                 paginatedPosts.map((post) => (
                   <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
-                    <PostCard
-                      categorySelected={categorySelected}
-                      post={post}
-                      // onDeletePost={updateCachePosts}
-                    />
+                    <PostCard  post={post}  postsQuery={{ query: FETCH_POSTS_QUERY, variables }} />
                   </Grid.Column>
                 ))}
             </TransitionGroup>
