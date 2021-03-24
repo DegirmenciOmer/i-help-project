@@ -3,6 +3,7 @@ import { Button, Form } from 'semantic-ui-react'
 import { useMutation, gql } from '@apollo/client'
 import { useForm } from '../util/hooks'
 import { FETCH_POSTS_QUERY } from '../util/graphql'
+import { PAGINATION_LIMIT, PAGINATION_OFFSET } from '../constants/constants'
 
 const options = [
   { key: 's', text: 'Shopping', value: 'Shopping' },
@@ -22,18 +23,25 @@ const PostForm = () => {
     variables: values,
 
     update(proxy, result) {
+      const variables = {
+        offset: PAGINATION_OFFSET,
+        limit: PAGINATION_LIMIT,
+      }
       const data = proxy.readQuery({
         query: FETCH_POSTS_QUERY,
+        variables,
       })
 
-      const newData = [result.data.createPost, ...data.getPosts]
-
+      const newData = [result.data.createPost, ...data.getPosts.paginatedPosts]
       proxy.writeQuery({
         query: FETCH_POSTS_QUERY,
+        variables,
         data: {
           ...data,
           getPosts: {
-            newData,
+            paginatedPosts: {
+              newData,
+            },
           },
         },
       })

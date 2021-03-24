@@ -5,15 +5,36 @@ const checkAuth = require('../../util/check-auth')
 
 module.exports = {
   Query: {
-    async getPosts(_, { category }) {
+    async getPosts(_, { category, offset = 0, limit }) {
       try {
+        const totalPostsCount = await Post.find().countDocuments()
         if (!category) {
           // Return all posts
-          return await Post.find().sort({ createdAt: -1 })
-        }
+          const paginatedPosts = await Post.find()
+            .sort({ createdAt: -1 })
+            .limit(limit)
+            .skip(offset)
 
-        // Return all posts filtered, in this case by category
-        return await Post.find({ category: category }).sort({ createdAt: -1 })
+          return {
+            paginatedPosts,
+            totalPostsCount,
+          }
+        } else {
+          // Return all posts filtered, in this case by category
+          const paginatedPosts = await Post.find({ category: category })
+              .sort({ createdAt: -1 })
+              .limit(limit)
+              .skip(offset),
+            matchedResultsCount = await Post.find({ category: category })
+              .sort({ createdAt: -1 })
+              .countDocuments()
+
+          return {
+            paginatedPosts,
+            totalPostsCount,
+            matchedResultsCount,
+          }
+        }
       } catch (err) {
         // Error!!!!
         throw new Error(err)

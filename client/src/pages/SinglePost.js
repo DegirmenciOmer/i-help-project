@@ -57,20 +57,29 @@ const SinglePost = (props) => {
       postId,
     },
   })
+  const [deleteComment] = useMutation(DELETE_COMMENT_MUTATION)
+  const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION)
 
-  const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
-    update() {
-      setComment('')
-      commentInputRef.current.blur()
-    },
-    variables: {
-      postId,
-      body: comment,
-    },
-  })
+  function handleCommentDelete(commentId) {
+    deleteComment({
+      variables: {
+        postId,
+        commentId,
+      },
+    })
+  }
 
-  function deletePostCallback() {
-    props.history.push('/')
+  function handleCommentSubmit() {
+    submitComment({
+      update() {
+        setComment('')
+        commentInputRef.current.blur()
+      },
+      variables: {
+        postId,
+        body: comment,
+      },
+    })
   }
 
   if (!data) {
@@ -156,9 +165,6 @@ const SinglePost = (props) => {
                     </Label>
                   </Button>
                 </NewPopup>
-                {user && user.username === username && (
-                  <DeleteButton postId={id} callback={deletePostCallback} />
-                )}
               </Card.Content>
             </Card>
             {user && (
@@ -179,7 +185,7 @@ const SinglePost = (props) => {
                         type='submit'
                         className='ui button teal'
                         disabled={comment.trim() === ''}
-                        onClick={submitComment}
+                        onClick={handleCommentSubmit}
                       >
                         Submit
                       </button>
@@ -192,7 +198,10 @@ const SinglePost = (props) => {
               <Card key={comment.id} fluid>
                 <Card.Content>
                   {user && user.username === comment.username && (
-                    <DeleteButton postId={id} commentId={comment.id} />
+                    <DeleteButton
+                      content='Delete Comment'
+                      onDelete={() => handleCommentDelete(comment.id)}
+                    />
                   )}
                   <Card.Header>{comment.username}</Card.Header>
                   <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
@@ -269,6 +278,20 @@ const UPDATE_POST_MUTATION = gql`
         body
         username
         createdAt
+      }
+      commentCount
+    }
+  }
+`
+const DELETE_COMMENT_MUTATION = gql`
+  mutation deleteComment($postId: ID!, $commentId: ID!) {
+    deleteComment(postId: $postId, commentId: $commentId) {
+      id
+      comments {
+        id
+        username
+        createdAt
+        body
       }
       commentCount
     }
