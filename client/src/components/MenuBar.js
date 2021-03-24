@@ -3,6 +3,7 @@ import { Menu } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
 import { AuthContext } from '../context/auth'
+import NewPopup from '../util/NewPopup'
 
 function MenuBar() {
   const { user, logout } = useContext(AuthContext)
@@ -13,10 +14,14 @@ function MenuBar() {
   const handleItemClick = (e, { name }) => setActiveItem(name)
 
   const menuBar = user ? (
-    <Menu pointing secondary size='massive' color='teal'>
-      <Menu.Item name={user.username} active as={Link} to='/' />
+    <Menu pointing secondary size='massive'>
+      <Menu.Item name={user.username} color='teal' active as={Link} to='/' />
       <Menu.Menu position='right'>
-        <Menu.Item name='logout' onClick={logout} />
+        <Menu.Item className='logout' name='logout' onClick={logout}>
+          <NewPopup content='Logout'>
+            <i className='fas fa-sign-out-alt'></i>
+          </NewPopup>
+        </Menu.Item>
       </Menu.Menu>
     </Menu>
   ) : (
@@ -35,13 +40,6 @@ function MenuBar() {
           onClick={handleItemClick}
           as={Link}
           to='/login'
-        />
-        <Menu.Item
-          name='register'
-          active={activeItem === 'register'}
-          onClick={handleItemClick}
-          as={Link}
-          to='/register'
         />
       </Menu.Menu>
     </Menu>

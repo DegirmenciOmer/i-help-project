@@ -7,7 +7,9 @@ import NewPopup from '../util/NewPopup'
 import { AuthContext } from '../context/auth'
 import LikeButton from './LikeButton'
 import DeleteButton from './DeleteButton'
-import {FETCH_POSTS_QUERY} from "../util/graphql";
+import { FETCH_POSTS_QUERY } from '../util/graphql'
+import { useMutation } from '@apollo/client'
+import gql from 'graphql-tag'
 
 const PostCard = ({
   post: {
@@ -21,17 +23,17 @@ const PostCard = ({
     commentCount,
     likes,
   },
-    categorySelected
+  categorySelected,
 }) => {
   const { user } = useContext(AuthContext)
 
   function updatePostCache(proxy) {
     const data = proxy.readQuery({
       query: FETCH_POSTS_QUERY,
-      variables: { category: categorySelected }
+      variables: { category: categorySelected },
     })
     // remove an element from an array
-    const newData = data.getPosts.filter(post => post.id !== id)
+    const newData = data.getPosts.filter((post) => post.id !== id)
 
     proxy.writeQuery({
       query: FETCH_POSTS_QUERY,
@@ -52,7 +54,9 @@ const PostCard = ({
           {moment(createdAt).fromNow(true)}
           {`-${category}`}
         </Card.Meta>
-        <Card.Description>{body}</Card.Description>
+        <Link to={`/posts/${id}`}>
+          <Card.Description>{body}</Card.Description>
+        </Link>
       </Card.Content>
       <Card.Content extra>
         <LikeButton user={user} post={{ id, likes, likeCount }} />
@@ -67,10 +71,18 @@ const PostCard = ({
           </Button>
         </NewPopup>
 
-        {user && user.username === username && <DeleteButton onDelete={updatePostCache} postId={id} />}
+        {user && user.username === username && (
+          <DeleteButton onDelete={updatePostCache} postId={id} />
+        )}
       </Card.Content>
     </Card>
   )
 }
+
+const DELETE_POST_MUTATION = gql`
+  mutation deletePost($postId: ID!) {
+    deletePost(postId: $postId)
+  }
+`
 
 export default PostCard
