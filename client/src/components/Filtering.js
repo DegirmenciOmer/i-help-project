@@ -9,9 +9,10 @@ const options = [
   { key: 'ga', text: 'Gardening', value: 'Gardening' },
 ]
 
-const Filtering = ({ categorySelected, onFilterChange }) => {
+const Filtering = ({ categorySelected, onFilterChange, onOffset }) => {
   const onChange = (event, { value }) => {
     onFilterChange(value)
+    onOffset(0)
   }
 
   return (
@@ -35,6 +36,7 @@ const Filtering = ({ categorySelected, onFilterChange }) => {
               className='filter-button'
               onClick={() => {
                 onFilterChange('')
+                onOffset(0)
               }}
             >
               Reset
