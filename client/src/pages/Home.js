@@ -1,12 +1,13 @@
 import React, { useContext, useState } from 'react'
 import { useQuery } from '@apollo/client'
-import { Grid, TransitionGroup } from 'semantic-ui-react'
+import { Button, Grid, TransitionGroup } from 'semantic-ui-react'
 import PostCard from '../components/PostCard'
 import PostForm from '../components/PostForm'
 
 import { AuthContext } from '../context/auth'
 import { FETCH_POSTS_QUERY } from '../util/graphql'
 import Filtering from '../components/Filtering'
+import NewPopup from '../util/NewPopup'
 
 import { PAGINATION_LIMIT, PAGINATION_OFFSET } from '../constants/constants'
 
@@ -114,10 +115,17 @@ const Home = () => {
             <Filtering
               categorySelected={categorySelected}
               onFilterChange={setCategory}
+              onOffset={setOffset}
             />
           </Grid.Column>
           <Grid.Column>
-            <h1>Recents Posts</h1>
+            {categorySelected ? (
+              <h1>
+                Recent Posts on {categorySelected} ({matchedResultsCount})
+              </h1>
+            ) : (
+              <h1>Recent Posts</h1>
+            )}
           </Grid.Column>
         </Grid.Row>
 
@@ -126,14 +134,36 @@ const Home = () => {
             <h2>Loading posts ...</h2>
           ) : (
             <TransitionGroup>
-              {posts &&
-                posts.map((post) => (
+              {paginatedPosts &&
+                paginatedPosts.map((post) => (
                   <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
-                    <PostCard categorySelected={categorySelected} post={post} />
+                    <PostCard
+                      categorySelected={categorySelected}
+                      post={post}
+                      // onDeletePost={updateCachePosts}
+                    />
                   </Grid.Column>
                 ))}
             </TransitionGroup>
           )}
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column position='right'>
+            {!isFirstPage() && (
+              <NewPopup content='Previous'>
+                <Button className='ui basic icon button' onClick={previousPage}>
+                  <i className='fas fa-chevron-circle-left'></i>
+                </Button>
+              </NewPopup>
+            )}
+            {!isLastPage() && (
+              <NewPopup content='Next'>
+                <Button className='ui basic icon button' onClick={nextPage}>
+                  <i className='fas fa-chevron-circle-right'></i>
+                </Button>
+              </NewPopup>
+            )}
+          </Grid.Column>
         </Grid.Row>
       </Grid>
     </div>
