@@ -60,7 +60,10 @@ const Login = (props) => {
           Login
         </Button>
         <p>
-          Not a member? <Link to='/register'>Register</Link>
+          Not a member?{' '}
+          <Button className='basic teal' as={Link} to='/register'>
+            Register
+          </Button>
         </p>
       </Form>
       {Object.keys(errors).length > 0 && (

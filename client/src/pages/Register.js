@@ -38,7 +38,7 @@ const Register = (props) => {
   function registerUser() {
     addUser()
   }
-
+  
   return (
     <div className='form-container'>
       <Form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>

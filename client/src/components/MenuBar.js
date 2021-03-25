@@ -7,18 +7,35 @@ import NewPopup from '../util/NewPopup'
 
 function MenuBar() {
   const { user, logout } = useContext(AuthContext)
-  const pathname = window.location.pathname
-  const path = pathname === '/' ? 'home' : pathname.substr(1)
-  const [activeItem, setActiveItem] = useState(path)
-
-  const handleItemClick = (e, { name }) => setActiveItem(name)
+  
+  const [activeItem, setActiveItem] = useState(window.location.pathname)
+  
+  const handleItemClick = (newPath) => setActiveItem(newPath)
 
   const menuBar = user ? (
-    <Menu pointing secondary size='massive'>
-      <Menu.Item name={user.username} color='teal' active as={Link} to='/' />
-      <Menu.Menu position='right'>
-        <Menu.Item className='logout' name='logout' onClick={logout}>
-          <NewPopup content='Logout'>
+    <Menu pointing secondary size='massive' color='teal'>
+      <Menu.Item 
+        name={user.username}
+        active={activeItem === '/'}
+        onClick={()=>handleItemClick('/')} 
+        as={Link} 
+        to='/' />
+      <Menu.Menu position='right' >
+      <Menu.Item 
+        name='profile' 
+        active={activeItem === `/profile/${user.id}`}
+        onClick={()=>handleItemClick(`/profile/${user.id}`)} 
+        as={Link} 
+        to={`/profile/${user.id}`}>
+        
+      </Menu.Item>
+      <Menu.Item 
+        name='logout' 
+        onClick={logout} 
+        as={Link}
+        to='/' 
+      >
+      <NewPopup content='Logout'>
             <i className='fas fa-sign-out-alt'></i>
           </NewPopup>
         </Menu.Item>
@@ -28,16 +45,16 @@ function MenuBar() {
     <Menu pointing secondary size='massive' color='teal'>
       <Menu.Item
         name='home'
-        active={activeItem === 'home'}
-        onClick={handleItemClick}
+        active={activeItem === '/'}
+        onClick={()=>handleItemClick('/')}
         as={Link}
         to='/'
       />
       <Menu.Menu position='right'>
         <Menu.Item
           name='login'
-          active={activeItem === 'login'}
-          onClick={handleItemClick}
+          active={activeItem === '/login'}
+          onClick={()=>handleItemClick('/login')}
           as={Link}
           to='/login'
         />

@@ -71,6 +71,7 @@ module.exports = {
         username: user.username,
         imageUrl: user.imageUrl,
         createdAt: new Date().toISOString(),
+        
       })
 
       const post = await newPost.save()

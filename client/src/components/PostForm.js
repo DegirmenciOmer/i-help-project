@@ -23,7 +23,7 @@ const PostForm = ({ categoryFiltered, postsQuery }) => {
       ...prevState,
       category: categoryFiltered
     }))
-  }, [categoryFiltered])
+  }, [categoryFiltered, setValues])
 
   function createPostCallback() {
     createPost({
