@@ -33,32 +33,6 @@ const Home = () => {
     getPosts: { paginatedPosts, totalPostsCount, matchedResultsCount },
   } = data
 
-  function removePostFromCache(proxy, postId) {
-    const data = proxy.readQuery({
-      query: FETCH_POSTS_QUERY,
-      variables,
-    })
-
-    // remove an element from an array
-    const newData = data.getPosts.paginatedPosts.filter(
-      (post) => post.id !== postId
-    )
-    const newDataSize = newData.length
-
-    proxy.writeQuery({
-      query: FETCH_POSTS_QUERY,
-      variables,
-      data: {
-        ...data,
-        getPosts: {
-          ...data.getPosts,
-          paginatedPosts: newData,
-          totalPostsCount: newDataSize,
-          matchedResultsCount: newDataSize,
-        },
-      },
-    })
-  }
 
   function nextPage() {
     setOffset((offset) => offset + PAGINATION_LIMIT)
