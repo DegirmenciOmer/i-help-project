@@ -121,19 +121,9 @@ module.exports = {
     },
 
     // UPDATE
-    async updateUser(_, { userId, username, imageUrl, email }) {
-// make sure that user already exist
-const user = await User.findOne({ username });
-// if (user ) {
-//   throw new UserInputError('Username is taken', {
-//     errors: {
-//       username: 'This username has already taken',
-//     },
-//   });
-// }
+    async updateUser(_, { userId, imageUrl, email }) {
 
       return User.findOneAndUpdate({ _id: userId }, {
-          username: username,
           email: email,
           imageUrl: imageUrl
         },

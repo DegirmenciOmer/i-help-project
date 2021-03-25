@@ -8,7 +8,7 @@ module.exports = gql`
     createdAt: String!
     username: String!
     imageUrl: String
-    author: [User!]
+    author: [User]!
     comments: [Comment]!
     likes: [Like]!
     likeCount: Int!
@@ -53,15 +53,15 @@ module.exports = gql`
   }
   type Query {
     getPosts(category: String, offset: Int, limit: Int): PostsResponse
-    getPost(postId: ID!, userId: String!): Post
+    getPost(postId: ID!): Post
     getUser(userId: ID!): User
 
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
-    updateUser(userId: ID!, username: String!, imageUrl: String, email: String!): User!
+    updateUser(userId: ID!, imageUrl: String, email: String!): User!
     login(username: String!, password: String!): User!
-    createPost(body: String!, category: String!, userId: String): Post!
+    createPost(body: String!, category: String!): Post!
     deletePost(postId: ID!): String!
     createComment(postId: String!, body: String!): Post!
     deleteComment(postId: ID!, commentId: ID!): Post!

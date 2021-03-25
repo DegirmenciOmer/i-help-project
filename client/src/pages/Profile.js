@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect} from 'react'
 import { useQuery, gql, useMutation } from '@apollo/client'
 import { Image, Grid, Card, Button, Icon, Form } from 'semantic-ui-react'
 import { useForm } from '../util/hooks'
 import ImageUpload from '../components/ImageUpload'
-
-
 
 const Profile = (props) => {
     
@@ -16,7 +14,6 @@ const Profile = (props) => {
     const { values, onChange, onSubmit, setValues } = useForm(updateUserCallback, {
         userId,
         email: '',
-        username: '',
         imageUrl: ''
     })
 
@@ -34,7 +31,7 @@ const Profile = (props) => {
 
     const [updateUser, {loading}] = useMutation(FETCH_USER_MUTATION)
     function updateUserCallback() {
-        console.log(values)
+
         updateUser(
             {
                 variables: values,
@@ -45,8 +42,6 @@ const Profile = (props) => {
                         variables: values,
                     })
                     const newData = {...data.getUser, ...result.data.updateUser}
-        
-                    console.log(newData)
                     
                     cache.writeQuery({
                         query: FETCH_USER_QUERY,
@@ -73,6 +68,7 @@ const Profile = (props) => {
         <Grid.Row>
         <Grid.Column width={10}>
             <h2>Profile page</h2>
+            
             <Card>
                 <Image src={data.getUser.imageUrl} wrapped ui={false} />
                 <Card.Content>
@@ -97,7 +93,7 @@ const Profile = (props) => {
                 
                     <Form onSubmit={onSubmit} className={loading ? 'loading' : ''}>
                         <Form.Field>
-                            <Form.Input
+                            {/* <Form.Input
                                 name='username'
                                 type='text'
                                 placeholder={data.getUser.username}
@@ -107,7 +103,7 @@ const Profile = (props) => {
                                 onChange={(evt, data) => {
                                 onChange(evt, data)
                             }}
-                            />
+                            /> */}
                             <ImageUpload
                                 onUploadComplite={(evt, data) => {
                                 onChange(evt, data)
@@ -129,15 +125,7 @@ const Profile = (props) => {
                     </Form>
                 )}
             </Card>
-            {Object.keys(errors).length > 0 && (
-                <div className='ui error message '>
-                    <ul className='list'>
-                        {Object.values(errors).map((value) => (
-                        <li key={value}>{value}</li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+            
         </Grid.Column>
         </Grid.Row>
         </Grid>
@@ -154,9 +142,9 @@ export const FETCH_USER_QUERY = gql`
     }
 ` 
 export const FETCH_USER_MUTATION = gql`
-    mutation ($userId: ID!, $username: String!, $imageUrl: String, $email: String!){
-        updateUser(userId: $userId, username: $username, imageUrl: $imageUrl, email: $email){
-                username
+    mutation ($userId: ID!, $imageUrl: String, $email: String!){
+        updateUser(userId: $userId, imageUrl: $imageUrl, email: $email){
+                
                 email
                 imageUrl
         }
