@@ -22,17 +22,20 @@ const PostCard = ({
     commentCount,
     likes,
   },
-  onDeletePost,
+  postsQuery,
 }) => {
   const { user } = useContext(AuthContext)
-  const [deletePostOrMutation] = useMutation(DELETE_POST_MUTATION)
+  const [deletePostMutation] = useMutation(DELETE_POST_MUTATION)
 
   function handleDeletePost() {
-    deletePostOrMutation({
+    deletePostMutation({
       variables: {
         postId: id,
       },
-      update: (proxy) => onDeletePost(proxy, id),
+      onError(err) {
+        console.log(err)
+      },
+      refetchQueries: [postsQuery],
     })
   }
 
@@ -63,7 +66,7 @@ const PostCard = ({
         </NewPopup>
 
         {user && user.username === username && (
-          <DeleteButton content='Delete Post' onDelete={handleDeletePost} />
+          <DeleteButton onDelete={handleDeletePost} postId={id} />
         )}
       </Card.Content>
     </Card>

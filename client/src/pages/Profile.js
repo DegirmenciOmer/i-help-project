@@ -16,7 +16,7 @@ const Profile = (props) => {
         email: '',
         imageUrl: ''
     })
-
+    console.log(values)
     const { data } = useQuery(FETCH_USER_QUERY, { 
         variables: {
         userId
@@ -30,8 +30,8 @@ const Profile = (props) => {
     }, [data, setValues])
 
     const [updateUser, {loading}] = useMutation(FETCH_USER_MUTATION)
+    
     function updateUserCallback() {
-
         updateUser(
             {
                 variables: values,
@@ -144,12 +144,9 @@ export const FETCH_USER_QUERY = gql`
 export const FETCH_USER_MUTATION = gql`
     mutation ($userId: ID!, $imageUrl: String, $email: String!){
         updateUser(userId: $userId, imageUrl: $imageUrl, email: $email){
-                
                 email
                 imageUrl
         }
     }
 ` 
-
-
 export default Profile
