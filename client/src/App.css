@@ -15,6 +15,14 @@ a, a:hover {
   margin: auto;
 }
 
+.logout{
+  box-sizing: border-box !important;
+  color: #00b5ad !important;
+  margin: 0 !important;
+  margin: 0 !important;
+
+}
+
 .logout:hover {
   color: red !important;
 }
