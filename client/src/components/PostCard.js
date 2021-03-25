@@ -7,8 +7,8 @@ import NewPopup from '../util/NewPopup'
 import { AuthContext } from '../context/auth'
 import LikeButton from './LikeButton'
 import DeleteButton from './DeleteButton'
-import {useMutation} from "@apollo/client";
-import gql from "graphql-tag";
+import { useMutation } from '@apollo/client'
+import gql from 'graphql-tag'
 
 const PostCard = ({
   post: {
@@ -35,7 +35,7 @@ const PostCard = ({
       onError(err) {
         console.log(err)
       },
-      refetchQueries: [postsQuery]
+      refetchQueries: [postsQuery],
     })
   }
 
@@ -48,7 +48,9 @@ const PostCard = ({
           {moment(createdAt).fromNow(true)}
           {`-${category}`}
         </Card.Meta>
-        <Card.Description>{body}</Card.Description>
+        <Link to={`/posts/${id}`}>
+          <Card.Description>{body}</Card.Description>
+        </Link>
       </Card.Content>
       <Card.Content extra>
         <LikeButton user={user} post={{ id, likes, likeCount }} />

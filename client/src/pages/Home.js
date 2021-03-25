@@ -20,7 +20,10 @@ const Home = () => {
     limit: INITIAL_VARIABLES.limit,
     category: categorySelected,
   }
-  const { loading, data } = useQuery(FETCH_POSTS_QUERY, { variables, fetchPolicy: "network-only" })
+  const { loading, data } = useQuery(FETCH_POSTS_QUERY, {
+    variables,
+    fetchPolicy: 'network-only',
+  })
 
   if (!data) {
     return null
@@ -30,7 +33,6 @@ const Home = () => {
     getPosts: { paginatedPosts, totalPostsCount, matchedResultsCount },
   } = data
 
-
   function removePostFromCache(proxy, postId) {
     const data = proxy.readQuery({
       query: FETCH_POSTS_QUERY,
@@ -38,8 +40,10 @@ const Home = () => {
     })
 
     // remove an element from an array
-    const newData = data.getPosts.paginatedPosts.filter((post) => post.id !== postId)
-    const newDataSize = newData.length;
+    const newData = data.getPosts.paginatedPosts.filter(
+      (post) => post.id !== postId
+    )
+    const newDataSize = newData.length
 
     proxy.writeQuery({
       query: FETCH_POSTS_QUERY,
@@ -50,7 +54,7 @@ const Home = () => {
           ...data.getPosts,
           paginatedPosts: newData,
           totalPostsCount: newDataSize,
-          matchedResultsCount: newDataSize
+          matchedResultsCount: newDataSize,
         },
       },
     })
@@ -95,7 +99,7 @@ const Home = () => {
             {user && (
               <Grid.Column>
                 <PostForm
-                    categoryFiltered={categorySelected}
+                  categoryFiltered={categorySelected}
                   postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
                 />
               </Grid.Column>
@@ -105,7 +109,7 @@ const Home = () => {
         <Grid.Row></Grid.Row>
       </Grid>
 
-      <Grid columns={3}>
+      <Grid columns={1}>
         <Grid.Row>
           <Grid.Column width={6}>
             <Filtering
@@ -134,7 +138,10 @@ const Home = () => {
               {paginatedPosts &&
                 paginatedPosts.map((post) => (
                   <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
-                    <PostCard  post={post}  postsQuery={{ query: FETCH_POSTS_QUERY, variables }} />
+                    <PostCard
+                      post={post}
+                      postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
+                    />
                   </Grid.Column>
                 ))}
             </TransitionGroup>
