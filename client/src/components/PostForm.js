@@ -1,9 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Form } from 'semantic-ui-react'
 import { useMutation, gql } from '@apollo/client'
 import { useForm } from '../util/hooks'
-import { FETCH_POSTS_QUERY } from '../util/graphql'
-import { PAGINATION_LIMIT, PAGINATION_OFFSET } from '../constants/constants'
 
 const options = [
   { key: 's', text: 'Shopping', value: 'Shopping' },
@@ -13,48 +11,29 @@ const options = [
   { key: 'ga', text: 'Gardening', value: 'Gardening' },
 ]
 
-const PostForm = () => {
-  const { values, onChange, onSubmit } = useForm(createPostCallback, {
+const PostForm = ({ categoryFiltered, postsQuery }) => {
+  const { values, setValues, onChange, onSubmit } = useForm(createPostCallback, {
     body: '',
-    category: '',
+    category: categoryFiltered || '',
   })
+  const [createPost, { error }] = useMutation(CREATE_POST_MUTATION)
 
-  const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
-    variables: values,
-
-    update(proxy, result) {
-      const variables = {
-        offset: PAGINATION_OFFSET,
-        limit: PAGINATION_LIMIT,
-      }
-      const data = proxy.readQuery({
-        query: FETCH_POSTS_QUERY,
-        variables,
-      })
-
-      const newData = [result.data.createPost, ...data.getPosts.paginatedPosts]
-      proxy.writeQuery({
-        query: FETCH_POSTS_QUERY,
-        variables,
-        data: {
-          ...data,
-          getPosts: {
-            paginatedPosts: {
-              newData,
-            },
-          },
-        },
-      })
-    },
-    onError(err) {
-      console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
-    },
-  })
+  useEffect(() => {
+    setValues((prevState) => ({
+      ...prevState,
+      category: categoryFiltered
+    }))
+  }, [categoryFiltered])
 
   function createPostCallback() {
-    createPost()
+    createPost({
+      variables: values,
+      onError(err) {
+        console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
+      },
+      refetchQueries: [postsQuery]
+    })
   }
-
   return (
     <>
       <Form onSubmit={onSubmit}>
@@ -67,6 +46,7 @@ const PostForm = () => {
             name='category'
             onChange={onChange}
             value={values.category}
+            disabled={!!categoryFiltered}
           />
 
           <Form.Input
@@ -81,13 +61,15 @@ const PostForm = () => {
         </Form.Field>
       </Form>
 
-      {error && (
-        <div className='ui error message' style={{ marginBottom: 20 }}>
-          <ul className='list'>
-            <li>{error.graphQLErrors[0].message}</li>
-          </ul>
-        </div>
-      )}
+      {error &&
+        Array.isArray(error.graphQLErrors) &&
+        error.graphQLErrors.length > 0 && (
+          <div className='ui error message' style={{ marginBottom: 20 }}>
+            <ul className='list'>
+              <li>{error.graphQLErrors[0].message}</li>
+            </ul>
+          </div>
+        )}
     </>
   )
 }

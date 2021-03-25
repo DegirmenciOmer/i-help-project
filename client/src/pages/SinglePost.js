@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react'
+import React, { useContext, useState, useRef, useEffect } from 'react'
 import { useQuery, gql, useMutation } from '@apollo/client'
 import { Button, Card, Grid, Icon, Image, Label, Form } from 'semantic-ui-react'
 import moment from 'moment'
@@ -15,48 +15,40 @@ const SinglePost = (props) => {
   const { user } = useContext(AuthContext)
   const commentInputRef = useRef(null)
   const [comment, setComment] = useState('')
-
-  //update post body {
-  const { values, onChange, onSubmit } = useForm(updatePostCallback, {
-    body: '',
-    postId,
+  const { data } = useQuery(FETCH_POST_QUERY, {
+    variables: {
+      postId,
+    },
   })
+  const { values, onChange, onSubmit, setValues } = useForm(
+    updatePostCallback,
+    {
+      body: '',
+      postId,
+    }
+  )
   const [updatePost] = useMutation(UPDATE_POST_MUTATION, {
     variables: values,
 
     update(proxy, result) {
-      const data = proxy.readQuery({
-        query: FETCH_POST_QUERY,
-        variables: values,
-      })
-      const newData = [result.data.updatePost, data.getPost]
-
-      proxy.writeQuery({
-        query: FETCH_POST_QUERY,
-        data: {
-          ...data,
-          getPost: {
-            newData,
-          },
-        },
-      })
       setToggle(false)
     },
     onError(err) {
       console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
     },
   })
+
   function updatePostCallback() {
     updatePost()
   }
 
-  //}
+  useEffect(() => {
+    if (!data) {
+      return
+    }
+    setValues((prevState) => ({ ...prevState, body: data.getPost.body }))
+  }, [data, setValues])
 
-  const { data } = useQuery(FETCH_POST_QUERY, {
-    variables: {
-      postId,
-    },
-  })
   const [deleteComment] = useMutation(DELETE_COMMENT_MUTATION)
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION)
 
@@ -85,6 +77,7 @@ const SinglePost = (props) => {
   if (!data) {
     return null
   }
+
   const { getPost: post } = data
 
   let postMarkup

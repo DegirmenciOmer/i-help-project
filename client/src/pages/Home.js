@@ -6,21 +6,23 @@ import PostForm from '../components/PostForm'
 
 import { AuthContext } from '../context/auth'
 import { FETCH_POSTS_QUERY } from '../util/graphql'
-
 import Filtering from '../components/Filtering'
 import NewPopup from '../util/NewPopup'
-import { PAGINATION_LIMIT, PAGINATION_OFFSET } from '../constants/constants'
+
+import { PAGINATION_LIMIT, INITIAL_VARIABLES } from '../constants/constants'
 
 const Home = () => {
-  const [category, setCategory] = useState()
-  const [offset, setOffset] = useState(PAGINATION_OFFSET)
+  const [categorySelected, setCategory] = useState(INITIAL_VARIABLES.category)
+  const [offset, setOffset] = useState(INITIAL_VARIABLES.offset)
   const { user } = useContext(AuthContext)
+  const variables = {
+    offset,
+    limit: INITIAL_VARIABLES.limit,
+    category: categorySelected,
+  }
   const { loading, data } = useQuery(FETCH_POSTS_QUERY, {
-    variables: {
-      offset,
-      limit: PAGINATION_LIMIT,
-      category: category,
-    },
+    variables,
+    fetchPolicy: 'network-only',
   })
 
   if (!data) {
@@ -31,26 +33,29 @@ const Home = () => {
     getPosts: { paginatedPosts, totalPostsCount, matchedResultsCount },
   } = data
 
-  function updateCachePosts(proxy, postId) {
-    const variables = {
-      offset,
-      limit: PAGINATION_LIMIT,
-    }
+  function removePostFromCache(proxy, postId) {
     const data = proxy.readQuery({
       query: FETCH_POSTS_QUERY,
       variables,
     })
 
-    // create a new variable for refresh result
-    const newDataGroups = [...data.getPosts.paginatedPosts]
-    newDataGroups[postId.id] = newDataGroups.filter((p) => p.id !== postId)
+    // remove an element from an array
+    const newData = data.getPosts.paginatedPosts.filter(
+      (post) => post.id !== postId
+    )
+    const newDataSize = newData.length
 
     proxy.writeQuery({
       query: FETCH_POSTS_QUERY,
       variables,
       data: {
         ...data,
-        getPosts: { paginatedPosts: { newDataGroups } },
+        getPosts: {
+          ...data.getPosts,
+          paginatedPosts: newData,
+          totalPostsCount: newDataSize,
+          matchedResultsCount: newDataSize,
+        },
       },
     })
   }
@@ -81,6 +86,11 @@ const Home = () => {
     }
   }
 
+  async function handleFiltersReset() {
+    setOffset(INITIAL_VARIABLES.offset)
+    setCategory(INITIAL_VARIABLES.category)
+  }
+
   return (
     <div>
       <Grid>
@@ -88,7 +98,10 @@ const Home = () => {
           <Grid.Row>
             {user && (
               <Grid.Column>
-                <PostForm />
+                <PostForm
+                  categoryFiltered={categorySelected}
+                  postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
+                />
               </Grid.Column>
             )}
           </Grid.Row>
@@ -100,15 +113,16 @@ const Home = () => {
         <Grid.Row>
           <Grid.Column width={6}>
             <Filtering
-              category={category}
+              categorySelected={categorySelected}
               onFilterChange={setCategory}
               onOffset={setOffset}
+              onReset={handleFiltersReset}
             />
           </Grid.Column>
           <Grid.Column>
-            {category ? (
+            {categorySelected ? (
               <h1>
-                Recent Posts on {category} ({matchedResultsCount})
+                Recent Posts on {categorySelected} ({matchedResultsCount})
               </h1>
             ) : (
               <h1>Recent Posts</h1>
@@ -124,7 +138,10 @@ const Home = () => {
               {paginatedPosts &&
                 paginatedPosts.map((post) => (
                   <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
-                    <PostCard post={post} onDeletePost={updateCachePosts} />
+                    <PostCard
+                      post={post}
+                      postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
+                    />
                   </Grid.Column>
                 ))}
             </TransitionGroup>
