@@ -68,8 +68,6 @@ module.exports = {
         body,
         category,
         user: user.id,
-        username: user.username,
-        imageUrl: user.imageUrl,
         createdAt: new Date().toISOString(),
         
       })
