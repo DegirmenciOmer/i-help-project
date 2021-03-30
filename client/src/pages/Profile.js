@@ -9,7 +9,7 @@ const Profile = (props) => {
     const userId = props.match.params.userId
     const [toggle, setToggle] = useState(false)
     const [errors, setErrors] = useState({})
-
+    
     //update user {
     const { values, onChange, onSubmit, setValues } = useForm(updateUserCallback, {
         userId,
@@ -22,6 +22,7 @@ const Profile = (props) => {
         userId
         }
     })
+
     useEffect(() => {
         if (!data) {
             return
@@ -93,17 +94,6 @@ const Profile = (props) => {
                 
                     <Form onSubmit={onSubmit} className={loading ? 'loading' : ''}>
                         <Form.Field>
-                            {/* <Form.Input
-                                name='username'
-                                type='text'
-                                placeholder={data.getUser.username}
-                                label='Username'
-                                value={values.username }
-                                error={errors.username ? true : false}
-                                onChange={(evt, data) => {
-                                onChange(evt, data)
-                            }}
-                            /> */}
                             <ImageUpload
                                 onUploadComplite={(evt, data) => {
                                 onChange(evt, data)
