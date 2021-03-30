@@ -86,7 +86,8 @@ module.exports = {
 
       try {
         const post = await Post.findById(postId)
-        if (user.username === post.username) {
+
+        if (user.id === post.user) {
           await post.delete()
           return 'Post deleted successfully'
         } else {
@@ -102,7 +103,8 @@ module.exports = {
       const user = checkAuth(context)
       try {
         const post = await Post.findById(postId)
-        if (user.username !== post.username) {
+
+        if (user.id !== post.user) {
           throw new AuthenticationError('Action not allowed')
         }
         post.body = body
