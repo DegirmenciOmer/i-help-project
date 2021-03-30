@@ -47,7 +47,7 @@ const SinglePost = (props) => {
       return
     }
     setValues((prevState) => ({ ...prevState, body: data.getPost.body }))
-  }, [data])
+  }, [data, setValues])
 
   const [deleteComment] = useMutation(DELETE_COMMENT_MUTATION)
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION)
