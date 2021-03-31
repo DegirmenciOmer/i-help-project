@@ -2,6 +2,7 @@
 const postsResolvers = require('./posts')
 const usersResolvers = require('./users')
 const commentsResolvers = require('./comments')
+const User = require('../../models/User')
 
 module.exports = {
   Post: {
@@ -16,18 +17,21 @@ module.exports = {
   },
   Like: {
     user: async (like) => {
-      //field resolver
-      await like.populate('user').execPopulate()
+      try {
+        return await User.findById(like.user)
+      } catch (err) {
+        return null
+      }
 
-      return like.user
     },
   },
   Comment: {
     author: async (comment) => {
-      //field resolver
-      await comment.populate('user').execPopulate()
-
-      return comment.user
+      try {
+        return await User.findById(comment.user)
+      } catch (err) {
+        return null
+      }
     },
   },
   Query: {

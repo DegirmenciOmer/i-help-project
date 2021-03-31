@@ -116,30 +116,28 @@ module.exports = {
     // like post
     async likePost(_, { postId }, context) {
       const user = checkAuth(context)
-
       const post = await Post.findById(postId)
 
-      if (post) {
-        if (post.likes.find((like) => String(like.user) === user.id)) {
-          // Post already likes, unlike it
-          post.likes = post.likes.filter(
-            (like) => String(like.user) !== user.id
-          )
-        } else {
-          // Not liked, like post
-          const newLike = {
-            user: user.id,
-            createdAt: new Date().toISOString(),
-          }
-          post.likes.push(newLike)
-        }
-
-        await post.save()
-
-        return post
-      } else {
+      if (!post) {
         throw new UserInputError('Post not found')
       }
+
+      const like = post.likes.find((like) => String(like.user) === user.id)
+
+      // Add like post from a specific user
+      if (!like) {
+        const newLike = {
+          user: user.id,
+          createdAt: new Date().toISOString(),
+        }
+        post.likes.push(newLike)
+      } else {
+        // Remove like post
+        post.likes.id(like._id).remove()
+      }
+
+      await post.save()
+      return post
     },
   },
   Subscription: {
