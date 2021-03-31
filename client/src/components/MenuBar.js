@@ -1,62 +1,58 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import { Menu } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import { AuthContext } from '../context/auth'
 import NewPopup from '../util/NewPopup'
 
 function MenuBar() {
+  const location = useLocation()
   const { user, logout } = useContext(AuthContext)
-  
-  const [activeItem, setActiveItem] = useState(window.location.pathname)
-  
-  const handleItemClick = (newPath) => setActiveItem(newPath)
 
   const menuBar = user ? (
-    <Menu pointing secondary size='massive' color='teal'>
-      <Menu.Item 
+    <Menu pointing secondary size="massive" color="teal">
+      <Menu.Item
         name={user.username}
-        active={activeItem === '/'}
-        onClick={()=>handleItemClick('/')} 
-        as={Link} 
-        to='/' />
-      <Menu.Menu position='right' >
-      <Menu.Item 
-        name='profile' 
-        active={activeItem === `/profile/${user.id}`}
-        onClick={()=>handleItemClick(`/profile/${user.id}`)} 
-        as={Link} 
-        to={`/profile/${user.id}`}>
-        
-      </Menu.Item>
-      <Menu.Item 
-        name='logout' 
-        onClick={logout} 
+        active={location.pathname === '/'}
         as={Link}
-        to='/' 
-      >
-      <NewPopup content='Logout'>
-            <i className='fas fa-sign-out-alt'></i>
+        to="/"
+      />
+
+      <Menu.Menu position="right">
+        <Menu.Item
+          name="profile"
+          active={location.pathname === `/profile/${user.id}`}
+          as={Link}
+          to={`/profile/${user.id}`}
+        ></Menu.Item>
+
+        <Menu.Item
+          className="logout"
+          name="logout"
+          onClick={logout}
+          as={Link}
+          to="/"
+        >
+          <NewPopup content="Logout">
+            <i className="fas fa-sign-out-alt"></i>
           </NewPopup>
         </Menu.Item>
       </Menu.Menu>
     </Menu>
   ) : (
-    <Menu pointing secondary size='massive' color='teal'>
+    <Menu pointing secondary size="massive" color="teal">
       <Menu.Item
-        name='home'
-        active={activeItem === '/'}
-        onClick={()=>handleItemClick('/')}
+        name="home"
+        active={location.pathname === '/'}
         as={Link}
-        to='/'
+        to="/"
       />
-      <Menu.Menu position='right'>
+      <Menu.Menu position="right">
         <Menu.Item
-          name='login'
-          active={activeItem === '/login'}
-          onClick={()=>handleItemClick('/login')}
+          name="login"
+          active={location.pathname === '/login'}
           as={Link}
-          to='/login'
+          to="/login"
         />
       </Menu.Menu>
     </Menu>
