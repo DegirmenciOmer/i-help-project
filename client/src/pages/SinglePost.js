@@ -218,12 +218,14 @@ const FETCH_POST_QUERY = gql`
       body
       category
       createdAt
-      username
-      imageUrl
+      author {
+        username
+        imageUrl
+      }
       likeCount
       likes {
         id
-        username
+
         createdAt
       }
       commentCount
@@ -245,7 +247,9 @@ const SUBMIT_COMMENT_MUTATION = gql`
         id
         body
         createdAt
-        username
+        # author {
+        #   username
+        # }
       }
       commentCount
     }
@@ -259,17 +263,18 @@ const UPDATE_POST_MUTATION = gql`
       body
       category
       createdAt
-      username
+      author {
+        username
+      }
+
       likes {
         id
-        username
         createdAt
       }
       likeCount
       comments {
         id
         body
-        username
         createdAt
       }
       commentCount
