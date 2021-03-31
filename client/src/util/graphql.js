@@ -6,18 +6,23 @@ export const FETCH_POSTS_QUERY = gql`
       paginatedPosts {
         id
         body
-        imageUrl
+        author {
+          id
+          username
+        }
         category
         createdAt
-        username
+
         likeCount
         likes {
-          username
+          id
         }
         commentCount
         comments {
           id
-          username
+          username {
+            username
+          }
           createdAt
           body
         }

@@ -20,13 +20,13 @@ module.exports = gql`
   type Comment {
     id: ID!
     createdAt: String!
-    username: String!
+    username: User!
     body: String!
   }
   type Like {
-    id: ID!
+    id: User!
     createdAt: String!
-    username: String!
+    username: User!
     body: String!
   }
   type User {
@@ -53,7 +53,6 @@ module.exports = gql`
     getPosts(category: String, offset: Int, limit: Int): PostsResponse
     getPost(postId: ID!): Post
     getUser(userId: ID!): User
-
   }
   type Mutation {
     register(registerInput: RegisterInput): User!

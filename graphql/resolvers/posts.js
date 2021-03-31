@@ -69,7 +69,6 @@ module.exports = {
         category,
         user: user.id,
         createdAt: new Date().toISOString(),
-        
       })
 
       const post = await newPost.save()
@@ -115,18 +114,18 @@ module.exports = {
     },
 
     // like post
-    async likePost(_, { postId }, context) {
-      const { username } = checkAuth(context)
+    async likePost(_, { id }, context) {
+      const { user } = checkAuth(context)
 
-      const post = await Post.findById(postId)
+      const post = await Post.findById(id)
       if (post) {
-        if (post.likes.find((like) => like.username === username)) {
+        if (post.likes.find((like) => like.id === user)) {
           // Post already likes, unlike it
-          post.likes = post.likes.filter((like) => like.username !== username)
+          post.likes = post.likes.filter((like) => like.id !== user)
         } else {
           // Not liked, like post
           post.likes.push({
-            username,
+            id,
             createdAt: new Date().toISOString(),
           })
         }
