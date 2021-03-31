@@ -26,7 +26,7 @@ const PostCard = ({
 }) => {
   const { user } = useContext(AuthContext)
   const [deletePostMutation] = useMutation(DELETE_POST_MUTATION)
-
+  
   function handleDeletePost() {
     deletePostMutation({
       variables: {
@@ -38,7 +38,7 @@ const PostCard = ({
       refetchQueries: [postsQuery],
     })
   }
-
+  console.log(imageUrl)
   return (
     <Card fluid>
       <Card.Content>
