@@ -8,6 +8,7 @@ export const FETCH_POSTS_QUERY = gql`
         body
         author {
           username
+          imageUrl
           id
         }
         category

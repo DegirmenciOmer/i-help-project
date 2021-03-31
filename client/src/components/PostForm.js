@@ -86,14 +86,20 @@ const CREATE_POST_MUTATION = gql`
       createdAt
       author {
         username
+        imageUrl
       }
       likes {
         id
-
+        user {
+          username
+        }
         createdAt
       }
       likeCount
       comments {
+        author {
+          username
+        }
         id
         body
         createdAt
