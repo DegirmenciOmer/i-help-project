@@ -18,7 +18,6 @@ const Profile = (props) => {
       imageUrl: '',
     }
   )
-  console.log(values)
   const { data } = useQuery(FETCH_USER_QUERY, {
     variables: {
       userId,
@@ -74,7 +73,7 @@ const Profile = (props) => {
             <Card.Content>
               <Card.Header>{data.getUser.username}</Card.Header>
               <Card.Meta>
-                <span className='date'>{data.getUser.createdAt}</span>
+                <span className="date">{data.getUser.createdAt}</span>
               </Card.Meta>
               <Card.Description>{data.getUser.email}</Card.Description>
             </Card.Content>
@@ -82,11 +81,11 @@ const Profile = (props) => {
             {!toggle ? (
               <Card.Description>
                 <Button
-                  color='teal'
-                  type='submit'
+                  color="teal"
+                  type="submit"
                   onClick={() => setToggle(true)}
                 >
-                  <Icon name='edit outline' />
+                  <Icon name="edit outline" />
                   update
                 </Button>
               </Card.Description>
@@ -110,15 +109,15 @@ const Profile = (props) => {
                     }}
                   />
                   <Form.Input
-                    name='email'
-                    type='email'
+                    name="email"
+                    type="email"
                     placeholder={data.getUser.email}
-                    label='Email'
+                    label="Email"
                     error={errors.email ? true : false}
                     value={values.email}
                     onChange={onChange}
                   />
-                  <Button color='teal' type='submit'>
+                  <Button color="teal" type="submit">
                     Save
                   </Button>
                 </Form.Field>
