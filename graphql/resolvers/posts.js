@@ -118,13 +118,12 @@ module.exports = {
       const user = checkAuth(context)
 
       const post = await Post.findById(postId)
-      console.log(user.id)
 
       if (post) {
-        if (post.likes.find((like) => like.user === String(user.id))) {
+        if (post.likes.find((like) => String(like.user) === user.id)) {
           // Post already likes, unlike it
           post.likes = post.likes.filter(
-            (like) => like.user !== String(user.id)
+            (like) => String(like.user) !== user.id
           )
         } else {
           // Not liked, like post
@@ -136,8 +135,11 @@ module.exports = {
         }
 
         await post.save()
+
         return post
-      } else throw new UserInputError('Post not found')
+      } else {
+        throw new UserInputError('Post not found')
+      }
     },
   },
   Subscription: {
