@@ -90,8 +90,7 @@ const SinglePost = (props) => {
       body,
       category,
       createdAt,
-      username,
-      imageUrl,
+      author: { username, imageUrl },
       comments,
       likes,
       likeCount,
@@ -225,13 +224,11 @@ const FETCH_POST_QUERY = gql`
       likeCount
       likes {
         id
-
         createdAt
       }
       commentCount
       comments {
         id
-        username
         createdAt
         body
       }
@@ -263,9 +260,9 @@ const UPDATE_POST_MUTATION = gql`
       body
       category
       createdAt
-      author {
-        username
-      }
+      # author {
+      #   username
+      # }
 
       likes {
         id
@@ -287,7 +284,7 @@ const DELETE_COMMENT_MUTATION = gql`
       id
       comments {
         id
-        username
+        # username
         createdAt
         body
       }

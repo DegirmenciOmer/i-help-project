@@ -118,10 +118,14 @@ module.exports = {
       const user = checkAuth(context)
 
       const post = await Post.findById(postId)
+      console.log(user.id)
+
       if (post) {
-        if (post.likes.find((like) => like.user === user.id)) {
+        if (post.likes.find((like) => like.user === String(user.id))) {
           // Post already likes, unlike it
-          post.likes = post.likes.filter((like) => like.user !== user.id)
+          post.likes = post.likes.filter(
+            (like) => like.user !== String(user.id)
+          )
         } else {
           // Not liked, like post
           const newLike = {
