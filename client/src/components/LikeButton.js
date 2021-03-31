@@ -57,7 +57,7 @@ const LIKE_POST_MUTATION = gql`
       id
       likes {
         id
-        username
+
         createdAt
       }
       likeCount

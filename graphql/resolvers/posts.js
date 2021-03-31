@@ -103,7 +103,7 @@ module.exports = {
       try {
         const post = await Post.findById(postId)
 
-        if (user.id !== String(post.user) {
+        if (user.id !== String(post.user)) {
           throw new AuthenticationError('Action not allowed')
         }
         post.body = body

@@ -14,10 +14,9 @@ const PostCard = ({
   post: {
     body,
     category,
-    imageUrl,
     createdAt,
     id,
-    username,
+    author: { username, imageUrl },
     likeCount,
     commentCount,
     likes,

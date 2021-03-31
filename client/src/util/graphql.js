@@ -7,8 +7,8 @@ export const FETCH_POSTS_QUERY = gql`
         id
         body
         author {
-          id
           username
+          id
         }
         category
         createdAt
@@ -20,9 +20,6 @@ export const FETCH_POSTS_QUERY = gql`
         commentCount
         comments {
           id
-          username {
-            username
-          }
           createdAt
           body
         }
