@@ -8,10 +8,27 @@ module.exports = {
     likeCount: (parent) => parent.likes.length,
     commentCount: (parent) => parent.comments.length,
     author: async (post) => {
-      await post.populate('user').execPopulate();
+      //field resolver
+      await post.populate('user').execPopulate()
 
-      return post.user;
-    }
+      return post.user
+    },
+  },
+  Like: {
+    user: async (like) => {
+      //field resolver
+      await like.populate('user').execPopulate()
+
+      return like.user
+    },
+  },
+  Comment: {
+    author: async (comment) => {
+      //field resolver
+      await comment.populate('user').execPopulate()
+
+      return comment.user
+    },
   },
   Query: {
     ...postsResolvers.Query,

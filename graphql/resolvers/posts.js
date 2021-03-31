@@ -86,7 +86,7 @@ module.exports = {
       try {
         const post = await Post.findById(postId)
 
-        if (user.id === post.user) {
+        if (user.id === String(post.user)) {
           await post.delete()
           return 'Post deleted successfully'
         } else {
@@ -103,7 +103,7 @@ module.exports = {
       try {
         const post = await Post.findById(postId)
 
-        if (user.id !== post.user) {
+        if (user.id !== String(post.user) {
           throw new AuthenticationError('Action not allowed')
         }
         post.body = body
@@ -114,20 +114,21 @@ module.exports = {
     },
 
     // like post
-    async likePost(_, { id }, context) {
-      const { user } = checkAuth(context)
+    async likePost(_, { postId }, context) {
+      const user = checkAuth(context)
 
-      const post = await Post.findById(id)
+      const post = await Post.findById(postId)
       if (post) {
-        if (post.likes.find((like) => like.id === user)) {
+        if (post.likes.find((like) => like.user === user.id)) {
           // Post already likes, unlike it
-          post.likes = post.likes.filter((like) => like.id !== user)
+          post.likes = post.likes.filter((like) => like.user !== user.id)
         } else {
           // Not liked, like post
-          post.likes.push({
-            id,
+          const newLike = {
+            user: user.id,
             createdAt: new Date().toISOString(),
-          })
+          }
+          post.likes.push(newLike)
         }
 
         await post.save()

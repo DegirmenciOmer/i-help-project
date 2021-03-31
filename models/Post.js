@@ -7,14 +7,20 @@ const postSchema = new Schema({
   comments: [
     {
       body: String,
-      username: String,
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
       createdAt: String,
     },
   ],
   likes: [
     {
-      username: String,
       createdAt: String,
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
     },
   ],
   user: {
