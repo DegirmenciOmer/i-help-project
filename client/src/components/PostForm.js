@@ -12,16 +12,19 @@ const options = [
 ]
 
 const PostForm = ({ categoryFiltered, postsQuery }) => {
-  const { values, setValues, onChange, onSubmit } = useForm(createPostCallback, {
-    body: '',
-    category: categoryFiltered || '',
-  })
+  const { values, setValues, onChange, onSubmit } = useForm(
+    createPostCallback,
+    {
+      body: '',
+      category: categoryFiltered || '',
+    }
+  )
   const [createPost, { error }] = useMutation(CREATE_POST_MUTATION)
 
   useEffect(() => {
     setValues((prevState) => ({
       ...prevState,
-      category: categoryFiltered
+      category: categoryFiltered,
     }))
   }, [categoryFiltered, setValues])
 
@@ -31,7 +34,7 @@ const PostForm = ({ categoryFiltered, postsQuery }) => {
       onError(err) {
         console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
       },
-      refetchQueries: [postsQuery]
+      refetchQueries: [postsQuery],
     })
   }
   return (
@@ -81,17 +84,24 @@ const CREATE_POST_MUTATION = gql`
       body
       category
       createdAt
-      username
+      author {
+        username
+        imageUrl
+      }
       likes {
         id
-        username
+        user {
+          username
+        }
         createdAt
       }
       likeCount
       comments {
+        author {
+          username
+        }
         id
         body
-        username
         createdAt
       }
       commentCount

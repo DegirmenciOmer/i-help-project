@@ -8,7 +8,7 @@ import NewPopup from '../util/NewPopup'
 function MenuBar() {
   const location = useLocation()
   const { user, logout } = useContext(AuthContext)
-  
+
   const menuBar = user ? (
     <Menu pointing secondary size="massive" color="teal">
       <Menu.Item

@@ -26,7 +26,7 @@ const Register = (props) => {
   const [addUser, { loading, error }] = useMutation(REGISTER_USER, {
     update(_, { data: { register: userData } }) {
       context.login(userData)
-      props.history.addClass('active').push('/')
+      props.history.push('/')
     },
     onError(err) {
       setErrors(err.graphQLErrors[0].extensions.exception.errors)

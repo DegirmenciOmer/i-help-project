@@ -68,10 +68,8 @@ module.exports = {
         body,
         category,
         user: user.id,
-        username: user.username,
         imageUrl: user.imageUrl,
         createdAt: new Date().toISOString(),
-        
       })
 
       const post = await newPost.save()
@@ -88,7 +86,8 @@ module.exports = {
 
       try {
         const post = await Post.findById(postId)
-        if (user.username === post.username) {
+
+        if (user.id === String(post.user)) {
           await post.delete()
           return 'Post deleted successfully'
         } else {
@@ -104,7 +103,8 @@ module.exports = {
       const user = checkAuth(context)
       try {
         const post = await Post.findById(postId)
-        if (user.username !== post.username) {
+
+        if (user.id !== String(post.user)) {
           throw new AuthenticationError('Action not allowed')
         }
         post.body = body
@@ -116,24 +116,29 @@ module.exports = {
 
     // like post
     async likePost(_, { postId }, context) {
-      const { username } = checkAuth(context)
-
+      const user = checkAuth(context)
       const post = await Post.findById(postId)
-      if (post) {
-        if (post.likes.find((like) => like.username === username)) {
-          // Post already likes, unlike it
-          post.likes = post.likes.filter((like) => like.username !== username)
-        } else {
-          // Not liked, like post
-          post.likes.push({
-            username,
-            createdAt: new Date().toISOString(),
-          })
-        }
 
-        await post.save()
-        return post
-      } else throw new UserInputError('Post not found')
+      if (!post) {
+        throw new UserInputError('Post not found')
+      }
+
+      const like = post.likes.find((like) => String(like.user) === user.id)
+
+      // Add like post from a specific user
+      if (!like) {
+        const newLike = {
+          user: user.id,
+          createdAt: new Date().toISOString(),
+        }
+        post.likes.push(newLike)
+      } else {
+        // Remove like post
+        post.likes.id(like._id).remove()
+      }
+
+      await post.save()
+      return post
     },
   },
   Subscription: {

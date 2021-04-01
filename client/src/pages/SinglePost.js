@@ -47,7 +47,7 @@ const SinglePost = (props) => {
       return
     }
     setValues((prevState) => ({ ...prevState, body: data.getPost.body }))
-  }, [data, setValues])
+  }, [data])
 
   const [deleteComment] = useMutation(DELETE_COMMENT_MUTATION)
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION)
@@ -90,8 +90,7 @@ const SinglePost = (props) => {
       body,
       category,
       createdAt,
-      username,
-      imageUrl,
+      author: { username, imageUrl },
       comments,
       likes,
       likeCount,
@@ -218,18 +217,18 @@ const FETCH_POST_QUERY = gql`
       body
       category
       createdAt
-      username
-      imageUrl
+      author {
+        username
+        imageUrl
+      }
       likeCount
       likes {
         id
-        username
         createdAt
       }
       commentCount
       comments {
         id
-        username
         createdAt
         body
       }
@@ -245,7 +244,9 @@ const SUBMIT_COMMENT_MUTATION = gql`
         id
         body
         createdAt
-        username
+        # author {
+        #   username
+        # }
       }
       commentCount
     }
@@ -259,17 +260,18 @@ const UPDATE_POST_MUTATION = gql`
       body
       category
       createdAt
-      username
+      # author {
+      #   username
+      # }
+
       likes {
         id
-        username
         createdAt
       }
       likeCount
       comments {
         id
         body
-        username
         createdAt
       }
       commentCount
@@ -282,7 +284,7 @@ const DELETE_COMMENT_MUTATION = gql`
       id
       comments {
         id
-        username
+        # username
         createdAt
         body
       }
