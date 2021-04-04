@@ -28,11 +28,12 @@ const PostForm = ({ categoryFiltered, postsQuery }) => {
     }))
   }, [categoryFiltered, setValues])
 
-  function createPostCallback() {
-    createPost({
+  async function createPostCallback() {
+    await createPost({
       variables: values,
+      refetchQueries: [postsQuery],
       onError(err) {
-        console.log(err && err.graphQLErrors[0] ? err.graphQLErrors[0] : err)
+        console.log(err)
       },
       refetchQueries: [postsQuery],
     })
@@ -45,20 +46,20 @@ const PostForm = ({ categoryFiltered, postsQuery }) => {
           <Form.Select
             fluid
             options={options}
-            placeholder='Category'
-            name='category'
+            placeholder="Category"
+            name="category"
             onChange={onChange}
             value={values.category}
             disabled={!!categoryFiltered}
           />
 
           <Form.Input
-            placeholder='Create new post'
-            name='body'
+            placeholder="Create new post"
+            name="body"
             onChange={onChange}
             value={values.body}
           />
-          <Button color='teal' type='submit'>
+          <Button color="teal" type="submit">
             Submit
           </Button>
         </Form.Field>
@@ -67,8 +68,8 @@ const PostForm = ({ categoryFiltered, postsQuery }) => {
       {error &&
         Array.isArray(error.graphQLErrors) &&
         error.graphQLErrors.length > 0 && (
-          <div className='ui error message' style={{ marginBottom: 20 }}>
-            <ul className='list'>
+          <div className="ui error message" style={{ marginBottom: 20 }}>
+            <ul className="list">
               <li>{error.graphQLErrors[0].message}</li>
             </ul>
           </div>
