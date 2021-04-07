@@ -33,7 +33,6 @@ const Home = () => {
     getPosts: { paginatedPosts, totalPostsCount, matchedResultsCount },
   } = data
 
-
   function nextPage() {
     setOffset((offset) => offset + PAGINATION_LIMIT)
   }

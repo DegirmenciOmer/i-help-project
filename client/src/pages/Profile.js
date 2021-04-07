@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery, gql, useMutation } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import { Image, Grid, Card, Button, Icon, Form } from 'semantic-ui-react'
 import { useForm } from '../util/hooks'
 import ImageUpload from '../components/ImageUpload'
+import { UPDATE_USER_MUTATION } from '../util/mutations'
+import { FETCH_USER_QUERY } from '../util/queries'
 
 const Profile = (props) => {
   const userId = props.match.params.userId
@@ -30,7 +32,7 @@ const Profile = (props) => {
     setValues((prevState) => ({ ...prevState, ...data.getUser }))
   }, [data, setValues])
 
-  const [updateUser, { loading }] = useMutation(FETCH_USER_MUTATION)
+  const [updateUser, { loading }] = useMutation(UPDATE_USER_MUTATION)
 
   function updateUserCallback() {
     updateUser({
@@ -73,7 +75,7 @@ const Profile = (props) => {
             <Card.Content>
               <Card.Header>{data.getUser.username}</Card.Header>
               <Card.Meta>
-                <span className="date">{data.getUser.createdAt}</span>
+                <span className='date'>{data.getUser.createdAt}</span>
               </Card.Meta>
               <Card.Description>{data.getUser.email}</Card.Description>
             </Card.Content>
@@ -81,11 +83,11 @@ const Profile = (props) => {
             {!toggle ? (
               <Card.Description>
                 <Button
-                  color="teal"
-                  type="submit"
+                  color='teal'
+                  type='submit'
                   onClick={() => setToggle(true)}
                 >
-                  <Icon name="edit outline" />
+                  <Icon name='edit outline' />
                   update
                 </Button>
               </Card.Description>
@@ -109,15 +111,15 @@ const Profile = (props) => {
                     }}
                   />
                   <Form.Input
-                    name="email"
-                    type="email"
+                    name='email'
+                    type='email'
                     placeholder={data.getUser.email}
-                    label="Email"
+                    label='Email'
                     error={errors.email ? true : false}
                     value={values.email}
                     onChange={onChange}
                   />
-                  <Button color="teal" type="submit">
+                  <Button color='teal' type='submit'>
                     Save
                   </Button>
                 </Form.Field>
@@ -130,22 +132,4 @@ const Profile = (props) => {
   )
 }
 
-export const FETCH_USER_QUERY = gql`
-  query getUser($userId: ID!) {
-    getUser(userId: $userId) {
-      username
-      email
-      imageUrl
-    }
-  }
-`
-export const FETCH_USER_MUTATION = gql`
-  mutation($userId: ID!, $imageUrl: String, $email: String!) {
-    updateUser(userId: $userId, imageUrl: $imageUrl, email: $email) {
-      username
-      email
-      imageUrl
-    }
-  }
-`
 export default Profile

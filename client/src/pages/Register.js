@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react'
 import { Button, Form } from 'semantic-ui-react'
 import { useMutation } from '@apollo/client'
-import gql from 'graphql-tag'
 
 import { AuthContext } from '../context/auth'
 
 import { useForm } from '../util/hooks'
 import ImageUpload from '../components/ImageUpload'
+import { REGISTER_USER } from '../util/mutations'
 
 const Register = (props) => {
   const context = useContext(AuthContext)
@@ -38,7 +38,7 @@ const Register = (props) => {
   function registerUser() {
     addUser()
   }
-  
+
   return (
     <div className='form-container'>
       <Form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
@@ -102,32 +102,5 @@ const Register = (props) => {
     </div>
   )
 }
-
-const REGISTER_USER = gql`
-  mutation register(
-    $username: String!
-    $email: String!
-    $password: String!
-    $confirmPassword: String!
-    $imageUrl: String
-  ) {
-    register(
-      registerInput: {
-        username: $username
-        email: $email
-        password: $password
-        confirmPassword: $confirmPassword
-        imageUrl: $imageUrl
-      }
-    ) {
-      id
-      email
-      username
-      createdAt
-      imageUrl
-      token
-    }
-  }
-`
 
 export default Register
