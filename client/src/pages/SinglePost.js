@@ -8,6 +8,11 @@ import { FETCH_POST_QUERY } from '../util/queries'
 import LikeButton from '../components/LikeButton'
 import { AuthContext } from '../context/auth'
 import NewPopup from '../util/NewPopup'
+import {
+  SUBMIT_COMMENT_MUTATION,
+  UPDATE_POST_MUTATION,
+  DELETE_COMMENT_MUTATION,
+} from '../util/mutations'
 
 const SinglePost = (props) => {
   const [toggle, setToggle] = useState(false)
@@ -96,7 +101,8 @@ const SinglePost = (props) => {
       likeCount,
       commentCount,
     } = post
-    console.log(comments)
+
+    console.log(comments[0])
     postMarkup = (
       <Grid>
         <Grid.Row>
@@ -189,7 +195,9 @@ const SinglePost = (props) => {
             {comments.map((comment) => (
               <Card key={comment.id} fluid>
                 <Card.Content>
-                  {user && user.username === authorName && (
+                  {console.log(comment)}
+                  {console.log(user.id)}
+                  {user && user.id === comment.id && (
                     <DeleteButton
                       content='Delete Comment'
                       onDelete={() => handleCommentDelete(comment.id)}
@@ -209,65 +217,5 @@ const SinglePost = (props) => {
 
   return postMarkup
 }
-
-const SUBMIT_COMMENT_MUTATION = gql`
-  mutation($postId: String!, $body: String!) {
-    createComment(postId: $postId, body: $body) {
-      id
-      comments {
-        id
-        body
-        createdAt
-        author {
-          username
-        }
-      }
-      commentCount
-    }
-  }
-`
-
-const UPDATE_POST_MUTATION = gql`
-  mutation updatePost($postId: ID!, $body: String!) {
-    updatePost(body: $body, postId: $postId) {
-      id
-      body
-      category
-      createdAt
-      # author {
-      #   username
-      # }
-
-      likes {
-        id
-        createdAt
-      }
-      likeCount
-      comments {
-        id
-        body
-        createdAt
-      }
-      commentCount
-    }
-  }
-`
-const DELETE_COMMENT_MUTATION = gql`
-  mutation deleteComment($postId: ID!, $commentId: ID!) {
-    deleteComment(postId: $postId, commentId: $commentId) {
-      id
-      comments {
-        id
-        createdAt
-        body
-        author {
-          id
-          username
-        }
-      }
-      commentCount
-    }
-  }
-`
 
 export default SinglePost

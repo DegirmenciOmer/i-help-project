@@ -129,13 +129,15 @@ const Home = () => {
                 </Button>
               </NewPopup>
             )}
-            {!isLastPage() && (
-              <NewPopup content='Next'>
-                <Button className='ui basic icon button' onClick={nextPage}>
-                  <i className='fas fa-chevron-circle-right'></i>
-                </Button>
-              </NewPopup>
-            )}
+
+            {matchedResultsCount > PAGINATION_LIMIT ||
+              (totalPostsCount > PAGINATION_LIMIT && !isLastPage() && (
+                <NewPopup content='Next'>
+                  <Button className='ui basic icon button' onClick={nextPage}>
+                    <i className='fas fa-chevron-circle-right'></i>
+                  </Button>
+                </NewPopup>
+              ))}
           </Grid.Column>
         </Grid.Row>
       </Grid>

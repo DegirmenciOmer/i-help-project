@@ -23,6 +23,7 @@ export const CREATE_POST_MUTATION = gql`
       comments {
         author {
           username
+          id
         }
         id
         body
@@ -39,16 +40,13 @@ export const UPDATE_POST_MUTATION = gql`
       body
       category
       createdAt
-      # author {
-      #   username
-      # }
+      author {
+        username
+      }
 
       likes {
         id
         createdAt
-        # author {
-        #   username
-        # }
       }
       likeCount
       comments {
@@ -103,8 +101,8 @@ export const REGISTER_USER = gql`
     ) {
       id
       email
-      username
       createdAt
+      username
       imageUrl
       token
     }
@@ -113,17 +111,19 @@ export const REGISTER_USER = gql`
 export const FETCH_USER_MUTATION = gql`
   mutation($userId: ID!, $imageUrl: String, $email: String!) {
     updateUser(userId: $userId, imageUrl: $imageUrl, email: $email) {
-      username
       email
-      imageUrl
+      author {
+        username
+        imageUrl
+      }
     }
   }
 `
 //comment mutations
 
 export const SUBMIT_COMMENT_MUTATION = gql`
-  mutation {
-    createComment(postId: "606c2cd068b8e22164073ea0", body: "Comment3") {
+  mutation($postId: String!, $body: String!) {
+    createComment(postId: $postId, body: $body) {
       id
       comments {
         id
@@ -131,6 +131,7 @@ export const SUBMIT_COMMENT_MUTATION = gql`
         createdAt
         author {
           username
+          id
         }
       }
       commentCount
@@ -144,9 +145,12 @@ export const DELETE_COMMENT_MUTATION = gql`
       id
       comments {
         id
-        # username
         createdAt
         body
+        author {
+          id
+          username
+        }
       }
       commentCount
     }

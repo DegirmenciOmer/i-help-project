@@ -61,6 +61,10 @@ export const FETCH_POST_QUERY = gql`
         id
         createdAt
         body
+        # author {
+        #   id
+        #   username
+        # }
       }
     }
   }
