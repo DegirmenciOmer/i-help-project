@@ -30,9 +30,12 @@ const Comments = ({ user, comments, postId }) => {
               />
             )}
             <Card.Header>
-              {comment.author.username} <span>commented on this post:</span>
+              {comment.author.username}{' '}
+              <span className='commit-header'>
+                {moment(comment.createdAt).fromNow()}:
+              </span>
             </Card.Header>
-            <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
+            <Card.Meta></Card.Meta>
             <Card.Description>{comment.body}</Card.Description>
           </Card.Content>
         </Card>

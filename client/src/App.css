@@ -39,6 +39,12 @@ a, a:hover {
   justify-content: space-between;
 }
 
+.commit-header{
+  font:small normal;
+  font-family: "Arial", sans-serif;
+
+}
+
 .EditInput {
   border: none;
 }
