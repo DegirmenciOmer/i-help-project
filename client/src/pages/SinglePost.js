@@ -1,17 +1,16 @@
 import React, { useContext, useState, useRef, useEffect } from 'react'
-import { useQuery, gql, useMutation } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import { Button, Card, Grid, Icon, Image, Label, Form } from 'semantic-ui-react'
 import moment from 'moment'
-import DeleteButton from '../components/DeleteButton'
 import { useForm } from '../util/hooks'
 import { FETCH_POST_QUERY } from '../util/queries'
 import LikeButton from '../components/LikeButton'
+import Comments from '../components/Comments'
 import { AuthContext } from '../context/auth'
 import NewPopup from '../util/NewPopup'
 import {
   SUBMIT_COMMENT_MUTATION,
   UPDATE_POST_MUTATION,
-  DELETE_COMMENT_MUTATION,
 } from '../util/mutations'
 
 const SinglePost = (props) => {
@@ -52,19 +51,8 @@ const SinglePost = (props) => {
       return
     }
     setValues((prevState) => ({ ...prevState, body: data.getPost.body }))
-  }, [data])
-
-  const [deleteComment] = useMutation(DELETE_COMMENT_MUTATION)
+  }, [data, postId])
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION)
-
-  function handleCommentDelete(commentId) {
-    deleteComment({
-      variables: {
-        postId,
-        commentId,
-      },
-    })
-  }
 
   function handleCommentSubmit() {
     submitComment({
@@ -102,7 +90,6 @@ const SinglePost = (props) => {
       commentCount,
     } = post
 
-    console.log(comments[0])
     postMarkup = (
       <Grid>
         <Grid.Row>
@@ -192,23 +179,7 @@ const SinglePost = (props) => {
                 </Card.Content>
               </Card>
             )}
-            {comments.map((comment) => (
-              <Card key={comment.id} fluid>
-                <Card.Content>
-                  {user && user.id === comment.author.id && (
-                    <DeleteButton
-                      content='Delete Comment'
-                      onDelete={() => handleCommentDelete(comment.id)}
-                    />
-                  )}
-                  <Card.Header>
-                    {comment.author.username} commented on this post:
-                  </Card.Header>
-                  <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
-                  <Card.Description>{comment.body}</Card.Description>
-                </Card.Content>
-              </Card>
-            ))}
+            <Comments postId={postId} comments={comments} user={user} />
           </Grid.Column>
         </Grid.Row>
       </Grid>
