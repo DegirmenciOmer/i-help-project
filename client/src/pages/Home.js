@@ -7,7 +7,6 @@ import PostForm from '../components/PostForm'
 import { AuthContext } from '../context/auth'
 import { FETCH_POSTS_QUERY } from '../util/queries'
 import Filtering from '../components/Filtering'
-import NewPopup from '../util/NewPopup'
 
 import { PAGINATION_LIMIT, INITIAL_VARIABLES } from '../constants/constants'
 
@@ -70,12 +69,10 @@ const Home = () => {
         <Grid.Column floated='left' width={5}>
           <Grid.Row>
             {user && (
-              <Grid.Column>
-                <PostForm
-                  categoryFiltered={categorySelected}
-                  postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
-                />
-              </Grid.Column>
+              <PostForm
+                categoryFiltered={categorySelected}
+                postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
+              />
             )}
           </Grid.Row>
         </Grid.Column>
@@ -123,20 +120,16 @@ const Home = () => {
         <Grid.Row>
           <Grid.Column position='right'>
             {!isFirstPage() && (
-              <NewPopup content='Previous'>
-                <Button className='ui basic icon button' onClick={previousPage}>
-                  <i className='fas fa-chevron-circle-left'></i>
-                </Button>
-              </NewPopup>
+              <Button className='ui basic icon button' onClick={previousPage}>
+                <i className='fas fa-chevron-circle-left'></i>
+              </Button>
             )}
 
             {matchedResultsCount > PAGINATION_LIMIT ||
               (totalPostsCount > PAGINATION_LIMIT && !isLastPage() && (
-                <NewPopup content='Next'>
-                  <Button className='ui basic icon button' onClick={nextPage}>
-                    <i className='fas fa-chevron-circle-right'></i>
-                  </Button>
-                </NewPopup>
+                <Button className='ui basic icon button' onClick={nextPage}>
+                  <i className='fas fa-chevron-circle-right'></i>
+                </Button>
               ))}
           </Grid.Column>
         </Grid.Row>

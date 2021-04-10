@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button, Form } from 'semantic-ui-react'
-import { useMutation, gql } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { useForm } from '../util/hooks'
 import { CREATE_POST_MUTATION } from '../util/mutations'
 

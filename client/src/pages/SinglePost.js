@@ -47,6 +47,7 @@ const SinglePost = (props) => {
       return
     }
     setValues((prevState) => ({ ...prevState, body: data.getPost.body }))
+    // eslint-disable-next-line
   }, [data, postId])
 
   if (!data) {
