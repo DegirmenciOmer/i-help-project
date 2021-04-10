@@ -43,7 +43,7 @@ const PostCard = ({
         <Image floated='right' size='mini' src={imageUrl} />
         <Card.Header>{username}</Card.Header>
         <Card.Meta as={Link} to={`/posts/${id}`}>
-          {moment(createdAt).fromNow(true)}
+          {moment(createdAt).fromNow(true)} //put inside const
           {`-${category}`}
         </Card.Meta>
         <Link to={`/posts/${id}`}>

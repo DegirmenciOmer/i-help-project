@@ -5,7 +5,7 @@ import PostCard from '../components/PostCard'
 import PostForm from '../components/PostForm'
 
 import { AuthContext } from '../context/auth'
-import { FETCH_POSTS_QUERY } from '../util/graphql'
+import { FETCH_POSTS_QUERY } from '../util/queries'
 import Filtering from '../components/Filtering'
 import NewPopup from '../util/NewPopup'
 

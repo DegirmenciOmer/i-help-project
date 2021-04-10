@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-//Single post mutations
+//post mutations
 
 export const CREATE_POST_MUTATION = gql`
   mutation createPost($body: String!, $category: String!) {

@@ -33,6 +33,10 @@ export const FETCH_POSTS_QUERY = gql`
           id
           createdAt
           body
+          author {
+            username
+            id
+          }
         }
       }
       totalPostsCount
@@ -40,6 +44,7 @@ export const FETCH_POSTS_QUERY = gql`
     }
   }
 `
+
 export const FETCH_POST_QUERY = gql`
   query($postId: ID!) {
     getPost(postId: $postId) {
@@ -61,10 +66,10 @@ export const FETCH_POST_QUERY = gql`
         id
         createdAt
         body
-        # author {
-        #   id
-        #   username
-        # }
+        author {
+          id
+          username
+        }
       }
     }
   }

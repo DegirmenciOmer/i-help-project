@@ -195,15 +195,15 @@ const SinglePost = (props) => {
             {comments.map((comment) => (
               <Card key={comment.id} fluid>
                 <Card.Content>
-                  {console.log(comment)}
-                  {console.log(user.id)}
-                  {user && user.id === comment.id && (
+                  {user && user.id === comment.author.id && (
                     <DeleteButton
                       content='Delete Comment'
                       onDelete={() => handleCommentDelete(comment.id)}
                     />
                   )}
-                  <Card.Header>{comment.author}</Card.Header>
+                  <Card.Header>
+                    {comment.author.username} commented on this post:
+                  </Card.Header>
                   <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
                   <Card.Description>{comment.body}</Card.Description>
                 </Card.Content>
