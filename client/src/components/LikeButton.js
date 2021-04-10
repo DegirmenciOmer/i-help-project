@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Icon, Label } from 'semantic-ui-react'
-import { useMutation, gql } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { Link } from 'react-router-dom'
 
 import NewPopup from '../util/NewPopup'
+import { LIKE_POST_MUTATION } from '../util/mutations'
 
 const LikeButton = ({ user, post: { id, likeCount, likes } }) => {
   const [liked, setLiked] = useState(false)
@@ -29,7 +30,7 @@ const LikeButton = ({ user, post: { id, likeCount, likes } }) => {
   )
 
   return user ? (
-    <NewPopup content='Like on post'>
+    <NewPopup content='Like post'>
       <Button as='div' labelPosition='right' onClick={likePost}>
         {likeButton}
         <Label basic color='teal' pointing='left'>
@@ -38,7 +39,7 @@ const LikeButton = ({ user, post: { id, likeCount, likes } }) => {
       </Button>
     </NewPopup>
   ) : (
-    <NewPopup content='Like on post'>
+    <NewPopup content='Like post'>
       <Button color='teal' labelPosition='right' basic as={Link} to='/login'>
         <Button color='teal' basic>
           <Icon name='heart' />
@@ -50,21 +51,5 @@ const LikeButton = ({ user, post: { id, likeCount, likes } }) => {
     </NewPopup>
   )
 }
-
-const LIKE_POST_MUTATION = gql`
-  mutation likePost($postId: ID!) {
-    likePost(postId: $postId) {
-      id
-      likes {
-        id
-        user {
-          username
-        }
-        createdAt
-      }
-      likeCount
-    }
-  }
-`
 
 export default LikeButton

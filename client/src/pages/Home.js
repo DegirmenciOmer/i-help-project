@@ -3,7 +3,6 @@ import { useQuery } from '@apollo/client'
 import { Button, Grid, TransitionGroup } from 'semantic-ui-react'
 import PostCard from '../components/PostCard'
 import PostForm from '../components/PostForm'
-
 import { AuthContext } from '../context/auth'
 import { FETCH_POSTS_QUERY } from '../util/queries'
 import Filtering from '../components/Filtering'
@@ -66,15 +65,13 @@ const Home = () => {
   return (
     <div>
       <Grid>
-        <Grid.Column floated='left' width={5}>
-          <Grid.Row>
-            {user && (
-              <PostForm
-                categoryFiltered={categorySelected}
-                postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
-              />
-            )}
-          </Grid.Row>
+        <Grid.Column width={6}>
+          {user && (
+            <PostForm
+              categoryFiltered={categorySelected}
+              postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
+            />
+          )}
         </Grid.Column>
         <Grid.Row></Grid.Row>
       </Grid>
