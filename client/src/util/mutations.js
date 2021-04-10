@@ -33,6 +33,7 @@ export const CREATE_POST_MUTATION = gql`
     }
   }
 `
+
 export const UPDATE_POST_MUTATION = gql`
   mutation updatePost($postId: ID!, $body: String!) {
     updatePost(body: $body, postId: $postId) {
