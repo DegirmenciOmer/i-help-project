@@ -1,13 +1,14 @@
 import React, { useContext, useState } from 'react'
 import { useQuery } from '@apollo/client'
-import { Button, Grid, TransitionGroup } from 'semantic-ui-react'
+import { Grid, TransitionGroup } from 'semantic-ui-react'
 import PostCard from '../components/PostCard'
 import PostForm from '../components/PostForm'
 import { AuthContext } from '../context/auth'
 import { FETCH_POSTS_QUERY } from '../util/queries'
 import Filtering from '../components/Filtering'
+import Paginate from '../components/Paginate'
 
-import { PAGINATION_LIMIT, INITIAL_VARIABLES } from '../constants/constants'
+import { INITIAL_VARIABLES } from '../constants/constants'
 
 const Home = () => {
   const [categorySelected, setCategory] = useState(INITIAL_VARIABLES.category)
@@ -30,32 +31,6 @@ const Home = () => {
   const {
     getPosts: { paginatedPosts, totalPostsCount, matchedResultsCount },
   } = data
-
-  function nextPage() {
-    setOffset((offset) => offset + PAGINATION_LIMIT)
-  }
-
-  function previousPage() {
-    setOffset((offset) => offset - PAGINATION_LIMIT)
-  }
-
-  function isFirstPage() {
-    return PAGINATION_LIMIT * offset <= 0
-  }
-
-  function isLastPage() {
-    if (matchedResultsCount) {
-      return (
-        offset / PAGINATION_LIMIT ===
-        Math.ceil(matchedResultsCount / PAGINATION_LIMIT) - 1
-      )
-    } else {
-      return (
-        offset / PAGINATION_LIMIT ===
-        Math.ceil(totalPostsCount / PAGINATION_LIMIT) - 1
-      )
-    }
-  }
 
   async function handleFiltersReset() {
     setOffset(INITIAL_VARIABLES.offset)
@@ -114,22 +89,12 @@ const Home = () => {
             </TransitionGroup>
           )}
         </Grid.Row>
-        <Grid.Row>
-          <Grid.Column position='right'>
-            {!isFirstPage() && (
-              <Button className='ui basic icon button' onClick={previousPage}>
-                <i className='fas fa-chevron-circle-left'></i>
-              </Button>
-            )}
-
-            {matchedResultsCount > PAGINATION_LIMIT ||
-              (totalPostsCount > PAGINATION_LIMIT && !isLastPage() && (
-                <Button className='ui basic icon button' onClick={nextPage}>
-                  <i className='fas fa-chevron-circle-right'></i>
-                </Button>
-              ))}
-          </Grid.Column>
-        </Grid.Row>
+        <Paginate
+          setOffset={setOffset}
+          matchedResultsCount={matchedResultsCount}
+          offset={offset}
+          totalPostsCount={totalPostsCount}
+        />
       </Grid>
     </div>
   )
