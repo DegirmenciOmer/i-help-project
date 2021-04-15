@@ -8,10 +8,6 @@ export default function Paginate({
   offset,
   matchedResultsCount,
 }) {
-  // const totalPostsCount = 8
-  // const offset = 2
-  // const matchedResultsCount = 3
-
   console.log(totalPostsCount, 'totalPostsCount')
 
   function nextPage() {

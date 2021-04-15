@@ -9,38 +9,45 @@ const options = [
   { key: 'ga', text: 'Gardening', value: 'Gardening' },
 ]
 
-const Filtering = ({ categorySelected, onFilterChange, onOffset, onReset }) => {
+const Filtering = ({
+  matchedResultsCount,
+  categorySelected,
+  onFilterChange,
+  onOffset,
+  onReset,
+}) => {
   const onChange = (event, { value }) => {
     onFilterChange(value)
     onOffset(0)
   }
-
+  //why columns act like rows and rows vice versa?
   return (
     <>
-      <Grid divided='vertically'>
-        <Grid.Row columns={2}>
-          <Grid.Column>
-            <Form.Select
-              className='filter-input'
-              fluid
-              options={options}
-              placeholder='Filter'
-              value={categorySelected}
-              name='filter'
-              onChange={onChange}
-            />{' '}
-          </Grid.Column>
-          <Grid.Column>
-            <Button
-              primary
-              className='filter-button'
-              onClick={onReset}
-            >
-              Reset
-            </Button>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <Grid.Row>
+        <Grid.Column width={6}>
+          <Form.Select
+            className='filter-input'
+            fluid
+            options={options}
+            placeholder='Filter'
+            value={categorySelected}
+            name='filter'
+            onChange={onChange}
+          />
+        </Grid.Column>
+        <Button primary className='filter-button' onClick={onReset}>
+          Reset
+        </Button>
+        <Grid.Column className='recent-posts-h1'>
+          {categorySelected ? (
+            <h1>
+              Recent Posts on {categorySelected} ({matchedResultsCount})
+            </h1>
+          ) : (
+            <h1>Recent Posts</h1>
+          )}
+        </Grid.Column>
+      </Grid.Row>
     </>
   )
 }

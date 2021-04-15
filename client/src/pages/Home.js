@@ -7,7 +7,6 @@ import { AuthContext } from '../context/auth'
 import { FETCH_POSTS_QUERY } from '../util/queries'
 import Filtering from '../components/Filtering'
 import Paginate from '../components/Paginate'
-
 import { INITIAL_VARIABLES } from '../constants/constants'
 
 const Home = () => {
@@ -39,38 +38,21 @@ const Home = () => {
 
   return (
     <div>
-      <Grid>
-        <Grid.Column width={6}>
-          {user && (
-            <PostForm
-              categoryFiltered={categorySelected}
-              postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
-            />
-          )}
-        </Grid.Column>
-        <Grid.Row></Grid.Row>
-      </Grid>
-
+      {user && (
+        <PostForm
+          categoryFiltered={categorySelected}
+          postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
+          user={user}
+        />
+      )}
       <Grid columns={1}>
-        <Grid.Row>
-          <Grid.Column width={6}>
-            <Filtering
-              categorySelected={categorySelected}
-              onFilterChange={setCategory}
-              onOffset={setOffset}
-              onReset={handleFiltersReset}
-            />
-          </Grid.Column>
-          <Grid.Column>
-            {categorySelected ? (
-              <h1>
-                Recent Posts on {categorySelected} ({matchedResultsCount})
-              </h1>
-            ) : (
-              <h1>Recent Posts</h1>
-            )}
-          </Grid.Column>
-        </Grid.Row>
+        <Filtering
+          categorySelected={categorySelected}
+          onFilterChange={setCategory}
+          onOffset={setOffset}
+          onReset={handleFiltersReset}
+          matchedResultsCount={matchedResultsCount}
+        />
 
         <Grid.Row>
           {loading ? (
