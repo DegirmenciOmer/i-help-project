@@ -39,7 +39,7 @@ const PostForm = ({ categoryFiltered, postsQuery, user }) => {
     })
   }
   return (
-    <Grid>
+    <>
       <Grid.Row>
         <Grid.Column>
           <h2 className='create-post-h2'>Create a post:</h2>
@@ -80,7 +80,7 @@ const PostForm = ({ categoryFiltered, postsQuery, user }) => {
             </ul>
           </div>
         )}
-    </Grid>
+    </>
   )
 }
 

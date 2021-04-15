@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react'
-import { useQuery } from '@apollo/client'
-import { Grid, TransitionGroup } from 'semantic-ui-react'
-import PostCard from '../components/PostCard'
+import { Grid } from 'semantic-ui-react'
 import PostForm from '../components/PostForm'
 import { AuthContext } from '../context/auth'
 import { FETCH_POSTS_QUERY } from '../util/queries'
 import Filtering from '../components/Filtering'
 import Paginate from '../components/Paginate'
 import { INITIAL_VARIABLES } from '../constants/constants'
+import PostList from '../components/PostList'
+import { useQuery } from '@apollo/client'
 
 const Home = () => {
   const [categorySelected, setCategory] = useState(INITIAL_VARIABLES.category)
@@ -37,15 +37,15 @@ const Home = () => {
   }
 
   return (
-    <div>
-      {user && (
-        <PostForm
-          categoryFiltered={categorySelected}
-          postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
-          user={user}
-        />
-      )}
+    <>
       <Grid columns={1}>
+        {user && (
+          <PostForm
+            categoryFiltered={categorySelected}
+            postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
+            user={user}
+          />
+        )}
         <Filtering
           categorySelected={categorySelected}
           onFilterChange={setCategory}
@@ -53,24 +53,12 @@ const Home = () => {
           onReset={handleFiltersReset}
           matchedResultsCount={matchedResultsCount}
         />
+        <PostList
+          loading={loading}
+          paginatedPosts={paginatedPosts}
+          variables={variables}
+        />
 
-        <Grid.Row>
-          {loading ? (
-            <h2>Loading posts ...</h2>
-          ) : (
-            <TransitionGroup>
-              {paginatedPosts &&
-                paginatedPosts.map((post) => (
-                  <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
-                    <PostCard
-                      post={post}
-                      postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
-                    />
-                  </Grid.Column>
-                ))}
-            </TransitionGroup>
-          )}
-        </Grid.Row>
         <Paginate
           setOffset={setOffset}
           matchedResultsCount={matchedResultsCount}
@@ -78,7 +66,7 @@ const Home = () => {
           totalPostsCount={totalPostsCount}
         />
       </Grid>
-    </div>
+    </>
   )
 }
 
