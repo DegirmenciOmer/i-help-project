@@ -6,25 +6,23 @@ import { Grid } from 'semantic-ui-react'
 
 function PostList({ loading, paginatedPosts, variables }) {
   return (
-    <div>
-      <Grid.Row>
-        {loading ? (
-          <h2>Loading posts ...</h2>
-        ) : (
-          <TransitionGroup>
-            {paginatedPosts &&
-              paginatedPosts.map((post) => (
-                <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
-                  <PostCard
-                    post={post}
-                    postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
-                  />
-                </Grid.Column>
-              ))}
-          </TransitionGroup>
-        )}
-      </Grid.Row>
-    </div>
+    <Grid.Row>
+      {loading ? (
+        <h2>Loading posts ...</h2>
+      ) : (
+        <TransitionGroup>
+          {paginatedPosts &&
+            paginatedPosts.map((post) => (
+              <Grid.Column fluid key={post.id} style={{ marginBottom: 20 }}>
+                <PostCard
+                  post={post}
+                  postsQuery={{ query: FETCH_POSTS_QUERY, variables }}
+                />
+              </Grid.Column>
+            ))}
+        </TransitionGroup>
+      )}
+    </Grid.Row>
   )
 }
 

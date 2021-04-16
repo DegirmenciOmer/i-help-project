@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Button, Card, Icon, Label, Image } from 'semantic-ui-react'
+import { Button, Card, Icon, Label, Image, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 import { DELETE_POST_MUTATION } from '../util/mutations'
@@ -35,6 +35,7 @@ const PostCard = ({
       refetchQueries: [postsQuery],
     })
   }
+  const postMoment = moment(createdAt).fromNow(true)
 
   return (
     <Card fluid>
@@ -42,10 +43,11 @@ const PostCard = ({
         <Image floated='right' size='mini' src={imageUrl} />
         <Card.Header>{username}</Card.Header>
         <Card.Meta as={Link} to={`/posts/${id}`}>
-          {
-            moment(createdAt).fromNow(true) //put inside const
-          }
-          {`-${category}`}
+          in {category} category
+        </Card.Meta>
+        <Grid.Column></Grid.Column>
+        <Card.Meta as={Link} to={`/posts/${id}`}>
+          {postMoment} ago
         </Card.Meta>
         <Link to={`/posts/${id}`}>
           <Card.Description>{body}</Card.Description>
