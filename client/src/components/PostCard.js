@@ -1,9 +1,8 @@
 import React, { useContext } from 'react'
-import { Button, Card, Icon, Label, Image, Grid } from 'semantic-ui-react'
+import { Card, Image, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 import { DELETE_POST_MUTATION } from '../util/mutations'
-import NewPopup from '../util/NewPopup'
 import { AuthContext } from '../context/auth'
 import LikeButton from './LikeButton'
 import DeleteButton from './DeleteButton'
@@ -57,7 +56,9 @@ const PostCard = ({
       </Card.Content>
       <Card.Content extra>
         <LikeButton user={user} post={{ id, likes, likeCount }} />
-        <Link to={`/posts/${id}`}><CommentButton commentCount={commentCount}/></Link>
+        <Link to={`/posts/${id}`}>
+          <CommentButton commentCount={commentCount} />
+        </Link>
 
         {user && user.username === username && (
           <DeleteButton onDelete={handleDeletePost} postId={id} />

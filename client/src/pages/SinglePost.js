@@ -1,16 +1,16 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
-import { Button, Card, Grid, Icon, Image, Label, Form } from 'semantic-ui-react'
+import { Card, Grid, Icon, Image } from 'semantic-ui-react'
 import moment from 'moment'
 import { useForm } from '../util/hooks'
 import { FETCH_POST_QUERY } from '../util/queries'
 import LikeButton from '../components/LikeButton'
 import Comments from '../components/Comments'
 import { AuthContext } from '../context/auth'
-import NewPopup from '../util/NewPopup'
 import CommentButton from '../components/CommentButton'
 import { UPDATE_POST_MUTATION } from '../util/mutations'
 import SubmitComments from '../components/SubmitComments'
+import EditPost from '../components/EditPost'
 
 const SinglePost = (props) => {
   const [toggle, setToggle] = useState(false)
@@ -74,6 +74,8 @@ const SinglePost = (props) => {
       commentCount,
     } = post
 
+    const postMoment = moment(createdAt).fromNow()
+
     postMarkup = (
       <Grid>
         <Grid.Row>
@@ -86,8 +88,7 @@ const SinglePost = (props) => {
                 <Card.Header>{authorName}</Card.Header>
                 <div className='floated'>
                   <Card.Meta>
-                    {moment(createdAt).fromNow()}
-                    {`-${category}`}
+                    {postMoment} - {category}
                   </Card.Meta>
                   <Card.Meta>
                     {user && user.username === authorName && (
@@ -101,26 +102,18 @@ const SinglePost = (props) => {
                 {!toggle ? (
                   <Card.Description>{body}</Card.Description>
                 ) : (
-                  <Form onSubmit={onSubmit}>
-                    <Form.Field>
-                      <Form.Input
-                        className='EditInput'
-                        placeholder={body}
-                        name='body'
-                        onChange={onChange}
-                        value={values.body}
-                      />
-                      <Button color='teal' type='submit'>
-                        Save
-                      </Button>
-                    </Form.Field>
-                  </Form>
+                  <EditPost
+                    onChange={onChange}
+                    onSubmit={onSubmit}
+                    body={body}
+                    values={values}
+                  />
                 )}
               </Card.Content>
               <hr />
               <Card.Content extra>
                 <LikeButton user={user} post={{ id, likeCount, likes }} />
-                <CommentButton commentCount={commentCount}/>
+                <CommentButton commentCount={commentCount} />
               </Card.Content>
             </Card>
             <SubmitComments postId={postId} user={user} />
