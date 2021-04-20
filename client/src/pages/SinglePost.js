@@ -8,6 +8,7 @@ import LikeButton from '../components/LikeButton'
 import Comments from '../components/Comments'
 import { AuthContext } from '../context/auth'
 import NewPopup from '../util/NewPopup'
+import CommentButton from '../components/CommentButton'
 import { UPDATE_POST_MUTATION } from '../util/mutations'
 import SubmitComments from '../components/SubmitComments'
 
@@ -119,20 +120,7 @@ const SinglePost = (props) => {
               <hr />
               <Card.Content extra>
                 <LikeButton user={user} post={{ id, likeCount, likes }} />
-                <NewPopup content='Comments'>
-                  <Button
-                    as='div'
-                    labelPosition='right'
-                    onClick={() => console.log('Comment')}
-                  >
-                    <Button basic color='blue'>
-                      <Icon name='comments' />
-                    </Button>
-                    <Label basic color='blue' pointing='left'>
-                      {commentCount}
-                    </Label>
-                  </Button>
-                </NewPopup>
+                <CommentButton commentCount={commentCount}/>
               </Card.Content>
             </Card>
             <SubmitComments postId={postId} user={user} />

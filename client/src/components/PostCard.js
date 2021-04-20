@@ -7,6 +7,8 @@ import NewPopup from '../util/NewPopup'
 import { AuthContext } from '../context/auth'
 import LikeButton from './LikeButton'
 import DeleteButton from './DeleteButton'
+import CommentButton from '../components/CommentButton'
+
 import { useMutation } from '@apollo/client'
 
 const PostCard = ({
@@ -55,16 +57,7 @@ const PostCard = ({
       </Card.Content>
       <Card.Content extra>
         <LikeButton user={user} post={{ id, likes, likeCount }} />
-        <NewPopup content='Comment on post'>
-          <Button labelPosition='right' as={Link} to={`/posts/${id}`}>
-            <Button color='blue' basic>
-              <Icon name='comments' />
-            </Button>
-            <Label basic color='blue' pointing='left'>
-              {commentCount}
-            </Label>
-          </Button>
-        </NewPopup>
+        <Link to={`/posts/${id}`}><CommentButton commentCount={commentCount}/></Link>
 
         {user && user.username === username && (
           <DeleteButton onDelete={handleDeletePost} postId={id} />

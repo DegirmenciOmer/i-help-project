@@ -9,6 +9,7 @@ import { INITIAL_VARIABLES } from '../constants/constants'
 import PostList from '../components/PostList'
 import { useQuery } from '@apollo/client'
 
+
 const Home = () => {
   const [categorySelected, setCategory] = useState(INITIAL_VARIABLES.category)
   const [offset, setOffset] = useState(INITIAL_VARIABLES.offset)
