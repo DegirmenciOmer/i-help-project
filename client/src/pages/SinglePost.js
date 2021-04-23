@@ -1,16 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
-import { Card, Grid, Icon, Image } from 'semantic-ui-react'
-import moment from 'moment'
+import { Grid, Image } from 'semantic-ui-react'
 import { useForm } from '../util/hooks'
 import { FETCH_POST_QUERY } from '../util/queries'
-import LikeButton from '../components/LikeButton'
 import Comments from '../components/Comments'
 import { AuthContext } from '../context/auth'
-import CommentButton from '../components/CommentButton'
 import { UPDATE_POST_MUTATION } from '../util/mutations'
 import SubmitComments from '../components/SubmitComments'
-import EditPost from '../components/EditPost'
+import SinglePostCard from '../components/SinglePostCard'
 
 const SinglePost = (props) => {
   const [toggle, setToggle] = useState(false)
@@ -63,18 +60,9 @@ const SinglePost = (props) => {
     postMarkup = <p>Loading...</p>
   } else {
     const {
-      id,
-      body,
-      category,
-      createdAt,
-      author: { username: authorName, imageUrl: authorImg },
+      author: { imageUrl: authorImg },
       comments,
-      likes,
-      likeCount,
-      commentCount,
     } = post
-
-    const postMoment = moment(createdAt).fromNow()
 
     postMarkup = (
       <Grid>
@@ -83,39 +71,15 @@ const SinglePost = (props) => {
             <Image floated='right' size='small' src={authorImg} />
           </Grid.Column>
           <Grid.Column width={10}>
-            <Card fluid>
-              <Card.Content>
-                <Card.Header>{authorName}</Card.Header>
-                <div className='floated'>
-                  <Card.Meta>
-                    {postMoment} - {category}
-                  </Card.Meta>
-                  <Card.Meta>
-                    {user && user.username === authorName && (
-                      <Icon
-                        onClick={() => setToggle(true)}
-                        name='pencil alternate'
-                      ></Icon>
-                    )}
-                  </Card.Meta>
-                </div>
-                {!toggle ? (
-                  <Card.Description>{body}</Card.Description>
-                ) : (
-                  <EditPost
-                    onChange={onChange}
-                    onSubmit={onSubmit}
-                    body={body}
-                    values={values}
-                  />
-                )}
-              </Card.Content>
-              <hr />
-              <Card.Content extra>
-                <LikeButton user={user} post={{ id, likeCount, likes }} />
-                <CommentButton commentCount={commentCount} />
-              </Card.Content>
-            </Card>
+            <SinglePostCard
+              toggle={toggle}
+              post={post}
+              user={user}
+              setToggle={setToggle}
+              onChange={onChange}
+              onSubmit={onSubmit}
+              values={values}
+            />
             <SubmitComments postId={postId} user={user} />
             <Comments postId={postId} comments={comments} user={user} />
           </Grid.Column>

@@ -8,8 +8,6 @@ export default function Paginate({
   offset,
   matchedResultsCount,
 }) {
-  console.log(totalPostsCount, 'totalPostsCount')
-
   function nextPage() {
     setOffset((offset) => offset + PAGINATION_LIMIT)
   }
