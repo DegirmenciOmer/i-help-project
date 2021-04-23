@@ -7,7 +7,7 @@ import Comments from '../components/Comments'
 import { AuthContext } from '../context/auth'
 import { UPDATE_POST_MUTATION } from '../util/mutations'
 import SubmitComments from '../components/SubmitComments'
-import SinglePostCard from '../components/SinglePostCard'
+import PostCard from '../components/PostCard'
 
 const SinglePost = (props) => {
   const [toggle, setToggle] = useState(false)
@@ -71,14 +71,17 @@ const SinglePost = (props) => {
             <Image floated='right' size='small' src={authorImg} />
           </Grid.Column>
           <Grid.Column width={10}>
-            <SinglePostCard
-              toggle={toggle}
+            <PostCard
               post={post}
-              user={user}
-              setToggle={setToggle}
-              onChange={onChange}
-              onSubmit={onSubmit}
-              values={values}
+              editTools={{
+                isInEditMode: toggle,
+                toggleEditMode: setToggle,
+                onChange: onChange,
+                onSubmit: onSubmit,
+                values: values,
+              }}
+              showProfileImage={false}
+              shouldLinkToPost={false}
             />
             <SubmitComments postId={postId} user={user} />
             <Comments postId={postId} comments={comments} user={user} />

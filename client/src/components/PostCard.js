@@ -1,14 +1,12 @@
-import React, { useContext } from 'react'
-import { Card, Image, Grid } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import moment from 'moment'
-import { DELETE_POST_MUTATION } from '../util/mutations'
-import { AuthContext } from '../context/auth'
-import LikeButton from './LikeButton'
-import DeleteButton from './DeleteButton'
-import CommentButton from '../components/CommentButton'
-
-import { useMutation } from '@apollo/client'
+import React, { useContext } from "react";
+import { Card, Image, Grid, Icon } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import moment from "moment";
+import { AuthContext } from "../context/auth";
+import LikeButton from "./LikeButton";
+import DeleteButton from "./DeleteButton";
+import CommentButton from "../components/CommentButton";
+import EditPost from "../components/EditPost";
 
 const PostCard = ({
   post: {
@@ -21,51 +19,75 @@ const PostCard = ({
     commentCount,
     likes,
   },
-  postsQuery,
+  onDelete,
+  editTools,
+  showProfileImage,
+  shouldLinkToPost,
 }) => {
-  const { user } = useContext(AuthContext)
-  const [deletePostMutation] = useMutation(DELETE_POST_MUTATION)
-  function handleDeletePost() {
-    deletePostMutation({
-      variables: {
-        postId: id,
-      },
-      onError(err) {
-        console.log(err)
-      },
-      refetchQueries: [postsQuery],
-    })
-  }
-  const postMoment = moment(createdAt).fromNow(true)
+  const { user } = useContext(AuthContext);
+  const postMoment = moment(createdAt).fromNow(true);
+  const {
+    isInEditMode,
+    toggleEditMode,
+    onChange,
+    onSubmit,
+    values,
+  } = editTools || {
+    isInEditMode: false,
+  };
+  const canEdit = editTools != undefined;
+  const LinkComponent = shouldLinkToPost ? Link : "";
+  const commentButton = <CommentButton commentCount={commentCount} />;
 
   return (
     <Card fluid>
       <Card.Content>
-        <Image floated='right' size='mini' src={imageUrl} />
+        {showProfileImage && (
+          <Image floated="right" size="mini" src={imageUrl} />
+        )}
         <Card.Header>{username}</Card.Header>
-        <Card.Meta as={Link} to={`/posts/${id}`}>
+        <Card.Meta as={LinkComponent} to={`/posts/${id}`}>
           in {category} category
         </Card.Meta>
         <Grid.Column></Grid.Column>
-        <Card.Meta as={Link} to={`/posts/${id}`}>
+        <Card.Meta as={LinkComponent} to={`/posts/${id}`}>
           {postMoment} ago
         </Card.Meta>
-        <Link to={`/posts/${id}`}>
-          <Card.Description>{body}</Card.Description>
-        </Link>
+        <div className="floated">
+          <Card.Meta>
+            {canEdit && user && user.username === username && (
+              <Icon onClick={toggleEditMode} name="pencil alternate"></Icon>
+            )}
+          </Card.Meta>
+        </div>
+
+        {isInEditMode ? (
+          <EditPost
+            onChange={onChange}
+            onSubmit={onSubmit}
+            body={body}
+            values={values}
+          />
+        ) : (
+          <Card.Description as={LinkComponent} to={`/posts/${id}`}>
+            {body}
+          </Card.Description>
+        )}
       </Card.Content>
       <Card.Content extra>
         <LikeButton user={user} post={{ id, likes, likeCount }} />
-        <Link to={`/posts/${id}`}>
-          <CommentButton commentCount={commentCount} />
-        </Link>
+        {shouldLinkToPost ? (
+          <Link to={`/posts/${id}`}>{commentButton}</Link>
+        ) : (
+          commentButton
+        )}
 
         {user && user.username === username && (
-          <DeleteButton onDelete={handleDeletePost} postId={id} />
+          <DeleteButton onDelete={onDelete} postId={id} />
         )}
       </Card.Content>
     </Card>
-  )
-}
+  );
+};
 
-export default PostCard
+export default PostCard;
