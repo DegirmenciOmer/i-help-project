@@ -1,0 +1,52 @@
+.row.page-title {
+  display: block !important;
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 10px;
+}
+
+a, a:hover {
+  color: inherit;
+}
+
+.recent-posts-h1{
+  margin-top: 50px !important;
+}
+.form-container {
+  width: 400px;
+  margin: auto;
+}
+
+.logout{
+  box-sizing: border-box !important;
+  color: #00b5ad !important;
+  margin: 0 !important;
+  margin: 0 !important;
+
+}
+
+.logout:hover {
+  color: red !important;
+}
+
+.ui.teal.button:focus,
+.ui.teal.buttons .button:focus {
+  background-color: #00b5ad;
+  color: #fff;
+  text-shadow: none;
+}
+
+.floated {
+  display: flex;
+  justify-content: space-between;
+}
+
+.commit-header{
+  font:small normal;
+  font-family: "Arial", sans-serif;
+
+}
+
+.EditInput {
+  border: none;
+}
