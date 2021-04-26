@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
-import { Card, Image, Grid, Icon } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import moment from "moment";
-import { AuthContext } from "../context/auth";
-import LikeButton from "./LikeButton";
-import DeleteButton from "./DeleteButton";
-import CommentButton from "../components/CommentButton";
-import EditPost from "../components/EditPost";
+import React, { useContext } from 'react'
+import { Card, Image, Grid, Icon } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import moment from 'moment'
+import { AuthContext } from '../context/auth'
+import LikeButton from './LikeButton'
+import DeleteButton from './DeleteButton'
+import CommentButton from '../components/CommentButton'
+import EditPost from '../components/EditPost'
 
 const PostCard = ({
   post: {
@@ -24,8 +24,8 @@ const PostCard = ({
   showProfileImage,
   shouldLinkToPost,
 }) => {
-  const { user } = useContext(AuthContext);
-  const postMoment = moment(createdAt).fromNow(true);
+  const { user } = useContext(AuthContext)
+  const postMoment = moment(createdAt).fromNow(true)
   const {
     isInEditMode,
     toggleEditMode,
@@ -34,16 +34,16 @@ const PostCard = ({
     values,
   } = editTools || {
     isInEditMode: false,
-  };
-  const canEdit = editTools != undefined;
-  const LinkComponent = shouldLinkToPost ? Link : "";
-  const commentButton = <CommentButton commentCount={commentCount} />;
+  }
+  const canEdit = editTools !== undefined
+  const LinkComponent = shouldLinkToPost ? Link : ''
+  const commentButton = <CommentButton commentCount={commentCount} />
 
   return (
     <Card fluid>
       <Card.Content>
         {showProfileImage && (
-          <Image floated="right" size="mini" src={imageUrl} />
+          <Image floated='right' size='mini' src={imageUrl} />
         )}
         <Card.Header>{username}</Card.Header>
         <Card.Meta as={LinkComponent} to={`/posts/${id}`}>
@@ -53,10 +53,10 @@ const PostCard = ({
         <Card.Meta as={LinkComponent} to={`/posts/${id}`}>
           {postMoment} ago
         </Card.Meta>
-        <div className="floated">
+        <div className='floated'>
           <Card.Meta>
             {canEdit && user && user.username === username && (
-              <Icon onClick={toggleEditMode} name="pencil alternate"></Icon>
+              <Icon onClick={toggleEditMode} name='pencil alternate'></Icon>
             )}
           </Card.Meta>
         </div>
@@ -87,7 +87,7 @@ const PostCard = ({
         )}
       </Card.Content>
     </Card>
-  );
-};
+  )
+}
 
-export default PostCard;
+export default PostCard

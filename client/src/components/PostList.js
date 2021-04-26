@@ -30,7 +30,7 @@ function PostList({ loading, paginatedPosts, variables }) {
         <TransitionGroup>
           {paginatedPosts &&
             paginatedPosts.map((post) => (
-              <Grid.Column fluid key={post.id} style={{ marginBottom: 20 }}>
+              <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
                 <PostCard
                   post={post}
                   onDelete={() => handleDeletePost(post.id)}
