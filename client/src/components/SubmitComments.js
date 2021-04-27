@@ -27,24 +27,23 @@ const SubmitComments = ({ user, postId }) => {
     user && (
       <Card fluid>
         <Card.Content>
-          <p>Post a comment</p>
           <Form>
             <div className='ui action input fluid'>
               <input
                 type='text'
                 name='comment'
-                placeholder='Left comment'
+                placeholder='Comment on this post'
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 ref={commentInputRef}
               />
               <button
                 type='submit'
-                className='ui button teal'
+                className='ui button teal '
                 disabled={comment.trim() === ''}
                 onClick={handleCommentSubmit}
               >
-                Submit
+                <i className='paper plane icon'></i>
               </button>
             </div>
           </Form>

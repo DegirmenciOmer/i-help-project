@@ -72,6 +72,7 @@ const SinglePost = (props) => {
           </Grid.Column>
           <Grid.Column width={10}>
             <PostCard
+              onDelete={() => props.handleDeletePost(post.id)}
               post={post}
               editTools={{
                 isInEditMode: toggle,
@@ -81,7 +82,7 @@ const SinglePost = (props) => {
                 values: values,
               }}
               showProfileImage={false}
-              shouldLinkToPost={false}
+              isListedPost={false}
             />
             <SubmitComments postId={postId} user={user} />
             <Comments postId={postId} comments={comments} user={user} />

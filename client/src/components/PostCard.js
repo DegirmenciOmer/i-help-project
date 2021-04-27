@@ -3,10 +3,8 @@ import { Card, Image, Grid, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 import { AuthContext } from '../context/auth'
-import LikeButton from './LikeButton'
-import DeleteButton from './DeleteButton'
-import CommentButton from '../components/CommentButton'
 import EditPost from '../components/EditPost'
+import CardButtons from './CardButtons'
 
 const PostCard = ({
   post: {
@@ -14,15 +12,15 @@ const PostCard = ({
     category,
     createdAt,
     id,
-    author: { username, imageUrl },
     likeCount,
     commentCount,
     likes,
+    author: { username, imageUrl },
   },
-  onDelete,
   editTools,
+  onDelete,
   showProfileImage,
-  shouldLinkToPost,
+  isListedPost,
 }) => {
   const { user } = useContext(AuthContext)
   const postMoment = moment(createdAt).fromNow(true)
@@ -36,8 +34,7 @@ const PostCard = ({
     isInEditMode: false,
   }
   const canEdit = editTools !== undefined
-  const LinkComponent = shouldLinkToPost ? Link : ''
-  const commentButton = <CommentButton commentCount={commentCount} />
+  const LinkComponent = isListedPost ? Link : ''
 
   return (
     <Card fluid>
@@ -75,16 +72,16 @@ const PostCard = ({
         )}
       </Card.Content>
       <Card.Content extra>
-        <LikeButton user={user} post={{ id, likes, likeCount }} />
-        {shouldLinkToPost ? (
-          <Link to={`/posts/${id}`}>{commentButton}</Link>
-        ) : (
-          commentButton
-        )}
-
-        {user && user.username === username && (
-          <DeleteButton onDelete={onDelete} postId={id} />
-        )}
+        <CardButtons
+          likeCount={likeCount}
+          commentCount={commentCount}
+          likes={likes}
+          id={id}
+          username={username}
+          isListedPost={isListedPost}
+          user={user}
+          onDelete={onDelete}
+        />
       </Card.Content>
     </Card>
   )

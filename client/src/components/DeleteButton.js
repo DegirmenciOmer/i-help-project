@@ -3,7 +3,7 @@ import { Button, Icon, Confirm } from 'semantic-ui-react'
 
 import NewPopup from '../util/NewPopup'
 
-const DeleteButton = ({  commentId, onDelete}) => {
+const DeleteButton = ({ commentId, onDelete }) => {
   const [confirmOpen, setConfirmOpen] = useState(false)
 
   return (
@@ -26,6 +26,5 @@ const DeleteButton = ({  commentId, onDelete}) => {
     </>
   )
 }
-
 
 export default DeleteButton

@@ -34,7 +34,7 @@ function PostList({ loading, paginatedPosts, variables }) {
                 <PostCard
                   post={post}
                   onDelete={() => handleDeletePost(post.id)}
-                  shouldLinkToPost={true}
+                  isListedPost={true}
                 />
               </Grid.Column>
             ))}
