@@ -5,10 +5,9 @@ import { AuthContext } from '../context/auth'
 import { FETCH_POSTS_QUERY } from '../util/queries'
 import Filtering from '../components/Filtering'
 import Paginate from '../components/Paginate'
-import { INITIAL_VARIABLES } from '../constants/constants'
+import { INITIAL_VARIABLES } from '../util/constants'
 import PostList from '../components/PostList'
 import { useQuery } from '@apollo/client'
-
 
 const Home = () => {
   const [categorySelected, setCategory] = useState(INITIAL_VARIABLES.category)

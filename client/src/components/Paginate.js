@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Grid } from 'semantic-ui-react'
-import { PAGINATION_LIMIT } from '../constants/constants'
+import { PAGINATION_LIMIT } from '../util/constants'
 
 export default function Paginate({
   setOffset,
