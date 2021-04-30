@@ -19,7 +19,6 @@ const PostCard = ({
   },
   editTools,
   onDelete,
-  showProfileImage,
   isListedPost,
 }) => {
   const { user } = useContext(AuthContext)
@@ -39,14 +38,13 @@ const PostCard = ({
   return (
     <Card fluid>
       <Card.Content>
-        {showProfileImage && (
-          <Image floated='right' size='mini' src={imageUrl} />
-        )}
+        {isListedPost && <Image floated='right' size='mini' src={imageUrl} />}
         <Card.Header>{username}</Card.Header>
-        <Card.Meta as={LinkComponent} to={`/posts/${id}`}>
-          in {category} category
-        </Card.Meta>
-        <Grid.Column></Grid.Column>
+        <Grid.Column>
+          <Card.Meta as={LinkComponent} to={`/posts/${id}`}>
+            in {category} category
+          </Card.Meta>
+        </Grid.Column>
         <Card.Meta as={LinkComponent} to={`/posts/${id}`}>
           {postMoment} ago
         </Card.Meta>
@@ -66,11 +64,12 @@ const PostCard = ({
             values={values}
           />
         ) : (
-          <Card.Description as={LinkComponent} to={`/posts/${id}`}>
+          <Card.Description extra as={LinkComponent} to={`/posts/${id}`}>
             {body}
           </Card.Description>
         )}
       </Card.Content>
+
       <Card.Content extra>
         <CardButtons
           likeCount={likeCount}
