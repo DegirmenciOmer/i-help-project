@@ -9,8 +9,11 @@ import {
 } from '@apollo/client'
 import { setContext } from 'apollo-link-context'
 
+const LOCAL_URI = 'http://localhost:5000/'
+const HEROKU_URI = 'https://ihelp28.herokuapp.com/'
+
 const httpLink = createHttpLink({
-  uri: 'http://localhost:5000/graphql',
+  uri: HEROKU_URI + 'graphql',
 })
 
 const authLink = setContext(() => {
@@ -35,7 +38,7 @@ const client = new ApolloClient({
           },
           getUser: {
             merge(existing = {}, incoming = {}) {
-              return {...existing, ...incoming};
+              return { ...existing, ...incoming }
             },
           },
         },
