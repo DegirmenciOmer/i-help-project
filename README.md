@@ -2,7 +2,7 @@
 
 - A social media app using GraphQl.
 - This project was forked from the [Fellowship28 project](https://github.com/DegirmenciOmer/fellowship28/tree/development).
-- Working site : https://hopeful-hamilton-2ac184.netlify.app/
+- Working site : https://i-help28.netlify.app/
 
 ## Table of contents
 
