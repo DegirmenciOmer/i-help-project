@@ -18,3 +18,12 @@ const server = new ApolloServer({
 dotenv.config()
 
 connectDB()
+  .then(() => {
+    return server.listen({ port: PORT })
+  })
+  .then((res) => {
+    console.log(`Server is running at ${res.url}`)
+  })
+  .catch((err) => {
+    console.error(err)
+  })
